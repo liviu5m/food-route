@@ -25,12 +25,11 @@ public class User implements UserDetails {
     private String username;
     @Column(unique = true, nullable = false)
     private String email;
-    @Column(nullable = false)
     private String password;
-    @Column(nullable = false)
     private String address;
-    @Column(nullable = false)
     private String phoneNumber;
+    private String role = "user";
+    private String provider;
 
     private boolean enabled;
     @Column(name = "verification_code")
@@ -75,4 +74,21 @@ public class User implements UserDetails {
         return enabled;
     }
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", fullName='" + fullName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", address='" + address + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", role='" + role + '\'' +
+                ", provider='" + provider + '\'' +
+                ", enabled=" + enabled +
+                ", verificationCode='" + verificationCode + '\'' +
+                ", verificationCodeExpiresAt=" + verificationCodeExpiresAt +
+                '}';
+    }
 }

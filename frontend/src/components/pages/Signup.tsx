@@ -25,6 +25,8 @@ const Signup = () => {
         navigate("/auth/verify?email="+res.data.email);
       })
       .catch((err) => {        
+        console.log(err);
+        
         if (Array.isArray(err.response.data)) {
           toast(
             <div>

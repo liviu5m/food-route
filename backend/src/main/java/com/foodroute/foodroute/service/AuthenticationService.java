@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
@@ -35,6 +36,8 @@ public class AuthenticationService {
     }
 
     public User signup(RegisterUserDto input) {
+        Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
+        if(optionalUser.isPresent()) throw new RuntimeException("Email already in use");
         User user = new User(input.getFullName(),input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()), input.getAddress(), input.getPhoneNumber());
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
@@ -49,7 +52,6 @@ public class AuthenticationService {
         if(!user.isEnabled()) {
             throw new RuntimeException("Account not verified, please verify your account");
         }
-
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
         return user;
     }
@@ -74,7 +76,7 @@ public class AuthenticationService {
         }
     }
 
-    public void ressendVerificationCode(String email) {
+    public void resendVerificationCode(String email) {
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isPresent()) {
             User user = optionalUser.get();
@@ -113,6 +115,7 @@ public class AuthenticationService {
             e.printStackTrace();
         }
     }
+
 
     private String generateVerificationCode() {
         Random random = new Random();

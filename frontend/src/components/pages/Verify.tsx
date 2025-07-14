@@ -7,10 +7,8 @@ const Verify = () => {
   const [code, setCode] = useState("");
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [resend, setResend] = useState(false);
 
   const verify = () => {
-    setResend(true);
     axios
       .post("http://localhost:8080/auth/verify", {
         verificationCode: code,
@@ -28,7 +26,9 @@ const Verify = () => {
 
   const resendVerificationCode = () => {
     axios
-      .post("http://localhost:8080/auth/resend?email="+searchParams.get("email"))
+      .post(
+        "http://localhost:8080/auth/resend?email=" + searchParams.get("email")
+      )
       .then((res) => {
         console.log(res.data);
         toast("Code has been resented");
@@ -47,7 +47,16 @@ const Verify = () => {
           On your email you received a code, please enter it here to enable your
           account
         </p>
-        {resend && <p className="text-[#00ADB5]">Code will expire in 5 minutes</p>}
+        <p>
+          Code will expire in 5 minutes{" "}
+          <span
+            className="text-[#00ADB5] cursor-pointer"
+            onClick={() => resendVerificationCode()}
+          >
+            Resend verification code
+          </span>
+        </p>
+
         <input
           type="number"
           placeholder="eg. 123456"
@@ -61,14 +70,6 @@ const Verify = () => {
         >
           Verify
         </button>
-        {resend && (
-          <p
-            className="text-[#00ADB5] text-center text-lg mt-4 cursor-pointer"
-            onClick={() => resendVerificationCode()}
-          >
-            Resend verification code
-          </p>
-        )}
       </div>
       <ToastContainer />
     </div>

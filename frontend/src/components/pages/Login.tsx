@@ -2,25 +2,37 @@ import React from "react";
 import BodyLayout from "../layouts/bodyLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
+import { useAppContext } from "../../../libs/AppContext";
 
 const Login = () => {
-
   const navigate = useNavigate();
+  const {getUser} = useAppContext();
 
   const login = (e: React.FormEvent<HTMLFormElement>) => {
+    let email = e.currentTarget.email.value;
     e.preventDefault();
     axios
       .post(`http://localhost:8080/auth/login`, {
-        email: e.currentTarget.email.value,
+        email,
         password: e.currentTarget.password.value,
       })
       .then((res) => {
         console.log(res.data);
         localStorage.setItem("jwtToken", res.data.token);
+        getUser();
         navigate("/");
       })
       .catch((err) => {
+        console.log(err);
+        if (
+          err.response.data ==
+          "Account not verified, please verify your account"
+        ) {
+          axios.post("http://localhost:8080/auth/resend");
+          navigate("/auth/verify?email=" + email);
+        }
         if (Array.isArray(err.response.data)) {
           toast(
             <div>
@@ -31,6 +43,11 @@ const Login = () => {
           );
         } else toast(err.response.data);
       });
+  };
+
+  const handleGoogleLogin = () => {
+    window.location.href =
+      import.meta.env.VITE_API_URL + "/oauth2/authorization/google";
   };
 
   return (
@@ -60,7 +77,10 @@ const Login = () => {
             Or
           </h2>
         </div>
-        <button className="px-8 py-3 bg-[#00ADB5] text-[#eee] cursor-pointer rounded-lg font-semibold hover:text-[#00ADB5] hover:bg-[#eee] flex items-center justify-center gap-7 w-full mt-5">
+        <button
+          onClick={() => handleGoogleLogin()}
+          className="px-8 py-3 bg-[#00ADB5] text-[#eee] cursor-pointer rounded-lg font-semibold hover:text-[#00ADB5] hover:bg-[#eee] flex items-center justify-center gap-7 w-full mt-5"
+        >
           <img src="/imgs/google.png" className="w-6" alt="" />
           <h3>Google</h3>
         </button>

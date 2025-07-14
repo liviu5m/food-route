@@ -2,7 +2,7 @@ import React from "react";
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 
-interface AuthRouteGuardProps {
+interface AuthRequiredRouteProps {
   children: ReactNode;
 }
 
@@ -10,14 +10,14 @@ const isAuthenticated = (): boolean => {
   return localStorage.getItem("jwtToken") != null;
 };
 
-const AuthRouteGuard: React.FC<AuthRouteGuardProps> = ({ children }) => {
+const AuthRequiredRoute: React.FC<AuthRequiredRouteProps> = ({ children }) => {
   const location = useLocation();
   
-  if (isAuthenticated() && location.pathname.startsWith("/auth")) {
+  if (!isAuthenticated() && location.pathname.startsWith("/account")) {
     return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
 };
 
-export default AuthRouteGuard;
+export default AuthRequiredRoute;

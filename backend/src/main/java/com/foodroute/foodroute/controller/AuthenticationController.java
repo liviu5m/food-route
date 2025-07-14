@@ -31,23 +31,32 @@ public class AuthenticationController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterUserDto registerUserDto, BindingResult result) {
-        if (result.hasErrors()) {
-            List<String> errors = new ArrayList<String>();
-            result.getFieldErrors().forEach(error -> errors.add(error.getDefaultMessage()));
-            return ResponseEntity.badRequest().body(errors);
-        }
-        if(!registerUserDto.getPasswordConfirmation().equals(registerUserDto.getPassword())) return ResponseEntity.badRequest().body("Passwords do not match");
+        try {
+            if (result.hasErrors()) {
+                List<String> errors = new ArrayList<String>();
+                result.getFieldErrors().forEach(error -> errors.add(error.getDefaultMessage()));
+                return ResponseEntity.badRequest().body(errors);
+            }
+            if(!registerUserDto.getPasswordConfirmation().equals(registerUserDto.getPassword())) return ResponseEntity.badRequest().body("Passwords do not match");
 
-        User registerdUser = authenticationService.signup(registerUserDto);
-        return ResponseEntity.ok(registerdUser);
+            User registerdUser = authenticationService.signup(registerUserDto);
+            return ResponseEntity.ok(registerdUser);
+        }catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> authenticate(@RequestBody LoginUserDto loginUserDto) {
-        User authenticatedUser = authenticationService.authenticate(loginUserDto);
-        String jwtToken = jwtService.generateToken(authenticatedUser);
-        LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
-        return ResponseEntity.ok(loginResponse);
+    public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
+        try {
+            User authenticatedUser = authenticationService.authenticate(loginUserDto);
+            String jwtToken = jwtService.generateToken(authenticatedUser);
+            LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());
+            System.out.println(authenticatedUser);
+            return ResponseEntity.ok(loginResponse);
+        }catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @PostMapping("/verify")
@@ -63,11 +72,13 @@ public class AuthenticationController {
     @PostMapping("/resend")
     public ResponseEntity<?> resendVerificationCode(@RequestParam String email) {
         try {
-            authenticationService.ressendVerificationCode(email);
+            authenticationService.resendVerificationCode(email);
             return ResponseEntity.ok("Verification code sent");
         }catch(RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+
 
 }
