@@ -9,6 +9,8 @@ import AdminRouteGuard from "./components/middleware/AdminRouteGuard";
 import AuthRequiredRoute from "./components/middleware/AuthRequiredRoute";
 import Account from "./components/pages/Account";
 import { AppProvider } from "../libs/AppContext";
+import CategoryAdmin from "./components/pages/admin/CategoryAdmin";
+import ProductAdmin from "./components/pages/admin/ProductAdmin";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
               <AdminRouteGuard>
                 <Routes>
                   <Route path="/dashboard" element={<AdminDashboard />} />
+                  <Route path="/category" element={<CategoryAdmin />} />
+                  <Route path="/product" element={<ProductAdmin />} />
                 </Routes>
               </AdminRouteGuard>
             }

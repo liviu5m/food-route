@@ -8,3 +8,17 @@ export type User = {
   role: string;
   provider: string;
 };
+
+export type Category = {
+  id: number;
+  name: string;
+}
+
+export type Product = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  category: Category;
+}

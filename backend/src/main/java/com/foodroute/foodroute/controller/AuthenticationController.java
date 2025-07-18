@@ -4,6 +4,7 @@ import com.foodroute.foodroute.dto.LoginUserDto;
 import com.foodroute.foodroute.dto.RegisterUserDto;
 import com.foodroute.foodroute.dto.VerifyUserDto;
 import com.foodroute.foodroute.model.User;
+import com.foodroute.foodroute.repository.UserRepository;
 import com.foodroute.foodroute.responses.LoginResponse;
 import com.foodroute.foodroute.service.AuthenticationService;
 import com.foodroute.foodroute.service.JwtService;
@@ -12,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -23,10 +21,12 @@ public class AuthenticationController {
 
     private final JwtService jwtService;
     private final AuthenticationService authenticationService;
+    private final UserRepository userRepository;
 
-    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService) {
+    public AuthenticationController(JwtService jwtService, AuthenticationService authenticationService, UserRepository userRepository) {
         this.jwtService = jwtService;
         this.authenticationService = authenticationService;
+        this.userRepository = userRepository;
     }
 
     @PostMapping("/signup")
@@ -49,6 +49,9 @@ public class AuthenticationController {
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody LoginUserDto loginUserDto) {
         try {
+            Optional<User> optionalUser = userRepository.findByEmail(loginUserDto.getEmail());
+            System.out.println(optionalUser.get());
+            if(optionalUser.isPresent() && optionalUser.get().getProvider() != null) throw new RuntimeException("You can only authenticate using google provider on this account.");
             User authenticatedUser = authenticationService.authenticate(loginUserDto);
             String jwtToken = jwtService.generateToken(authenticatedUser);
             LoginResponse loginResponse = new LoginResponse(jwtToken, jwtService.getExpirationTime());

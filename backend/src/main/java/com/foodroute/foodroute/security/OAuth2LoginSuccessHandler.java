@@ -1,7 +1,9 @@
 package com.foodroute.foodroute.security;
 
 import com.foodroute.foodroute.dto.LoginUserDto;
+import com.foodroute.foodroute.model.Cart;
 import com.foodroute.foodroute.model.User;
+import com.foodroute.foodroute.repository.CartRepository;
 import com.foodroute.foodroute.repository.UserRepository;
 import com.foodroute.foodroute.responses.LoginResponse;
 import com.foodroute.foodroute.service.AuthenticationService;
@@ -31,6 +33,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
     private final ObjectProvider<AuthenticationManager> authenticationManagerProvider;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
+    private final CartRepository cartRepository;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
@@ -39,7 +42,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         OAuth2AuthenticationToken token = (OAuth2AuthenticationToken) authentication;
         Map<String, Object> attributes = token.getPrincipal().getAttributes();
-
         String email = (String) attributes.get("email");
         Optional<User> optionalUser = userRepository.findByEmail(email);
         System.out.println(email + attributes);
@@ -47,6 +49,8 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if(optionalUser.isPresent()) {
             user = optionalUser.get();
         }else {
+            Cart cart = new Cart();
+            cartRepository.save(cart);
             user = new User();
             user.setEmail(email);
             user.setUsername(email);
@@ -54,6 +58,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             user.setFullName((String) attributes.get("name"));
             user.setProvider(token.getAuthorizedClientRegistrationId());
             user.setEnabled(true);
+            user.setCart(cart);
             userRepository.save(user);
         }
         try {

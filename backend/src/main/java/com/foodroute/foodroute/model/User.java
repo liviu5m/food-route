@@ -31,6 +31,10 @@ public class User implements UserDetails {
     private String role = "user";
     private String provider;
 
+    @OneToOne(optional = false)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
+    private Cart cart;
+
     private boolean enabled;
     @Column(name = "verification_code")
     private String verificationCode;
@@ -45,6 +49,18 @@ public class User implements UserDetails {
         this.address = address;
         this.phoneNumber = phoneNumber;
     }
+
+    public User(String fullName, String username, String email, String password, String address, String phoneNumber, Cart cart) {
+        this.fullName = fullName;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.address = address;
+        this.phoneNumber = phoneNumber;
+        this.cart = cart;
+    }
+
+
 
     public User() {
     }

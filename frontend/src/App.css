@@ -15,6 +15,17 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
+.hide-scrollbar {
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+
 .loader {
   position: relative;
   width: 2.5em;

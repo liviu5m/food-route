@@ -3,7 +3,9 @@ package com.foodroute.foodroute.service;
 import com.foodroute.foodroute.dto.LoginUserDto;
 import com.foodroute.foodroute.dto.RegisterUserDto;
 import com.foodroute.foodroute.dto.VerifyUserDto;
+import com.foodroute.foodroute.model.Cart;
 import com.foodroute.foodroute.model.User;
+import com.foodroute.foodroute.repository.CartRepository;
 import com.foodroute.foodroute.repository.UserRepository;
 import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
@@ -24,12 +26,14 @@ import java.util.Random;
 public class AuthenticationService {
 
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
 
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
+    public AuthenticationService(UserRepository userRepository, CartRepository cartRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailService emailService) {
         this.userRepository = userRepository;
+        this.cartRepository = cartRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.emailService = emailService;
@@ -38,7 +42,9 @@ public class AuthenticationService {
     public User signup(RegisterUserDto input) {
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
         if(optionalUser.isPresent()) throw new RuntimeException("Email already in use");
-        User user = new User(input.getFullName(),input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()), input.getAddress(), input.getPhoneNumber());
+        Cart cart = new Cart();
+        cartRepository.save(cart);
+        User user = new User(input.getFullName(),input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()), input.getAddress(), input.getPhoneNumber(), cart);
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
         user.setEnabled(false);
