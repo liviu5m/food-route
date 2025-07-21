@@ -1,2 +1,28 @@
-/frontend/.env
-/backend/.env
+# General ignores
+.DS_Store
+node_modules/
+*.log
+*.tmp
+*.bak
+
+# Environment files (global)
+*.env
+.env*
+!.env.example
+!.env*.example
+
+# Backend specific (Spring Boot)
+backend/target/
+backend/.gradle/
+backend/.settings/
+backend/.project
+backend/.classpath
+
+# Frontend specific (React)
+frontend/node_modules/
+frontend/.next/
+frontend/build/
+frontend/.cache/
+frontend/.env.local
+frontend/.env.development
+frontend/.env.production
