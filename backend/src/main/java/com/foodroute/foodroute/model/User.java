@@ -3,11 +3,14 @@ package com.foodroute.foodroute.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -30,6 +33,13 @@ public class User implements UserDetails {
     private String phoneNumber;
     private String role = "user";
     private String provider;
+    @Column(name = "created_at", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updatedAt;
 
     @OneToOne(optional = false)
     @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
@@ -60,7 +70,16 @@ public class User implements UserDetails {
         this.cart = cart;
     }
 
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
+        this.updatedAt = new Date();
+    }
 
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = new Date();
+    }
 
     public User() {
     }

@@ -26,20 +26,21 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-//        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAll();
 //        productRepository.deleteAll();
-//        for (int i = 0; i < 50; i++) {
-//            Product product = new Product();
-//            product.setName(faker.commerce().productName());
-//            product.setPrice(Double.parseDouble(faker.commerce().price(10, 1000)));
-//            product.setImage("https://picsum.photos/640/480?random=" + i);
-//            product.setCategory(categories.get(
-//                    (int)Math.floor(Math.random() * categories.size())
-//            ));
-//            product.setDescription(faker.lorem().paragraph());
-//            productRepository.save(product);
-//        }
-//
-//        System.out.println("Generated 50 fake customers");
+        System.out.println(categories);
+        for (int i = 0; i < 50; i++) {
+            Product product = new Product();
+            product.setName(faker.commerce().productName());
+            product.setPrice(Double.parseDouble(faker.commerce().price(10, 1000)));
+            product.setImage("https://picsum.photos/640/480?random=" + i);
+            product.setCategory(categories.get(
+                    (int)Math.floor(Math.random() * categories.size())
+            ));
+            product.setDescription(faker.lorem().paragraph());
+            productRepository.save(product);
+        }
+
+        System.out.println("Generated 50 fake customers");
     }
 }

@@ -37,6 +37,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
 
     @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        return request.getMethod().equals("GET") && (
+                request.getRequestURI().startsWith("/api/category") ||
+                        request.getRequestURI().startsWith("/api/product") ||
+                        request.getRequestURI().startsWith("/auth") ||
+                        request.getRequestURI().startsWith("/oauth2") ||
+                        request.getRequestURI().startsWith("/login")
+        );
+    }
+
+    @Override
     protected void doFilterInternal(
             @NonNull HttpServletRequest request,
             @NonNull HttpServletResponse response,

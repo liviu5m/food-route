@@ -1,10 +1,7 @@
 package com.foodroute.foodroute.service;
 
-import com.foodroute.foodroute.model.Category;
 import com.foodroute.foodroute.model.Product;
-import com.foodroute.foodroute.repository.CategoryRepository;
 import com.foodroute.foodroute.repository.ProductRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,9 +23,21 @@ public class ProductService {
         return productRepositor.findById(id);
     }
 
-    public Page<Product> getProducts(int page, int size) {
+    public Page<Product> getProducts(int page, int size, Double min, Double max, String search, Long categoryId, String sortingType) {
         Pageable pageable = PageRequest.of(page, size);
-        return productRepositor.findAll(pageable);
+        switch (sortingType) {
+            case "latest":
+                return productRepositor.findAllByLatestFilter(min,max,search, categoryId, pageable);
+            case "rating":
+                return productRepositor.findAllByDefaultFilter(min,max,search, categoryId, pageable);
+            case "low":
+                return productRepositor.findAllByPriceLow(min,max,search, categoryId, pageable);
+            case "high":
+                return productRepositor.findAllByPriceHigh(min,max,search, categoryId, pageable);
+            default:
+                return productRepositor.findAllByDefaultFilter(min,max,search, categoryId, pageable);
+        }
+
     }
 
     public List<Product> getProducts() {

@@ -5,10 +5,12 @@ import { toast, ToastContainer } from "react-toastify";
 import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useAppContext } from "../../../libs/AppContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const Login = () => {
   const navigate = useNavigate();
-  const {getUser} = useAppContext();
+  const { getUser } = useAppContext();
 
   const login = (e: React.FormEvent<HTMLFormElement>) => {
     let email = e.currentTarget.email.value;
@@ -51,7 +53,12 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center">
+    <div className="h-screen w-screen flex items-center justify-center bg-[#222831]">
+      <Link to="/" className="absolute top-5 left-5">
+        <h1 className="flex gap-3 items-center justify-center p-2">
+          <FontAwesomeIcon icon={faArrowLeft} /> <span>Back</span>
+        </h1>
+      </Link>
       <div className="w-[400px]">
         <h1 className="font-bold text-2xl text-center mb-10">Log In</h1>
         <form className="flex flex-col gap-5" onSubmit={(e) => login(e)}>

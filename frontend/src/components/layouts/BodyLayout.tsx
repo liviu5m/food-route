@@ -8,11 +8,9 @@ type LayoutProps = {
 
 const BodyLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex justify-center">
-      <div className="container">
-        <Header />
-        {children}
-      </div>
+    <div className="flex justify-center items-center flex-col text-[#1E1D23]">
+      <Header />
+      {children}
     </div>
   );
 };

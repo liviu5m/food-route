@@ -44,7 +44,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err);
         localStorage.removeItem("jwtToken");
         setLoading(false);
       });

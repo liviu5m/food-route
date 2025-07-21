@@ -25,8 +25,13 @@ public class ProductController {
 
     @GetMapping
     public Page<Product> getProductsPageable(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "10") int size) {
-        return productService.getProducts(page, size);
+                                             @RequestParam(defaultValue = "10") int size,
+                                             @RequestParam(defaultValue = "0") Double min,
+                                             @RequestParam(defaultValue = "10000") Double max,
+                                             @RequestParam(defaultValue = "") String search,
+                                             @RequestParam(defaultValue = "") Long categoryId,
+                                             @RequestParam(defaultValue = "default") String sortingType) {
+        return productService.getProducts(page, size, min,max, search, categoryId, sortingType);
     }
 
     @GetMapping("/all")

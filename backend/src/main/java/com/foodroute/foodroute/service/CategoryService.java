@@ -39,6 +39,7 @@ public class CategoryService {
     public Category updateCategory(Long id, Category updatedCategory) {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
         category.setName(updatedCategory.getName());
+        category.setImage(updatedCategory.getImage());
         return categoryRepository.save(category);
     }
 

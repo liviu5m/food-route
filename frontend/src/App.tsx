@@ -11,11 +11,12 @@ import Account from "./components/pages/Account";
 import { AppProvider } from "../libs/AppContext";
 import CategoryAdmin from "./components/pages/admin/CategoryAdmin";
 import ProductAdmin from "./components/pages/admin/ProductAdmin";
+import Products from "./components/pages/Products";
 
 function App() {
   return (
     <AppProvider>
-      <div className="bg-[#222831] min-h-screen text-[#EEEEEE]">
+      <div className="min-h-screen text-[#EEEEEE] overflow-x-hidden">
         <Routes>
           <Route
             path="/auth/*"
@@ -52,6 +53,7 @@ function App() {
             }
           />
           <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
         </Routes>
       </div>
     </AppProvider>

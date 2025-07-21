@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import CategoryModal from "../../elements/CategoryModal";
-import type { Category, Product } from "../../../../libs/Types";
+import type { Product } from "../../../../libs/Types";
 import axios from "axios";
 import Loader from "../../elements/Loader";
 import { toast, ToastContainer } from "react-toastify";
-import ProductModal from "../../elements/ProductModal";
+import ProductModal from "../../elements/admin/ProductModal";
 import Pagination from "../../elements/Pagination";
 
 const ProductAdmin = () => {

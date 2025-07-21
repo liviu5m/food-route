@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import CategoryModal from "../../elements/CategoryModal";
+import CategoryModal from "../../elements/admin/CategoryModal";
 import type { Category } from "../../../../libs/Types";
 import axios from "axios";
 import Loader from "../../elements/Loader";
@@ -86,6 +86,7 @@ const CategoryAdmin = () => {
               <tr className="bg-gradient-to-r from-blue-500 to-blue-400 text-white">
                 <th className="p-4">Id</th>
                 <th className="p-4">Name</th>
+                <th className="p-4">Image</th>
                 <th className="p-4">Actions</th>
               </tr>
             </thead>
@@ -98,6 +99,9 @@ const CategoryAdmin = () => {
                   >
                     <td className="p-4 font-semibold">{category.id}</td>
                     <td className="p-4 font-semibold">{category.name}</td>
+                    <td className="p-4 font-semibold">
+                      <img src={category.image} />
+                    </td>
                     <td className="p-4 font-semibold">
                       <button
                         className="px-4 py-2 rounded-md text-[#eee] bg-blue-400 mr-5 cursor-pointer"

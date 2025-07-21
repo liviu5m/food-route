@@ -36,10 +36,12 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.GET,
+                                "/api/category/**",
+                                "/api/product/**"
+                        ).permitAll()
                         .requestMatchers("/auth/**", "/oauth2/**", "/login/**")
                         .permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/category/*", "/product/*").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
