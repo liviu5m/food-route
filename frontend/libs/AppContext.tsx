@@ -48,7 +48,9 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         setLoading(false);
       });
   };
-  useEffect(() => getUser(), []);
+  useEffect(() => {
+    getUser();
+  }, []);
 
   return loading ? (
     <Loader />

@@ -4,7 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,7 +19,7 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-public class User implements UserDetails {
+public class User extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -33,17 +35,6 @@ public class User implements UserDetails {
     private String phoneNumber;
     private String role = "user";
     private String provider;
-    @Column(name = "created_at", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
-
-    @Column(name = "updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
-
-    @OneToOne(optional = false)
-    @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
-    private Cart cart;
 
     private boolean enabled;
     @Column(name = "verification_code")
@@ -58,27 +49,6 @@ public class User implements UserDetails {
         this.password = password;
         this.address = address;
         this.phoneNumber = phoneNumber;
-    }
-
-    public User(String fullName, String username, String email, String password, String address, String phoneNumber, Cart cart) {
-        this.fullName = fullName;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.cart = cart;
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = new Date();
     }
 
     public User() {

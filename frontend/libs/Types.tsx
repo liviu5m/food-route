@@ -7,13 +7,17 @@ export type User = {
   phoneNumber: string;
   role: string;
   provider: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type Category = {
   id: number;
   name: string;
   image: string;
-}
+  createdAt: string;
+  updatedAt: string;
+};
 
 export type Product = {
   id: number;
@@ -22,4 +26,16 @@ export type Product = {
   price: number;
   image: string;
   category: Category;
-}
+  createdAt: string;
+  updatedAt: string;
+  reviews: Review[];
+};
+
+export type Review = {
+  id: number;
+  rating: number;
+  review: string;
+  user: User;
+  createdAt: string;
+  updatedAt: string;
+};

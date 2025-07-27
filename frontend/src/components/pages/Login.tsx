@@ -56,7 +56,8 @@ const Login = () => {
     <div className="h-screen w-screen flex items-center justify-center bg-[#222831]">
       <Link to="/" className="absolute top-5 left-5">
         <h1 className="flex gap-3 items-center justify-center p-2">
-          <FontAwesomeIcon icon={faArrowLeft} /> <span>Back</span>
+          <FontAwesomeIcon icon={faArrowLeft} /> 
+          <span>Back</span>
         </h1>
       </Link>
       <div className="w-[400px]">

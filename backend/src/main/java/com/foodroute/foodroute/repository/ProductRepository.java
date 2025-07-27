@@ -16,8 +16,7 @@ import org.springframework.stereotype.Repository;
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
 
     @Query("SELECT p FROM Product p WHERE " +
-            "(:min IS NULL OR p.price >= :min) AND " +
-            "(:max IS NULL OR p.price <= :max) AND " +
+            "p.price >= :min AND p.price <= :max AND" +
             "(:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%'))) AND " +
             "(:categoryId = -1 OR p.category.id = :categoryId)")
     Page<Product> findAllByFilters(
@@ -59,4 +58,21 @@ public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpec
                         pageable.getPageSize(),
                         Sort.by("price").descending()));
     }
+    @Query("""
+    SELECT p
+    FROM Product p
+    LEFT JOIN p.reviews r
+    WHERE p.price BETWEEN :min AND :max
+      AND (:search IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :search, '%')))
+      AND (:categoryId = -1 OR p.category.id = :categoryId)
+    GROUP BY p.id
+    ORDER BY COALESCE(AVG(r.rating), 0) DESC
+""")
+    Page<Product> findAllByFiltersOrderByAvgRatingDesc(
+            @Param("min") Double minPrice,
+            @Param("max") Double maxPrice,
+            @Param("search") String search,
+            @Param("categoryId") Long categoryId,
+            Pageable pageable
+    );
 }

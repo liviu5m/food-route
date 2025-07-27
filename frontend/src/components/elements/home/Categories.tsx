@@ -31,8 +31,16 @@ const Categories = () => {
           <div className="flex items-center justify-center gap-8">
             {categories.map((category, i) => {
               return (
-                <Link to="/" key={i} className="flex flex-col items-center justify-center gap-5 hover:text-[#FFCC00] cursor-pointer p-1 hover:scale-110">
-                  <img src={category.image} alt="" />
+                <Link
+                  to={"/products?categoryId=" + category.id}
+                  key={i}
+                  className="flex flex-col items-center justify-center gap-5 hover:text-[#FFCC00] cursor-pointer p-1 hover:scale-110"
+                >
+                  <img
+                    className="w-30 aspect-square rounded-lg object-cover"
+                    src={category.image}
+                    alt=""
+                  />
                   <span className="font-semibold">{category.name}</span>
                 </Link>
               );

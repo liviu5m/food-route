@@ -29,7 +29,7 @@ public class ProductService {
             case "latest":
                 return productRepositor.findAllByLatestFilter(min,max,search, categoryId, pageable);
             case "rating":
-                return productRepositor.findAllByDefaultFilter(min,max,search, categoryId, pageable);
+                return productRepositor.findAllByFiltersOrderByAvgRatingDesc(min,max,search, categoryId, pageable);
             case "low":
                 return productRepositor.findAllByPriceLow(min,max,search, categoryId, pageable);
             case "high":

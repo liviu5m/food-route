@@ -29,7 +29,7 @@ public class ProductController {
                                              @RequestParam(defaultValue = "0") Double min,
                                              @RequestParam(defaultValue = "10000") Double max,
                                              @RequestParam(defaultValue = "") String search,
-                                             @RequestParam(defaultValue = "") Long categoryId,
+                                             @RequestParam(defaultValue = "-1") Long categoryId,
                                              @RequestParam(defaultValue = "default") String sortingType) {
         return productService.getProducts(page, size, min,max, search, categoryId, sortingType);
     }
@@ -41,7 +41,8 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public Optional<Product> getProducts(@PathVariable Long id) {
-        return productService.getProductById(id);
+        System.out.println(productService.getProductById(id).get());
+    return productService.getProductById(id);
     }
 
     @PostMapping

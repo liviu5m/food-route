@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
+import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 
 const ProductsFilter = ({
   prices,
@@ -31,14 +32,18 @@ const ProductsFilter = ({
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(0);
+  const [hoverId, setHoverId] = useState<number | null>(null);
 
   useEffect(() => {
     setLoading(true);
     axios.get(import.meta.env.VITE_API_URL + "/api/product/all").then((res) => {
       let maxVal = 0;
+      console.log(res.data);
+      
       res.data.map((product: Product) => {
         maxVal = Math.max(maxVal, product.price);
       });
+      
       setMaxPrice(Math.round(maxVal));
       setPrices([0, Math.round(maxVal)]);
     });
@@ -65,7 +70,7 @@ const ProductsFilter = ({
             return (
               <div
                 key={i}
-                className={`hover:text-[#FFCC00] ${
+                className={`hover:text-[#FFCC00]  cursor-pointer ${
                   selectedCategory == category.id && "text-[#FFCC00]"
                 }`}
                 onClick={() =>
@@ -73,9 +78,17 @@ const ProductsFilter = ({
                     selectedCategory == category.id ? -1 : category.id
                   )
                 }
+                onMouseOver={() => setHoverId(category.id)}
+                onMouseOut={() => setHoverId(null)}
               >
-                <span className="py-2 cursor-pointer ">{category.name}</span>
-                <div className="border-t border-dotted border-gray-400 h-px"></div>
+                <span className="py-2">{category.name}</span>
+                <div
+                  className={`border-t border-dotted pb-2 ${
+                    hoverId == category.id || selectedCategory == category.id
+                      ? "border-[#FFCC00]"
+                      : "border-gray-400"
+                  } h-px`}
+                ></div>
               </div>
             );
           })}
@@ -90,7 +103,7 @@ const ProductsFilter = ({
           onChange={(e) => setSearch(e.target.value)}
         />
         <FontAwesomeIcon
-          icon={faSearch}
+          icon={faSearch as IconDefinition}
           className="absolute top-1/2 right-14 -translate-y-1/2"
         />
       </div>

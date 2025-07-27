@@ -12,6 +12,7 @@ import { AppProvider } from "../libs/AppContext";
 import CategoryAdmin from "./components/pages/admin/CategoryAdmin";
 import ProductAdmin from "./components/pages/admin/ProductAdmin";
 import Products from "./components/pages/Products";
+import Product from "./components/pages/Product";
 
 function App() {
   return (
@@ -54,6 +55,7 @@ function App() {
           />
           <Route path="/" element={<Home />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/product/:id" element={<Product />} />
         </Routes>
       </div>
     </AppProvider>

@@ -5,6 +5,7 @@ interface PaginationProps {
   totalPages: number;
   onPageChange: (page: number) => void;
   className?: string;
+  client?: boolean;
 }
 
 const Pagination: React.FC<PaginationProps> = ({
@@ -12,8 +13,11 @@ const Pagination: React.FC<PaginationProps> = ({
   totalPages,
   onPageChange,
   className = "",
+  client = false,
 }) => {
   if (totalPages <= 1) return null;
+
+  const color = client ? "#FFCC00" : "#00ADB5";
 
   const handlePrevious = () => {
     window.scrollTo({
@@ -103,10 +107,10 @@ const Pagination: React.FC<PaginationProps> = ({
               </span>
             ) : (
               <button
-                className={`flex items-center justify-center min-w-[2.5rem] h-10 px-2 border rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[#00ADB5] focus:border-[#00ADB5] cursor-pointer ${
+                className={`flex items-center justify-center min-w-[2.5rem] h-10 px-2 border rounded-md transition-colors focus:outline-none focus:ring-2 focus:ring-[${color}] focus:border-[${color}] cursor-pointer ${
                   page === currentPage
-                    ? "bg-[#00ADB5] border-[#00ADB5] text-white"
-                    : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
+                    ? `bg-[${color}] border-[${color}] text-white`
+                    : `border-gray-300 bg-white text-gray-700 hover:bg-gray-100`
                 }`}
                 onClick={() => handlePageClick(page)}
                 aria-current={page === currentPage ? "page" : undefined}

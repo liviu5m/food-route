@@ -49,8 +49,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         if(optionalUser.isPresent()) {
             user = optionalUser.get();
         }else {
-            Cart cart = new Cart();
-            cartRepository.save(cart);
             user = new User();
             user.setEmail(email);
             user.setUsername(email);
@@ -58,8 +56,9 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
             user.setFullName((String) attributes.get("name"));
             user.setProvider(token.getAuthorizedClientRegistrationId());
             user.setEnabled(true);
-            user.setCart(cart);
-            userRepository.save(user);
+            User savedUser = userRepository.save(user);
+            Cart cart = new Cart(savedUser);
+            cartRepository.save(cart);
         }
         try {
             authenticationManagerProvider.getObject()

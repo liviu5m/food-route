@@ -22,12 +22,10 @@ const ProductsContainer = ({
 }) => {
   const [products, setProducts] = useState<ProductType[]>();
   const [loading, setLoading] = useState(true);
-  const [displayType, setDisplayType] = useState("grid");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const pageSize = 12;
-  console.log(selectedCategory);
 
   useEffect(() => {
     setLoading(true);
@@ -44,7 +42,6 @@ const ProductsContainer = ({
         },
       })
       .then((res) => {
-        console.log(res.data);
         setTotalElements(res.data.totalElements);
         setProducts(res.data.content);
         setTotalPages(res.data.totalPages);
@@ -74,7 +71,7 @@ const ProductsContainer = ({
               <select
                 value={sortingType}
                 onChange={(e) => {
-                  setSortingType(e.target.value)
+                  setSortingType(e.target.value);
                   setCurrentPage(0);
                 }}
                 className="px-5 py-3 rounded-lg bg-[#FBF7E8] outline-none text-sm"
@@ -87,23 +84,16 @@ const ProductsContainer = ({
               </select>
             </div>
           </div>
-          <div
-            className={`w-full h-full ${
-              displayType == "grid" &&
-              products &&
-              "grid grid-cols-4 mt-5 gap-10"
-            }`}
-          >
+          <div className={`w-full h-full grid grid-cols-4 mt-5 gap-10`}>
             {products?.map((product, i) => {
-              return (
-                <Product key={i} product={product} displayType={displayType} />
-              );
+              return <Product key={i} product={product} />;
             })}
           </div>
           <Pagination
             currentPage={currentPage}
             totalPages={totalPages}
             onPageChange={setCurrentPage}
+            client={true}
           />
         </div>
       )}

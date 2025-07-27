@@ -42,14 +42,16 @@ public class AuthenticationService {
     public User signup(RegisterUserDto input) {
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
         if(optionalUser.isPresent()) throw new RuntimeException("Email already in use");
-        Cart cart = new Cart();
-        cartRepository.save(cart);
-        User user = new User(input.getFullName(),input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()), input.getAddress(), input.getPhoneNumber(), cart);
+
+        User user = new User(input.getFullName(),input.getUsername(), input.getEmail(), passwordEncoder.encode(input.getPassword()), input.getAddress(), input.getPhoneNumber());
         user.setVerificationCode(generateVerificationCode());
         user.setVerificationCodeExpiresAt(LocalDateTime.now().plusMinutes(5));
         user.setEnabled(false);
         sendVerificationEmail(user);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        Cart cart = new Cart(savedUser);
+        cartRepository.save(cart);
+        return savedUser;
     }
 
 

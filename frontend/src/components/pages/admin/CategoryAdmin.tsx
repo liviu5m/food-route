@@ -100,7 +100,7 @@ const CategoryAdmin = () => {
                     <td className="p-4 font-semibold">{category.id}</td>
                     <td className="p-4 font-semibold">{category.name}</td>
                     <td className="p-4 font-semibold">
-                      <img src={category.image} />
+                      <img className="w-30" src={category.image} />
                     </td>
                     <td className="p-4 font-semibold">
                       <button

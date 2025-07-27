@@ -4,6 +4,7 @@ import com.foodroute.foodroute.dto.LoginUserDto;
 import com.foodroute.foodroute.dto.RegisterUserDto;
 import com.foodroute.foodroute.dto.VerifyUserDto;
 import com.foodroute.foodroute.model.User;
+import com.foodroute.foodroute.repository.CartRepository;
 import com.foodroute.foodroute.repository.UserRepository;
 import com.foodroute.foodroute.responses.LoginResponse;
 import com.foodroute.foodroute.service.AuthenticationService;
