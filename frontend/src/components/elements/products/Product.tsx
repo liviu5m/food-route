@@ -4,10 +4,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBasketShopping, faStar } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { useAppContext } from "../../../../libs/AppContext";
+import SmallLoader from "../SmallLoader";
+import CartLoader from "../CartLoader";
 
 const Product = ({ product }: { product: Product }) => {
   const [hover, setHover] = useState(false);
   const [rating, setRating] = useState<React.ReactElement[]>();
+  const { managedCart, user, cartLoading } = useAppContext();
 
   const formatDesc = (desc: string) => {
     let res = desc;
@@ -33,12 +37,12 @@ const Product = ({ product }: { product: Product }) => {
 
         for (let i = 1; i <= avg; i++) {
           stars.push(
-            <FontAwesomeIcon icon={faStar} className={"text-[#FFCC00]"} />
+            <FontAwesomeIcon keyPoints={i} key={i} icon={faStar} className={"text-[#FFCC00]"} />
           );
         }
         for (let i = avg + 1; i <= 5; i++) {
           stars.push(
-            <FontAwesomeIcon icon={faStar} className={"text-[#DFDFDF]"} />
+            <FontAwesomeIcon key={i} icon={faStar} className={"text-[#DFDFDF]"} />
           );
         }
         setRating(stars);
@@ -86,8 +90,26 @@ const Product = ({ product }: { product: Product }) => {
         </div>
         <div className="flex items-center justify-between w-full p-5">
           <h2 className="text-[#FFCC00] font-bold text-xl">${product.price}</h2>
-          <button className="px-4 text-lg py-3 rounded-2xl bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] cursor-pointer">
-            <FontAwesomeIcon icon={faBasketShopping} />
+          <button
+            className={`w-14 h-14 text-lg rounded-2xl flex items-center justify-center p-2 cursor-pointer ${
+              user?.cart.cartProducts.find(
+                (prod) => prod.product.id == product.id
+              )
+                ? "bg-[#1E1D23] text-[#FFCC00]"
+                : "bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] text-[#1E1D23]"
+            }`}
+            onClick={() => {
+              let el = user?.cart.cartProducts.find(
+                (prod) => prod.product.id == product.id
+              );
+              managedCart(product.id, el ? String(el?.id) : "add", true, 1);
+            }}
+          >
+            {cartLoading == product.id ? (
+              <CartLoader />
+            ) : (
+              <FontAwesomeIcon icon={faBasketShopping} />
+            )}
           </button>
         </div>
       </div>

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +36,31 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> AuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User currentUser = (User) authentication.getPrincipal();
-        System.out.println(currentUser);
-        return ResponseEntity.ok(currentUser);
+    public ResponseEntity<?> getAuthenticatedUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if (authentication.getPrincipal() instanceof DefaultOidcUser) {
+                // Handle OIDC/OAuth2 user
+                DefaultOidcUser oidcUser = (DefaultOidcUser) authentication.getPrincipal();
+                String email = oidcUser.getEmail(); // Standard claim
+                User user = userRepository.findByEmail(email)
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+                return ResponseEntity.ok(user);
+
+            } else if (authentication.getPrincipal() instanceof User) {
+                // Handle regular form login user
+                User currentUser = (User) authentication.getPrincipal();
+                User user = userRepository.findByUsername(currentUser.getUsername())
+                        .orElseThrow(() -> new RuntimeException("User not found"));
+                return ResponseEntity.ok(user);
+
+            } else {
+                return ResponseEntity.badRequest().body("Unsupported authentication type");
+            }
+        } catch(Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping

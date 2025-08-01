@@ -12,6 +12,7 @@ const isAuthenticated = (): boolean => {
 
 const AuthRequiredRoute: React.FC<AuthRequiredRouteProps> = ({ children }) => {
   const location = useLocation();
+  // console.log(location.pathname);
   
   if (!isAuthenticated() && location.pathname.startsWith("/account")) {
     return <Navigate to="/" replace />;

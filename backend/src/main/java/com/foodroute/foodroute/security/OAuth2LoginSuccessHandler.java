@@ -69,6 +69,7 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         }
         String jwtToken = jwtService.generateToken(user);
         Cookie jwtCookie = new Cookie("jwt", jwtToken);
+        System.out.println();
         jwtCookie.setHttpOnly(false);
         jwtCookie.setSecure(false);
         jwtCookie.setPath("/");

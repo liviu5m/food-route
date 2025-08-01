@@ -9,6 +9,7 @@ export type User = {
   provider: string;
   createdAt: string;
   updatedAt: string;
+  cart: Cart;
 };
 
 export type Category = {
@@ -36,6 +37,53 @@ export type Review = {
   rating: number;
   review: string;
   user: User;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Cart = {
+  id: number;
+  user: User;
+  createdAt: string;
+  updatedAt: string;
+  cartProducts: CartProduct[];
+};
+
+export type CartProduct = {
+  id: number;
+  product: Product;
+  quantity: number;
+  cart: Cart;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type PaymentResult = {
+  paymentIntent?: {
+    id: string;
+    status: string;
+  };
+  error?: {
+    message: string;
+  };
+};
+
+export type Order = {
+  id: number;
+  user: User;
+  status: string;
+  shippingAddress: string;
+  phoneNumber: string;
+  orderItemList: OrderItem[];
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type OrderItem = {
+  id: number;
+  order: Order;
+  product: Product;
+  quantity: number;
   createdAt: string;
   updatedAt: string;
 };

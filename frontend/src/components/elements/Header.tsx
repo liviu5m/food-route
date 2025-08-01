@@ -28,6 +28,9 @@ const Header = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
   }, []);
 
+  console.log(user);
+  
+
   return (
     <div className="relative z-50 w-full">
       <div
@@ -62,14 +65,14 @@ const Header = () => {
                   Products
                 </Link>
                 <Link
-                  to="/services"
+                  to="/orders"
                   className={`hover:text-[#FFCC00] font-semibold ${
-                    pathname == "/services"
+                    pathname == "/orders"
                       ? "text-[#FFCC00]"
                       : "text-[#1E1D23]"
                   }`}
                 >
-                  Services
+                  Orders
                 </Link>
                 <Link
                   to="/contact"
@@ -83,58 +86,69 @@ const Header = () => {
               <div className="flex items-center justify-center gap-10">
                 {user ? (
                   <div className="flex items-center justify-center gap-5">
-                    <Menu as="div" className="relative inline-block text-left">
-                      <div>
-                        <MenuButton className="inline-flex w-full justify-center gap-x-1.5 text-sm shadow-xs ring-gray-300 px-10 h-12 cursor-pointer outline-none bg-[#FFCC00] text-[#1E1D23] rounded-lg font-semibold hover:text-[#FFCC00] hover:bg-[#1E1D23] items-center gap-5">
-                          {user.username}
-                          <FontAwesomeIcon icon={faChevronDown} />
-                        </MenuButton>
-                      </div>
+                    <button
+                      className=" inline-flex w-full justify-center gap-x-1.5 text-sm shadow-xs ring-gray-300 px-16 h-12 cursor-pointer outline-none bg-[#FFCC00] text-[#1E1D23] rounded-lg font-semibold hover:text-[#FFCC00] hover:bg-[#1E1D23] items-center gap-5 border-none cursor-pointer"
+                      popoverTarget="popover-1"
+                      style={
+                        {
+                          anchorName: "--anchor-1",
+                        } as React.CSSProperties
+                      }
+                    >
+                      {user.username}
+                      <FontAwesomeIcon icon={faChevronDown} />
+                    </button>
 
-                      <MenuItems
-                        transition
-                        className="absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-                      >
-                        <div className="py-1">
-                          {user.role == "admin" && (
-                            <MenuItem>
-                              <a
-                                href="/admin/dashboard"
-                                className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                              >
-                                Admin Dashboard
-                              </a>
-                            </MenuItem>
-                          )}
-                          <MenuItem>
-                            <a
-                              href="/account"
-                              className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                            >
-                              Account Data
-                            </a>
-                          </MenuItem>
-                          <MenuItem>
-                            <button
-                              onClick={() => {
-                                localStorage.removeItem("jwtToken");
-                                setUser(null);
-                              }}
-                              className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
-                            >
-                              Log out
-                            </button>
-                          </MenuItem>
-                        </div>
-                      </MenuItems>
-                    </Menu>
+                    <ul
+                      className="dropdown menu w-52 rounded-box bg-white shadow-sm"
+                      popover="auto"
+                      id="popover-1"
+                      style={
+                        {
+                          positionAnchor: "--anchor-1",
+                        } as React.CSSProperties
+                      }
+                    >
+                      <li>
+                        <Link
+                          to="/admin/dashboard"
+                          className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                        >
+                          Admin Dashboard
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          to="/account"
+                          className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                        >
+                          Account Data
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          onClick={() => {
+                            localStorage.removeItem("jwtToken");
+                            setUser(null);
+                          }}
+                          className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
+                        >
+                          Log out
+                        </button>
+                      </li>
+                    </ul>
                     <div className="flex items-center justify-center gap-5">
-                      <button
-                        className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
-                        onClick={() => setIsCartOpened(!isCartOpened)}
-                      >
-                        <FontAwesomeIcon icon={faShoppingCart} />
-                      </button>
+                      <div className="relative">
+                        <button
+                          className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
+                          onClick={() => setIsCartOpened(!isCartOpened)}
+                        >
+                          <FontAwesomeIcon icon={faShoppingCart} />
+                        </button>
+                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                          {user.cart.cartProducts.length}
+                        </span>
+                      </div>
                       <button className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer">
                         <FontAwesomeIcon icon={faHeart} />
                       </button>

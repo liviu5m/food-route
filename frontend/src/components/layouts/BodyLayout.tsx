@@ -9,7 +9,7 @@ type LayoutProps = {
 
 const BodyLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex justify-center items-center flex-col text-[#1E1D23]">
+    <div className="flex justify-center items-center flex-col text-[#1E1D23] bg-white">
       <Header />
       {children}
       <Footer />

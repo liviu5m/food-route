@@ -13,52 +13,78 @@ import CategoryAdmin from "./components/pages/admin/CategoryAdmin";
 import ProductAdmin from "./components/pages/admin/ProductAdmin";
 import Products from "./components/pages/Products";
 import Product from "./components/pages/Product";
+import Cart from "./components/pages/Cart";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import FailedPayment from "./components/pages/FailedPayment";
+import SuccessPayment from "./components/pages/SuccessPayment";
+import SessionRequiredRoute from "./components/middleware/SessionRequiredRoute";
+import Orders from "./components/pages/Orders";
+
+const stripePromise = loadStripe(
+  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || ""
+);
 
 function App() {
   return (
-    <AppProvider>
-      <div className="min-h-screen text-[#EEEEEE] overflow-x-hidden">
-        <Routes>
-          <Route
-            path="/auth/*"
-            element={
-              <AuthRouteGuard>
-                <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/signup" element={<Signup />} />
-                  <Route path="/verify" element={<Verify />} />
-                </Routes>
-              </AuthRouteGuard>
-            }
-          />
-          <Route
-            path="/admin/*"
-            element={
-              <AdminRouteGuard>
-                <Routes>
-                  <Route path="/dashboard" element={<AdminDashboard />} />
-                  <Route path="/category" element={<CategoryAdmin />} />
-                  <Route path="/product" element={<ProductAdmin />} />
-                </Routes>
-              </AdminRouteGuard>
-            }
-          />
-          <Route
-            path="/*"
-            element={
-              <AuthRequiredRoute>
-                <Routes>
-                  <Route path="/account" element={<Account />} />
-                </Routes>
-              </AuthRequiredRoute>
-            }
-          />
-          <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/:id" element={<Product />} />
-        </Routes>
-      </div>
-    </AppProvider>
+    <Elements stripe={stripePromise}>
+      <AppProvider>
+        <div className="min-h-screen text-[#EEEEEE] overflow-x-hidden bg-[#222831]">
+          <Routes>
+            <Route
+              path="/auth/*"
+              element={
+                <AuthRouteGuard>
+                  <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/signup" element={<Signup />} />
+                    <Route path="/verify" element={<Verify />} />
+                  </Routes>
+                </AuthRouteGuard>
+              }
+            />
+            <Route
+              path="/admin/*"
+              element={
+                <AdminRouteGuard>
+                  <Routes>
+                    <Route path="/dashboard" element={<AdminDashboard />} />
+                    <Route path="/category" element={<CategoryAdmin />} />
+                    <Route path="/product" element={<ProductAdmin />} />
+                  </Routes>
+                </AdminRouteGuard>
+              }
+            />
+            <Route
+              path="/*"
+              element={
+                <AuthRequiredRoute>
+                  <Routes>
+                    <Route path="/account" element={<Account />} />
+                  </Routes>
+                </AuthRequiredRoute>
+              }
+            />
+            <Route
+              path="/session/*"
+              element={
+                <SessionRequiredRoute>
+                  <Routes>
+                    <Route path="/success" element={<SuccessPayment />} />
+                    <Route path="/cancel" element={<FailedPayment />} />
+                  </Routes>
+                </SessionRequiredRoute>
+              }
+            />
+            <Route path="/" element={<Home />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<Product />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/orders" element={<Orders />} />
+          </Routes>
+        </div>
+      </AppProvider>
+    </Elements>
   );
 }
 

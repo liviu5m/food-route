@@ -15,6 +15,8 @@ import {
 import Reviews from "../elements/products/Reviews";
 import RelatedProducts from "../elements/products/RelatedProducts";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { useAppContext } from "../../../libs/AppContext";
+import CartLoader from "../elements/CartLoader";
 
 const Product = () => {
   const { id } = useParams();
@@ -24,6 +26,7 @@ const Product = () => {
   const [totalReviews, setTotalReviews] = useState(0);
   const [rating, setRating] = useState(0);
   const [stars, setStars] = useState<React.ReactElement[]>([]);
+  const { user, managedCart, cartLoading } = useAppContext();
 
   useEffect(() => {
     setLoading(true);
@@ -98,7 +101,6 @@ const Product = () => {
                   <img
                     src={product.image}
                     className="aspect-square object-cover w-3/4 rounded-xl"
-                    alt=""
                   />
                 </div>
               </div>
@@ -134,11 +136,36 @@ const Product = () => {
                     </button>
                   </div>
                   <div className="flex items-center justify-center gap-5">
-                    <button className="bg-[#FFCC00] px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer hover:bg-[#1E1D23] hover:text-[#FFCC00]">
-                      <FontAwesomeIcon
-                        icon={faBasketShopping as IconDefinition}
-                      />
-                      Add to Cart
+                    <button
+                      className={`px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer ${
+                        user?.cart.cartProducts.find(
+                          (prod) => prod.product.id == product.id
+                        )
+                          ? "bg-[#1E1D23] text-[#FFCC00]"
+                          : "bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] text-[#1E1D23]"
+                      }`}
+                      onClick={() => {
+                        let el = user?.cart.cartProducts.find(
+                          (prod) => prod.product.id == product.id
+                        );
+                        managedCart(
+                          product.id,
+                          el ? String(el.id) : "add",
+                          true,
+                          quantity
+                        );
+                      }}
+                    >
+                      {cartLoading == product.id ? (
+                        <CartLoader />
+                      ) : (
+                        <FontAwesomeIcon icon={faBasketShopping} />
+                      )}
+                      {user?.cart.cartProducts.find(
+                        (prod) => prod.product.id == product.id
+                      )
+                        ? "In Cart"
+                        : "Add to Cart"}
                     </button>
                     <button className="w-14 h-14 flex items-center justify-center text-[#FF0000] text-lg rounded-lg bg-[#F7F4EF] cursor-pointer hover:bg-[#FF0000] hover:text-[#F7F4EF]">
                       <FontAwesomeIcon icon={faHeart as IconDefinition} />

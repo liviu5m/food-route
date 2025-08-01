@@ -1,5 +1,6 @@
 package com.foodroute.foodroute.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +42,10 @@ public class User extends BaseEntity implements UserDetails {
     private String verificationCode;
     @Column(name = "verification_expiration")
     private LocalDateTime verificationCodeExpiresAt;
+
+    @OneToOne(mappedBy = "user")
+    @JsonManagedReference
+    private Cart cart;
 
     public User(String fullName, String username, String email, String password, String address, String phoneNumber) {
         this.fullName = fullName;

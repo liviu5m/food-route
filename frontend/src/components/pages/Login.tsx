@@ -21,7 +21,7 @@ const Login = () => {
         password: e.currentTarget.password.value,
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res.data.token);
         localStorage.setItem("jwtToken", res.data.token);
         getUser();
         navigate("/");

@@ -85,7 +85,7 @@ const Reviews = ({
           setEditReview(null);
         })
         .catch((err) => {
-          console.log(err);
+        console.log(err);
         });
     } else {
       axios
@@ -100,6 +100,8 @@ const Reviews = ({
           }
         )
         .then((res) => {
+          console.log(res.data);
+
           setRating(
             Math.round(
               (rating * totalReviews + res.data.rating) / (totalReviews + 1)
