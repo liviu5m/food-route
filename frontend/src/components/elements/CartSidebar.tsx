@@ -12,7 +12,7 @@ const CartSidebar = ({
   setIsCartOpened: (isOpen: boolean) => void;
   isCartOpened: boolean;
 }) => {
-  const { user } = useAppContext();
+  const { user, clearCart } = useAppContext();
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
@@ -79,13 +79,21 @@ const CartSidebar = ({
             </div>
           </div>
           {user?.cart.cartProducts.length != 0 && (
-            <Link
-              onClick={() => setIsCartOpened(false)}
-              to={"/cart"}
-              className="w-full p-3 text-center text-[#FFCC00] bg-[#1E1D23] rounded-lg hover:scale-105 hover:shadow-md hover:shadow-[#FFCC00] cursor-pointer"
-            >
-              {"Checkout - $" + totalPrice.toFixed(2)}
-            </Link>
+            <div className="flex items-center justify-between gap-5 w-full">
+              <Link
+                onClick={() => setIsCartOpened(false)}
+                to={"/cart"}
+                className="w-full p-3 text-center text-[#FFCC00] bg-[#1E1D23] rounded-lg hover:scale-105 hover:shadow-md hover:shadow-[#FFCC00] cursor-pointer"
+              >
+                {"Checkout - $" + totalPrice.toFixed(2)}
+              </Link>
+              <button
+                className="w-full p-3 text-center text-[#FFCC00] bg-[#1E1D23] rounded-lg hover:scale-105 hover:shadow-md hover:shadow-[#FFCC00] cursor-pointer"
+                onClick={() => clearCart()}
+              >
+                Clear
+              </button>
+            </div>
           )}
         </div>
       </div>

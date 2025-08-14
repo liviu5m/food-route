@@ -14,8 +14,6 @@ const ProductDisplay = () => {
   const categoryId = Number(searchParams.get("categoryId")) || -1;
 
   useEffect(() => {
-    console.log(categoryId);
-
     setSelectedCategory(categoryId ? categoryId : -1);
   }, [categoryId]);
 

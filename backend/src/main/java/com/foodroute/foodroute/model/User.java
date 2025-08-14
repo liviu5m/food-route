@@ -47,6 +47,10 @@ public class User extends BaseEntity implements UserDetails {
     @JsonManagedReference
     private Cart cart;
 
+    @OneToMany(mappedBy = "user")
+    @JsonManagedReference
+    private List<Favorite> favorites;
+
     public User(String fullName, String username, String email, String password, String address, String phoneNumber) {
         this.fullName = fullName;
         this.username = username;

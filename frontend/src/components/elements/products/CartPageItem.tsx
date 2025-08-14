@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import type { Product } from "../../../../libs/Types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
@@ -19,7 +19,10 @@ const CartPageItem = ({
   setTotalPrice: (price: number) => void;
 }) => {
   const [quantity, setQuantity] = React.useState(productQuantity);
-  const { user, managedCart } = useAppContext();
+  const { user, managedCart, manageFavorite } = useAppContext();
+  const [isFavorite, setIsFavorite] = useState(
+    user?.favorites.find((fav) => fav.product.id == product.id) ? true : false
+  );
 
   useEffect(() => {
     if (quantity != productQuantity) {
@@ -57,7 +60,7 @@ const CartPageItem = ({
         />
       </div>
       <div className="flex flex-col justify-between w-full">
-        <div className="h-full flex justify-between w-full items-start">
+        <div className="h-full grid grid-cols-4 justify-between w-full items-start">
           <div>
             <h2 className="text-xl font-semibold ">{product.name}</h2>
             <h4 className="text-[#808080]">{product.category.name}</h4>
@@ -96,7 +99,7 @@ const CartPageItem = ({
         <div className="flex gap-5 text-sm ml-5">
           <button
             className="text-[#808080] cursor-pointer hover:text-[#FFCC00]"
-            onClick={(e) => {
+            onClick={() => {
               setTotalPrice(totalPrice - product.price * quantity);
               managedCart(product.id, String(cartProductId), false);
             }}
@@ -105,11 +108,12 @@ const CartPageItem = ({
           </button>
           <button
             className="text-[#808080] cursor-pointer hover:text-[#FFCC00]"
-            onClick={(e) =>
-              managedCart(product.id, String(cartProductId), false)
-            }
+            onClick={() => {
+              setIsFavorite(!isFavorite);
+              manageFavorite(product, isFavorite ? "create" : "delete");
+            }}
           >
-            Add to Wishlist
+            {isFavorite ? "Add to " : "Remove from "} Wishlist
           </button>
         </div>
       </div>

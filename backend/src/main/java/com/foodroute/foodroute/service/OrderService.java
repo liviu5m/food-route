@@ -7,6 +7,7 @@ import com.foodroute.foodroute.model.User;
 import com.foodroute.foodroute.repository.OrderRepository;
 import com.foodroute.foodroute.repository.UserRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -28,10 +29,9 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public Page<Order> findAllByUserId(Long userId) {
-        Pageable pageable = new Pageable() {
-        }
-        return orderRepository.findAllByUserId(userId);
+    public Page<Order> findAllByUserId(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return orderRepository.findAllByUserId(userId, pageable);
     }
 
     public Optional<Order> findOrderById(Long id) {

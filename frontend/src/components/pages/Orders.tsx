@@ -8,21 +8,26 @@ import type { Order, OrderItem } from "../../../libs/Types";
 import { Link, useLocation } from "react-router-dom";
 import SingleOrder from "../elements/SingleOrder";
 import Loader from "../elements/Loader";
+import Pagination from "../elements/Pagination";
 
 const Orders = () => {
   const { user } = useAppContext();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [showOrderItems, setShowOrderItems] = useState<OrderItem[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
   const location = useLocation();
 
   useEffect(() => {
-    setLoading(true);
-    if (user)
+    if (user) {
+      setLoading(true);
       axios
         .get(import.meta.env.VITE_API_URL + "/api/order/user", {
           params: {
             userId: user.id,
+            page: currentPage,
+            size: 10,
           },
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwtToken"),
@@ -31,14 +36,16 @@ const Orders = () => {
         })
         .then((res) => {
           console.log(res.data);
-          setOrders(res.data);
+          setOrders(res.data.content);
+          setTotalPages(res.data.totalPages);
           setLoading(false);
         })
         .catch((err) => {
           console.log(err);
           setLoading(false);
         });
-  }, [user]);
+    }
+  }, [user, currentPage]);
 
   return loading ? (
     <Loader />
@@ -50,7 +57,7 @@ const Orders = () => {
           <h1 className="text-center font-bold">Orders</h1>
         </div>
         <div className="mb-10 min-h-[50vh]">
-          {orders.length == 0 ? (
+          {orders && orders.length == 0 ? (
             <div className="flex items-center justify-center flex-col gap-3 mt-20">
               <p className="text-lg font-bold">No Orders</p>
               <Link
@@ -84,10 +91,14 @@ const Orders = () => {
                         <td className="p-4 font-semibold">{order.id}</td>
                         <th className="p-4">{order.createdAt}</th>
                         <td className="p-4 font-semibold">
-                          {order.shippingAddress || <FontAwesomeIcon icon={faMinus} />}
+                          {order.shippingAddress || (
+                            <FontAwesomeIcon icon={faMinus} />
+                          )}
                         </td>
                         <td className="p-4 font-semibold">
-                          {order.phoneNumber || <FontAwesomeIcon icon={faMinus} />}
+                          {order.phoneNumber || (
+                            <FontAwesomeIcon icon={faMinus} />
+                          )}
                         </td>
                         <td
                           className="p-4 font-semibold"
@@ -206,11 +217,12 @@ const Orders = () => {
                   })}
                 </tbody>
               </table>
-              {/* <Pagination
+              <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
-              /> */}
+                client={true}
+              />
             </div>
           )}
         </div>

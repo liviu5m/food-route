@@ -26,7 +26,14 @@ const Product = () => {
   const [totalReviews, setTotalReviews] = useState(0);
   const [rating, setRating] = useState(0);
   const [stars, setStars] = useState<React.ReactElement[]>([]);
-  const { user, managedCart, cartLoading } = useAppContext();
+  const { user, managedCart, cartLoading, manageFavorite } = useAppContext();
+  const [isFavorite, setIsFavorite] = useState(
+    id
+      ? user?.favorites.find((fav) => fav.product.id == Number(id))
+        ? true
+        : false
+      : false
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -142,7 +149,7 @@ const Product = () => {
                           (prod) => prod.product.id == product.id
                         )
                           ? "bg-[#1E1D23] text-[#FFCC00]"
-                          : "bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] text-[#1E1D23]"
+                          : " "
                       }`}
                       onClick={() => {
                         let el = user?.cart.cartProducts.find(
@@ -167,7 +174,20 @@ const Product = () => {
                         ? "In Cart"
                         : "Add to Cart"}
                     </button>
-                    <button className="w-14 h-14 flex items-center justify-center text-[#FF0000] text-lg rounded-lg bg-[#F7F4EF] cursor-pointer hover:bg-[#FF0000] hover:text-[#F7F4EF]">
+                    <button
+                      className={`w-14 h-14 flex items-center justify-center   cursor-pointer text-lg rounded-lg ${
+                        isFavorite
+                          ? "bg-[#FF0000] text-[#F7F4EF] hover:bg-[#F7F4EF] hover:text-[#FF0000]"
+                          : "bg-[#F7F4EF] text-[#FF0000]  hover:bg-[#FF0000] hover:text-[#F7F4EF]"
+                      }`}
+                      onClick={() => {
+                        setIsFavorite(!isFavorite);
+                        manageFavorite(
+                          product,
+                          isFavorite ? "delete" : "create"
+                        );
+                      }}
+                    >
                       <FontAwesomeIcon icon={faHeart as IconDefinition} />
                     </button>
                   </div>

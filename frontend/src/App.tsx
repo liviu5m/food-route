@@ -14,20 +14,26 @@ import ProductAdmin from "./components/pages/admin/ProductAdmin";
 import Products from "./components/pages/Products";
 import Product from "./components/pages/Product";
 import Cart from "./components/pages/Cart";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import FailedPayment from "./components/pages/FailedPayment";
 import SuccessPayment from "./components/pages/SuccessPayment";
 import SessionRequiredRoute from "./components/middleware/SessionRequiredRoute";
 import Orders from "./components/pages/Orders";
+import Wishlist from "./components/pages/Wishlist";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Contact from "./components/pages/Contact";
 
-const stripePromise = loadStripe(
-  import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || ""
-);
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 60 * 1000,
+      retry: 2,
+    },
+  },
+});
 
 function App() {
   return (
-    <Elements stripe={stripePromise}>
+    <QueryClientProvider client={queryClient}>
       <AppProvider>
         <div className="min-h-screen text-[#EEEEEE] overflow-x-hidden bg-[#222831]">
           <Routes>
@@ -81,10 +87,12 @@ function App() {
             <Route path="/product/:id" element={<Product />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </div>
       </AppProvider>
-    </Elements>
+    </QueryClientProvider>
   );
 }
 

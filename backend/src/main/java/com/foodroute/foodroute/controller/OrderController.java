@@ -3,6 +3,7 @@ package com.foodroute.foodroute.controller;
 import com.foodroute.foodroute.dto.OrderDto;
 import com.foodroute.foodroute.model.Order;
 import com.foodroute.foodroute.service.OrderService;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,8 @@ public class OrderController {
     }
 
     @GetMapping("/user")
-    public List<Order> findAllByUserId(@RequestParam Long userId) {
-        return orderService.findAllByUserId(userId);
+    public Page<Order> findAllByUserId(@RequestParam Long userId, @RequestParam int page, @RequestParam int size) {
+        return orderService.findAllByUserId(userId, page, size);
     }
 
     @GetMapping("/{id}")

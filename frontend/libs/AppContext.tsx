@@ -3,7 +3,7 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import axios from "axios";
-import type { User } from "./Types";
+import type { Product, User } from "./Types";
 import Loader from "../src/components/elements/Loader";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -19,6 +19,8 @@ interface AppContextType {
     quantity?: number
   ) => void;
   cartLoading: number;
+  manageFavorite: (product: Product, type: string) => void;
+  clearCart: () => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -80,7 +82,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const addToCart = (productId: number, quantity: number) => {
     setCartLoading(productId);
     console.log(productId, user?.id);
-    if (!user) navigate("/login");
+    if (!user) navigate("/auth/login");
     axios
       .post(
         import.meta.env.VITE_API_URL + "/api/cart-product",
@@ -113,8 +115,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   };
 
   const removeFromCart = (productId: number, id: string, isToast: boolean) => {
-    setCartLoading(productId);
-    if (!user) navigate("/login");
+    if (!user) navigate("/auth/login");
     axios
       .delete(import.meta.env.VITE_API_URL + "/api/cart-product/" + id, {
         headers: {
@@ -142,11 +143,109 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       });
   };
 
+  const manageFavorite = (product: Product, type: string) => {
+    if (type == "create") createFavorite(product);
+    else deleteFavorite(product);
+  };
+
+  const createFavorite = (product: Product) => {
+    if (user)
+      setUser({
+        ...user,
+        favorites: [
+          ...user?.favorites,
+          {
+            id: Math.floor(Math.random() * 1000000),
+            product,
+            createdAt: "",
+            updatedAt: "",
+          },
+        ],
+      });
+    axios
+      .post(
+        import.meta.env.VITE_API_URL + "/api/favorite",
+        {
+          productId: product.id,
+          userId: user?.id,
+        },
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+          },
+          withCredentials: true,
+        }
+      )
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const deleteFavorite = (product: Product) => {
+    if (user)
+      setUser({
+        ...user,
+        favorites: user.favorites.filter((fav) => fav.product.id != product.id),
+      });
+    axios
+      .delete(import.meta.env.VITE_API_URL + "/api/favorite", {
+        params: {
+          productId: product.id,
+          userId: user?.id,
+        },
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const clearCart = () => {
+    axios
+      .delete(import.meta.env.VITE_API_URL + "/api/cart-product", {
+        params: {
+          cartId: user?.cart.id,
+        },
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+        },
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (user) {
+          let updatedCart = { ...user.cart, cartProducts: [] };
+          setUser({ ...user, cart: updatedCart });
+        }
+        toast("Cart Cleared");
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   return loading ? (
     <Loader />
   ) : (
     <AppContext.Provider
-      value={{ user, setUser, getUser, managedCart, cartLoading }}
+      value={{
+        user,
+        setUser,
+        getUser,
+        managedCart,
+        cartLoading,
+        manageFavorite,
+        clearCart,
+      }}
     >
       {children}
       <ToastContainer />

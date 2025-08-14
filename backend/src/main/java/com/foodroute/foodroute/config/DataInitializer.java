@@ -27,7 +27,6 @@ public class DataInitializer implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
 //        List<Category> categories = categoryRepository.findAll();
-//        productRepository.deleteAll();//        System.out.println(categories);
 //        for (int i = 0; i < 50; i++) {
 //            Product product = new Product();
 //            product.setName(faker.commerce().productName());

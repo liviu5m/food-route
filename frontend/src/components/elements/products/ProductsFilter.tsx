@@ -36,28 +36,26 @@ const ProductsFilter = ({
 
   useEffect(() => {
     setLoading(true);
-    axios.get(import.meta.env.VITE_API_URL + "/api/product/all").then((res) => {
-      let maxVal = 0;
-      console.log(res.data);
-      
-      res.data.map((product: Product) => {
-        maxVal = Math.max(maxVal, product.price);
-      });
-      
-      setMaxPrice(Math.round(maxVal));
-      setPrices([0, Math.round(maxVal)]);
-    });
     axios
       .get(import.meta.env.VITE_API_URL + "/api/category/all")
       .then((res) => {
         setCategories(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    axios
+      .get(import.meta.env.VITE_API_URL + "/api/product/max")
+      .then((res) => {
+        setMaxPrice(Math.round(res.data));
+        setPrices([0, Math.round(res.data)]);
         setLoading(false);
       })
       .catch((err) => {
         console.log(err);
         setLoading(false);
       });
-  }, []);
+  }, [maxPrice]);
 
   return loading ? (
     <Loader />
@@ -133,12 +131,6 @@ const ProductsFilter = ({
           Price: ${prices[0]} - ${prices[1]}
         </h3>
       </div>
-      <button
-        onClick={() => setSave(!save)}
-        className="bg-[#FFCC00] text-[#1E1D23] w-full py-4 rounded-lg cursor-pointer hover:scale-110 outline-none"
-      >
-        Save
-      </button>
     </div>
   );
 };

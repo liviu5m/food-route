@@ -39,6 +39,16 @@ public class ProductController {
         return productService.getProducts();
     }
 
+    @GetMapping("/max")
+    public Double getProductsMaxPrice() {
+        List<Product> products = productService.getProducts();
+        double max = products.get(0).getPrice();
+        for (Product p : products) {
+            max = Math.max(max, p.getPrice());
+        }
+        return max;
+    }
+
     @GetMapping("/{id}")
     public Optional<Product> getProducts(@PathVariable Long id) {
         System.out.println(productService.getProductById(id).get());

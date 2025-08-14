@@ -10,6 +10,7 @@ export type User = {
   createdAt: string;
   updatedAt: string;
   cart: Cart;
+  favorites: Favorite[];
 };
 
 export type Category = {
@@ -84,6 +85,13 @@ export type OrderItem = {
   order: Order;
   product: Product;
   quantity: number;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Favorite = {
+  id: number;
+  product: Product;
   createdAt: string;
   updatedAt: string;
 };

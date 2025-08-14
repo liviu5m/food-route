@@ -1,7 +1,11 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "../../../../libs/Types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBasketShopping, faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faBasketShopping,
+  faHeart,
+  faStar,
+} from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAppContext } from "../../../../libs/AppContext";
@@ -11,7 +15,13 @@ import CartLoader from "../CartLoader";
 const Product = ({ product }: { product: Product }) => {
   const [hover, setHover] = useState(false);
   const [rating, setRating] = useState<React.ReactElement[]>();
-  const { managedCart, user, cartLoading } = useAppContext();
+  const { managedCart, user, cartLoading, manageFavorite } = useAppContext();
+  const [isFavorite, setIsFavorite] = useState(
+    user?.favorites.find((fav) => fav.product.id == product.id) ? true : false
+  );
+  const [isInCart, setIsInCart] = useState(
+    user?.cart.cartProducts.find((prod) => prod.product.id == product.id) ? true : false
+  );
 
   const formatDesc = (desc: string) => {
     let res = desc;
@@ -37,12 +47,21 @@ const Product = ({ product }: { product: Product }) => {
 
         for (let i = 1; i <= avg; i++) {
           stars.push(
-            <FontAwesomeIcon keyPoints={i} key={i} icon={faStar} className={"text-[#FFCC00]"} />
+            <FontAwesomeIcon
+              keyPoints={i}
+              key={i}
+              icon={faStar}
+              className={"text-[#FFCC00]"}
+            />
           );
         }
         for (let i = avg + 1; i <= 5; i++) {
           stars.push(
-            <FontAwesomeIcon key={i} icon={faStar} className={"text-[#DFDFDF]"} />
+            <FontAwesomeIcon
+              key={i}
+              icon={faStar}
+              className={"text-[#DFDFDF]"}
+            />
           );
         }
         setRating(stars);
@@ -61,7 +80,7 @@ const Product = ({ product }: { product: Product }) => {
       <div className="flex flex-col justify-between h-full">
         <div>
           <div
-            className={`w-full aspect-square mb-3 rounded-xl ${
+            className={`relative w-full aspect-square mb-3 rounded-xl ${
               hover ? "bg-[#FFCC00]" : ""
             }`}
           >
@@ -74,6 +93,19 @@ const Product = ({ product }: { product: Product }) => {
                 alt=""
               />
             </Link>
+            <button
+              className={`absolute top-5 right-5 w-10 h-10 rounded-lg flex items-center justify-center p-2 cursor-pointer  ${
+                isFavorite
+                  ? "bg-[#1E1D23] text-[#FFCC00] hover:text-[#FB2C36] hover:bg-[#1E1D23]"
+                  : "bg-[#FFCC00] text-[#1E1D23] hover:text-[#FFCC00] hover:bg-[#1E1D23]"
+              }`}
+              onClick={() => {
+                setIsFavorite(!isFavorite);
+                manageFavorite(product, isFavorite ? "delete" : "create");
+              }}
+            >
+              <FontAwesomeIcon icon={faHeart} />
+            </button>
           </div>
           <div className="p-5 pt-0">
             <div className="mb-2">{rating}</div>
@@ -92,24 +124,19 @@ const Product = ({ product }: { product: Product }) => {
           <h2 className="text-[#FFCC00] font-bold text-xl">${product.price}</h2>
           <button
             className={`w-14 h-14 text-lg rounded-2xl flex items-center justify-center p-2 cursor-pointer ${
-              user?.cart.cartProducts.find(
-                (prod) => prod.product.id == product.id
-              )
+              isInCart
                 ? "bg-[#1E1D23] text-[#FFCC00]"
                 : "bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] text-[#1E1D23]"
             }`}
             onClick={() => {
+              setIsInCart(!isInCart);
               let el = user?.cart.cartProducts.find(
                 (prod) => prod.product.id == product.id
               );
               managedCart(product.id, el ? String(el?.id) : "add", true, 1);
             }}
           >
-            {cartLoading == product.id ? (
-              <CartLoader />
-            ) : (
-              <FontAwesomeIcon icon={faBasketShopping} />
-            )}
+            {<FontAwesomeIcon icon={faBasketShopping} />}
           </button>
         </div>
       </div>

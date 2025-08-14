@@ -7,6 +7,7 @@ import com.foodroute.foodroute.model.Product;
 import com.foodroute.foodroute.repository.CartProductRepository;
 import com.foodroute.foodroute.repository.CartRepository;
 import com.foodroute.foodroute.repository.ProductRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +29,7 @@ public class CartProductService {
         return cartProductRepository.findByCartId(id);
     }
 
+    @Transactional
     public CartProduct addCartProduct(CartProductDto cartProductDto) {
         Cart cart = cartRepository.findById(cartProductDto.getCartId()).orElseThrow(() -> new RuntimeException("Cart not found"));
         Product product = productRepository.findById(cartProductDto.getProductId()).orElseThrow(() -> new RuntimeException("Product not found"));
@@ -35,6 +37,7 @@ public class CartProductService {
         return cartProductRepository.save(cartProduct);
     }
 
+    @Transactional
     public CartProduct editCartProduct(CartProductDto cartProductDto, Long id) {
         CartProduct cartProduct = cartProductRepository.findById(id).orElseThrow(() -> new RuntimeException("Cart Product not found"));
         Cart cart = cartRepository.findById(cartProductDto.getCartId()).orElseThrow(() -> new RuntimeException("Cart not found"));
@@ -45,6 +48,7 @@ public class CartProductService {
         return cartProductRepository.save(cartProduct);
     }
 
+    @Transactional
     public void removeCartProduct(Long id) {
         cartProductRepository.deleteById(id);
     }

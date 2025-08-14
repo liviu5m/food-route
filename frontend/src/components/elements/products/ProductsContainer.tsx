@@ -4,12 +4,14 @@ import axios from "axios";
 import Product from "./Product";
 import Pagination from "../Pagination";
 import SmallLoader from "../SmallLoader";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { getProduct } from "../../../api/products";
+import Loader from "../Loader";
 
 const ProductsContainer = ({
   prices,
   selectedCategory,
   search,
-  save,
   sortingType,
   setSortingType,
 }: {
@@ -20,52 +22,41 @@ const ProductsContainer = ({
   sortingType: string;
   setSortingType: (e: string) => void;
 }) => {
-  const [products, setProducts] = useState<ProductType[]>();
-  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalElements, setTotalElements] = useState(0);
   const pageSize = 12;
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(import.meta.env.VITE_API_URL + `/api/product`, {
-        params: {
-          page: currentPage,
-          size: pageSize,
-          ...(prices[0] && { min: prices[0] }),
-          ...(prices[1] && { max: prices[1] }),
-          ...(selectedCategory && { categoryId: selectedCategory }),
-          ...(search && { search }),
-          ...(sortingType && { sortingType }),
-        },
-      })
-      .then((res) => {
-        setTotalElements(res.data.totalElements);
-        setProducts(res.data.content);
-        setTotalPages(res.data.totalPages);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, [currentPage, save, sortingType]);
+  const { data: productsData, isLoading } = useQuery({
+    queryKey: [
+      "products",
+      { currentPage, pageSize, prices, selectedCategory, search, sortingType },
+    ],
+    queryFn: () =>
+      getProduct(
+        currentPage,
+        pageSize,
+        prices,
+        selectedCategory,
+        search,
+        sortingType
+      ),
+    refetchOnWindowFocus: false,
+    staleTime: 0,
+    placeholderData: keepPreviousData,
+  });
+
+  if (isLoading) return <Loader />;
 
   return (
     <div className="w-4/5">
-      {loading ? (
-        <SmallLoader />
-      ) : (
+      {
         <div className="mb-10">
           <div className="flex items-center justify-between py-4">
             <h1 className="text-[#808080] text-sm">
               Showing {currentPage * pageSize + 1}-
-              {currentPage * pageSize + pageSize > totalElements
-                ? totalElements
+              {currentPage * pageSize + pageSize > productsData.totalElements
+                ? productsData.totalElements
                 : currentPage * pageSize + pageSize}{" "}
-              of {totalElements} results
+              of {productsData.totalElements} results
             </h1>
             <div>
               <select
@@ -85,18 +76,18 @@ const ProductsContainer = ({
             </div>
           </div>
           <div className={`w-full h-full grid grid-cols-4 mt-5 gap-10`}>
-            {products?.map((product, i) => {
+            {productsData.content.map((product: ProductType, i: number) => {
               return <Product key={i} product={product} />;
             })}
           </div>
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={productsData.totalPages}
             onPageChange={setCurrentPage}
             client={true}
           />
         </div>
-      )}
+      }
     </div>
   );
 };

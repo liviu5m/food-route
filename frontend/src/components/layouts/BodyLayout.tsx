@@ -11,6 +11,7 @@ const BodyLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex justify-center items-center flex-col text-[#1E1D23] bg-white">
       <Header />
+      <div className="h-24"></div>
       {children}
       <Footer />
     </div>
