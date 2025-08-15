@@ -42,21 +42,9 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setFrom(new InternetAddress(user.getEmail(), user.getFullName()));
 
-        // Set TO as admin email
         helper.setTo(adminEmail);
         helper.setSubject(subject);
         helper.setText(text, true);
-
-        // Important SMTP properties
-        Properties props = new Properties();
-        props.put("mail.smtp.allow8bitmime", "true");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.ssl.trust", "smtp.gmail.com");
-
-        // Required for Gmail to allow FROM override
-        props.put("mail.smtp.auth.login.disable", "true");
-        props.put("mail.smtp.auth.plain.disable", "true");
 
         emailSender.send(message);
     }

@@ -6,6 +6,7 @@ import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faArrowDown,
+  faBars,
   faChevronDown,
   faHeart,
   faShoppingCart,
@@ -14,18 +15,19 @@ import { useAppContext } from "../../../libs/AppContext";
 import CartSidebar from "./CartSidebar";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import HeaderSidebar from "./HeaderSidebar";
 
 const Header = () => {
   const { pathname } = useLocation();
 
   const { user, setUser } = useAppContext();
   const [isCartOpened, setIsCartOpened] = useState(false);
-  const [isFavoriteOpened, setIsFavoriteOpened] = useState(false);
+  const [isSidebarOpened, setIsSidebarOpened] = useState(false);
 
   return (
     <div className="relative z-50 w-full">
       <div
-        className={`w-full bg-white fixed top-0 left-0 right-0 shadow-md z-50 h-24 flex items-center justify-center`}
+        className={`w-full px-5 md:px-0 bg-white fixed top-0 left-0 right-0 shadow-md z-50 h-24 flex items-center justify-center`}
       >
         <div className="bg-white flex items-center justify-center w-full">
           <div className="container">
@@ -34,7 +36,7 @@ const Header = () => {
                 <img className="w-8" src="./imgs/logo.png" alt="" />
                 <h2 className="text-3xl font-bold text-[#FFCC00]">FoodRoute</h2>
               </Link>
-              <ul className="flex items-center justify-center gap-10">
+              <ul className="hidden xl:flex items-center justify-center gap-10">
                 <Link
                   to="/"
                   className={`hover:text-[#FFCC00] font-semibold  ${
@@ -74,7 +76,7 @@ const Header = () => {
                 {user ? (
                   <div className="flex items-center justify-center gap-5">
                     <button
-                      className=" inline-flex w-full justify-center gap-x-1.5 text-sm shadow-xs ring-gray-300 px-16 h-12 outline-none bg-[#FFCC00] text-[#1E1D23] rounded-lg font-semibold hover:text-[#FFCC00] hover:bg-[#1E1D23] items-center gap-5 border-none cursor-pointer"
+                      className="hidden xl:inline-flex w-full justify-center gap-x-1.5 text-sm shadow-xs ring-gray-300 px-5 md:px-16 h-12 outline-none bg-[#FFCC00] text-[#1E1D23] rounded-lg font-semibold hover:text-[#FFCC00] hover:bg-[#1E1D23] items-center gap-5 border-none cursor-pointer"
                       popoverTarget="popover-1"
                       style={
                         {
@@ -127,26 +129,32 @@ const Header = () => {
                     <div className="flex items-center justify-center gap-5">
                       <div className="relative">
                         <button
-                          className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
+                          className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg hidden xl:flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
                           onClick={() => setIsCartOpened(!isCartOpened)}
                         >
                           <FontAwesomeIcon icon={faShoppingCart} />
                         </button>
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        <span className="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 xl:flex items-center justify-center">
                           {user.cart.cartProducts.length}
                         </span>
                       </div>
                       <div className="relative">
                         <Link
                           to="/wishlist"
-                          className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
+                          className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg hidden xl:flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
                         >
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>
-                        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        <span className="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 xl:flex items-center justify-center">
                           {user.favorites.length}
                         </span>
                       </div>
+                      <button
+                        className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg xl:hidden flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
+                        onClick={() => setIsSidebarOpened(true)}
+                      >
+                        <FontAwesomeIcon icon={faBars} />
+                      </button>
                     </div>
                   </div>
                 ) : (
@@ -172,6 +180,10 @@ const Header = () => {
         <CartSidebar
           setIsCartOpened={setIsCartOpened}
           isCartOpened={isCartOpened}
+        />
+        <HeaderSidebar
+          isSidebarOpened={isSidebarOpened}
+          setIsSidebarOpened={setIsSidebarOpened}
         />
       </div>
     </div>

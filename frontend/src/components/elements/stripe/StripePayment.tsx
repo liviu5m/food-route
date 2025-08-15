@@ -45,7 +45,7 @@ const StripePayment = ({ amount }: { amount: number }) => {
         className="btn px-10 py-3 rounded-lg bg-[#FFCC00] text-[#1E1D23] hover:bg-[#1E1D23] hover:text-[#FFCC00] font-semibold cursor-pointer mb-10 flex items-center justify-center gap-2"
       >
         {loading && (
-          <div className="scale-50">
+          <div className="scale-50 hidden md:block">
             <CartLoader />
           </div>
         )}

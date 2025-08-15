@@ -20,7 +20,7 @@ const Footer = () => {
         </div>
         <div className="flex items-center justify-center">
           <div className="container mt-20">
-            <div className="grid grid-cols-4">
+            <div className="flex flex-col gap-5 md:gap-0 md:grid md:grid-cols-4">
               <div className="flex items-center justify-center flex-col gap-5">
                 <h2 className="text-lg font-bold text-white">ADDRESS</h2>
                 <p className="text-[#DFDFDF] text-center text-sm">
@@ -68,13 +68,13 @@ const Footer = () => {
                 <p className="text-[#DFDFDF] text-center text-sm">
                   Subscribe to the weekly newsletter for all the latest updates
                 </p>
-                <div className="relative w-full">
+                <div className="relative w-3/5 md:w-full">
                   <input
                     type="text"
                     className="px-5 py-3 rounded-lg w-full text-white border border-[#DFDFDF] outline-none"
                     placeholder="Your Email..."
                   />
-                  <button className="absolute right-0 top-0 px-5 py-3 rounded-r-lg bg-[#FFCC00] text-[#1E1D23] font-semibold hover:bg-[#1E1D23] hover:text-[#FFCC00] border border-[#FFCC00] cursor-pointer">
+                  <button className="absolute right-0 top-0 px-2 sm:px-5 py-3 rounded-r-lg bg-[#FFCC00] text-[#1E1D23] font-semibold hover:bg-[#1E1D23] hover:text-[#FFCC00] border border-[#FFCC00] cursor-pointer">
                     Subscribe
                   </button>
                 </div>
@@ -85,7 +85,7 @@ const Footer = () => {
       </div>
       <div className="text-white bg-[#00A850] flex items-center justify-center py-5">
         <div className="container">
-          <h1>Copyright © {new Date().getFullYear()} foodroute. All Rights Reserved.</h1>
+          <h1 className="text-center md:text-left">Copyright © {new Date().getFullYear()} foodroute. All Rights Reserved.</h1>
         </div>
       </div>
     </div>

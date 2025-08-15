@@ -39,8 +39,8 @@ const Contact = () => {
         <h1>Contact Us</h1>
       </div>
       <div className="flex items-center justify-center py-20 w-full">
-        <div className="container flex justify-between gap-10">
-          <div className="w-1/2 flex flex-col gap-16">
+        <div className="container flex flex-col lg:flex-row justify-between gap-10 px-5 items-center">
+          <div className="w-full lg:w-1/2 flex flex-col gap-16">
             <div className="flex items-center gap-10">
               <FontAwesomeIcon
                 icon={faPhone}
@@ -75,9 +75,9 @@ const Contact = () => {
               </div>
             </div>
           </div>
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2">
             <h2 className="text-xl font-semibold mb-4">Send us a message</h2>
-            <form className="w-2/3" onSubmit={(e) => sendEmailFunc(e)}>
+            <form className="w-full lg:w-2/3" onSubmit={(e) => sendEmailFunc(e)}>
               <input
                 type="text"
                 className="px-5 py-3 rounded-lg border border-[#E1E1E1] outline-none w-full"

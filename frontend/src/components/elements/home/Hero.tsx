@@ -17,9 +17,9 @@ const Hero = () => {
       </div>
       <div className="bg-[#1E1D23] h-full w-full flex items-center justify-center text-white">
         <div className="container relative pointer-events-none z-40">
-          <div className="flex items-center justify-between py-10">
-            <div className="flex items-start flex-col gap-10">
-              <h1 className="text-[70px] font-bold">
+          <div className="flex flex-col sm:flex-row items-center justify-between py-10">
+            <div className="flex items-center md:items-start flex-col gap-10 w-full ">
+              <h1 className="2xl:text-[70px] xl:text-[50px] text-3xl font-bold text-center">
                 <SplitText
                   text="Craving Something"
                   className="text-center"
@@ -48,18 +48,22 @@ const Hero = () => {
                   textAlign="center"
                 />
               </h1>
-              <h3 className="text-xl">
+              <h3 className="md:text-xl text-sm text-center md:text-left">
                 Get your favorite meals delivered in under 30 minutes !
               </h3>
               <Link
                 to="/products"
-                className="uppercase px-8 py-3 rounded-lg bg-[#FFCC00] text-[#1E1D23] font-semibold hover:bg-[#1E1D23] hover:text-[#FFCC00]  border border-[#FFCC00] pointer-events-auto"
+                className="uppercase px-8 py-3 rounded-lg bg-[#FFCC00] text-[#1E1D23] font-semibold hover:bg-[#1E1D23] hover:text-[#FFCC00] border border-[#FFCC00] pointer-events-auto"
               >
                 Order now
               </Link>
             </div>
-            <div>
-              <img src="/imgs/heroImg.png" alt="" />
+            <div className="mt-5 md:mt-0">
+              <img
+                className="xl:w-full lg:w-[400px] w-[300px]"
+                src="/imgs/heroImg.png"
+                alt=""
+              />
             </div>
           </div>
         </div>

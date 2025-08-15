@@ -22,7 +22,7 @@ const Categories = () => {
     <div className="bg-white flex items-center justify-center w-full py-10 text-[#1E1D23]">
       <div className="container">
         <h1 className="text-xl text-center mb-7 font-semibold">Categories</h1>
-        <div className="flex items-center justify-center gap-8">
+        <div className="flex items-center justify-center gap-8 overflow-y-scroll hide-scrollbar">
           {categories.map((category, i) => {
             return (
               <Link

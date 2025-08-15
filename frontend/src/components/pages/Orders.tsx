@@ -68,8 +68,8 @@ const Orders = () => {
               </Link>
             </div>
           ) : (
-            <div>
-              <table className="w-full table-auto border-collapse text-left my-10">
+            <div className="overflow-y-scroll hide-scrollbar px-5">
+              <table className="text-sm sm:text-sm lg:scale-100  w-full table-auto border-collapse text-left my-10">
                 <thead>
                   <tr className="bg-gradient-to-r from-blue-500 to-blue-400 text-white">
                     <th className="p-4">Id</th>

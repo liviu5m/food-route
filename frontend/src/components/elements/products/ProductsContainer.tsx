@@ -7,6 +7,8 @@ import SmallLoader from "../SmallLoader";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getProduct } from "../../../api/products";
 import Loader from "../Loader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 
 const ProductsContainer = ({
   prices,
@@ -14,6 +16,7 @@ const ProductsContainer = ({
   search,
   sortingType,
   setSortingType,
+  setIsSidebarOpened,
 }: {
   prices: number[];
   selectedCategory: number;
@@ -21,6 +24,7 @@ const ProductsContainer = ({
   save: boolean;
   sortingType: string;
   setSortingType: (e: string) => void;
+  setIsSidebarOpened: (e: boolean) => void;
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 12;
@@ -47,17 +51,26 @@ const ProductsContainer = ({
   if (isLoading) return <Loader />;
 
   return (
-    <div className="w-4/5">
+    <div className="w-full xl:w-4/5">
       {
-        <div className="mb-10">
-          <div className="flex items-center justify-between py-4">
-            <h1 className="text-[#808080] text-sm">
-              Showing {currentPage * pageSize + 1}-
-              {currentPage * pageSize + pageSize > productsData.totalElements
-                ? productsData.totalElements
-                : currentPage * pageSize + pageSize}{" "}
-              of {productsData.totalElements} results
-            </h1>
+        <div className="mb-10 w-full">
+          <div className="flex flex-col sm:flex-row items-center justify-between py-4 px-5">
+            <div className="flex items-center justify-center gap-5">
+              <h2
+                className="flex xl:hidden mb-3 sm:mb-0 items-center justify-center gap-2 font-semibold"
+                onClick={() => setIsSidebarOpened(true)}
+              >
+                <FontAwesomeIcon icon={faFilter} className="text-[#FFCC00]" />
+                <span>Filter</span>
+              </h2>
+              <h1 className="text-[#808080] text-sm hidden sm:block">
+                Showing {currentPage * pageSize + 1}-
+                {currentPage * pageSize + pageSize > productsData.totalElements
+                  ? productsData.totalElements
+                  : currentPage * pageSize + pageSize}{" "}
+                of {productsData.totalElements} results
+              </h1>
+            </div>
             <div>
               <select
                 value={sortingType}
@@ -75,7 +88,9 @@ const ProductsContainer = ({
               </select>
             </div>
           </div>
-          <div className={`w-full h-full grid grid-cols-4 mt-5 gap-10`}>
+          <div
+            className={`w-full h-full sm:grid xl:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 flex items-center justify-center flex-col mt-5 gap-10`}
+          >
             {productsData.content.map((product: ProductType, i: number) => {
               return <Product key={i} product={product} />;
             })}

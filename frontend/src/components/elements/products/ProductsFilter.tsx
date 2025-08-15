@@ -60,7 +60,7 @@ const ProductsFilter = ({
   return loading ? (
     <Loader />
   ) : (
-    <div className="w-1/5 flex flex-col gap-10">
+    <div className="w-1/5 hidden xl:flex flex-col gap-10">
       <div className="rounded-2xl border border-[#e5e5e5] px-5 py-3">
         <h2 className="text-center font-bold text-lg">Categories</h2>
         <div className="bg-[#FBF7E8] rounded-2xl px-5 py-3 flex flex-col gap-5 text-[#808080] mt-4">
@@ -96,13 +96,13 @@ const ProductsFilter = ({
         <input
           type="text"
           placeholder="Search products..."
-          className="pl-5 pr-12 py-4 border border-[#FFCC00] outline-none rounded-2xl"
+          className="pl-5 w-full pr-12 py-4 border border-[#FFCC00] outline-none rounded-2xl"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <FontAwesomeIcon
           icon={faSearch as IconDefinition}
-          className="absolute top-1/2 right-14 -translate-y-1/2"
+          className="absolute top-1/2 right-5 -translate-y-1/2"
         />
       </div>
       <div>

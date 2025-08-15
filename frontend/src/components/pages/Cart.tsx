@@ -51,7 +51,7 @@ const Cart = () => {
                   />
                 );
               })}
-              <div className="mb-4 flex gap-4 items-end cart-item mt-10 py-5 border-t border-[#DFDFDF]">
+              <div className="mb-4 flex gap-4 items-end cart-item mt-10 py-5 border-t border-[#DFDFDF] px-5">
                 <div className="flex justify-between w-full">
                   <h2 className="text-xl font-semibold">Total Price:</h2>
                   <h3 className="text-xl font-semibold">
@@ -59,7 +59,7 @@ const Cart = () => {
                   </h3>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between px-5">
                 <button
                   onClick={() => clearCart()}
                   className="btn px-10 py-3 rounded-lg bg-[#FFCC00] text-[#1E1D23] hover:bg-[#1E1D23] hover:text-[#FFCC00] font-semibold cursor-pointer mb-10 flex items-center justify-center gap-2"

@@ -20,7 +20,9 @@ const Product = ({ product }: { product: Product }) => {
     user?.favorites.find((fav) => fav.product.id == product.id) ? true : false
   );
   const [isInCart, setIsInCart] = useState(
-    user?.cart.cartProducts.find((prod) => prod.product.id == product.id) ? true : false
+    user?.cart.cartProducts.find((prod) => prod.product.id == product.id)
+      ? true
+      : false
   );
 
   const formatDesc = (desc: string) => {
@@ -73,7 +75,7 @@ const Product = ({ product }: { product: Product }) => {
 
   return (
     <div
-      className="rounded-xl border border-[#E5E5E5] flex flex-col items-center justify-between"
+      className="scale-90 sm:scale-100 rounded-xl border border-[#E5E5E5] flex flex-col items-center justify-between"
       onMouseOver={() => setHover(true)}
       onMouseOut={() => setHover(false)}
     >

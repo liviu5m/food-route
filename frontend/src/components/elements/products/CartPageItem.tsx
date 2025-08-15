@@ -50,20 +50,20 @@ const CartPageItem = ({
   return (
     <div
       key={product.id}
-      className="mb-4 flex gap-4 cart-item mt-10 py-5 border-t border-[#DFDFDF]"
+      className="mb-4 flex flex-col md:flex-row gap-4 cart-item mt-10 py-5 border-t border-[#DFDFDF] px-5"
     >
       <div>
         <img
           src={product.image}
           alt={product.name}
-          className="w-80 h-60 object-cover rounded"
+          className="w-full md:w-80 h-60 object-cover rounded"
         />
       </div>
       <div className="flex flex-col justify-between w-full">
-        <div className="h-full grid grid-cols-4 justify-between w-full items-start">
+        <div className="h-full flex flex-col gap-5 md:grid md:grid-cols-4 justify-between w-full items-start">
           <div>
-            <h2 className="text-xl font-semibold ">{product.name}</h2>
-            <h4 className="text-[#808080]">{product.category.name}</h4>
+            <h2 className="text-lg md:text-xl font-semibold ">{product.name}</h2>
+            <h4 className="hidden md:block text-[#808080]">{product.category.name}</h4>
           </div>
           <p className=" text-gray-600">Price: ${product.price.toFixed(2)}</p>
           <div className="flex items-center">
@@ -90,13 +90,13 @@ const CartPageItem = ({
             </button>
           </div>
           <div className="text-right">
-            <h4>Total</h4>
+            <h4 className="text-left md:text-right">Total</h4>
             <h5 className="font-semibold">
               $ {(product.price * quantity).toFixed(2)}
             </h5>
           </div>
         </div>
-        <div className="flex gap-5 text-sm ml-5">
+        <div className="flex gap-5 text-sm ml-5 mt-5 md:mt-0">
           <button
             className="text-[#808080] cursor-pointer hover:text-[#FFCC00]"
             onClick={() => {
