@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import BodyLayout from "../layouts/bodyLayout";
 import { useAppContext } from "../../../libs/AppContext";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "../../../../libs/Types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
+import { faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useAppContext } from "../../../../libs/AppContext";
 

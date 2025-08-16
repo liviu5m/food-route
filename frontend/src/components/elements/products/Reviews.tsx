@@ -7,7 +7,6 @@ import axios from "axios";
 import type { Review } from "../../../../libs/Types";
 import SingleReview from "./SingleReview";
 import SmallLoader from "../SmallLoader";
-import Loader from "../Loader";
 import type { Dispatch, SetStateAction } from "react";
 import { toast, ToastContainer } from "react-toastify";
 

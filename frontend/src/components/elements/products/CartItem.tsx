@@ -48,7 +48,7 @@ const CartItem = ({
     <div key={product.id} className="mb-4 flex items-center gap-4 cart-item">
       <button
         className="text-sm text-[#FF0000] cursor-pointer hover:scale-120 p-1"
-        onClick={(e) => managedCart(product.id, String(cartProductId), false)}
+        onClick={() => managedCart(product.id, String(cartProductId), false)}
       >
         <FontAwesomeIcon icon={faX} />
       </button>

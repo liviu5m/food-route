@@ -1,10 +1,10 @@
-import { keepPreviousData, useQueries, useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { getCategories } from "../../../api/categories";
 import { getProduct } from "../../../api/products";
 import type { Category, Product as ProductType } from "../../../../libs/Types";
 import Loader from "../Loader";
-import Product from "../products/Product";
+import ProductCard from "../products/ProductCard";
 import { Link } from "react-router-dom";
 
 const PopularDishes = () => {
@@ -28,7 +28,9 @@ const PopularDishes = () => {
     <div className="flex items-center justify-center">
       <div className="container">
         <div className="py-20 flex items-center justify-center flex-col">
-          <h1 className="text-2xl md:text-4xl font-bold text-center">Popular dishes</h1>
+          <h1 className="text-2xl md:text-4xl font-bold text-center">
+            Popular dishes
+          </h1>
           <div className="hidden md:flex items-center justify-center gap-10 mt-8">
             {categories.content.map((category: Category, i: number) => {
               return (
@@ -48,7 +50,7 @@ const PopularDishes = () => {
           </div>
           <div className="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-5 gap-10 mt-10">
             {products.content.map((product: ProductType, i: number) => {
-              return <Product key={i} product={product} />;
+              return <ProductCard key={i} product={product} />;
             })}
           </div>
           <Link

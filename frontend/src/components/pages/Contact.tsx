@@ -1,5 +1,5 @@
-import React, { useState, type FormEvent } from "react";
-import BodyLayout from "../layouts/bodyLayout";
+import React, { useState } from "react";
+import BodyLayout from "../layouts/BodyLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faAddressCard,

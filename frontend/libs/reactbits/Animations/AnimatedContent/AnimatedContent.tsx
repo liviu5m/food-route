@@ -1,8 +1,5 @@
-/*
-	Installed from https://reactbits.dev/ts/tailwind/
-*/
-
-import React, { useRef, useEffect, ReactNode } from "react";
+import React, { useRef, useEffect } from "react";
+import type { ReactNode } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 

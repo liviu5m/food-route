@@ -1,8 +1,6 @@
 import React from "react";
-import BodyLayout from "../layouts/bodyLayout";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { GoogleOAuthProvider, useGoogleLogin } from "@react-oauth/google";
 import axios from "axios";
 import { useAppContext } from "../../../libs/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

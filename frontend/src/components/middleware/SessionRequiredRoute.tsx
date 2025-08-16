@@ -6,10 +6,6 @@ interface SessionRequiredRouteProps {
   children: ReactNode;
 }
 
-const isAuthenticated = (): boolean => {
-  return localStorage.getItem("sessionId") != null;
-};
-
 const SessionRequiredRoute: React.FC<SessionRequiredRouteProps> = ({
   children,
 }) => {

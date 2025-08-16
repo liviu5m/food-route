@@ -1,11 +1,7 @@
-import axios from "axios";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import Loader from "./Loader";
-import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faArrowDown,
   faBars,
   faChevronDown,
   faHeart,
@@ -13,8 +9,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useAppContext } from "../../../libs/AppContext";
 import CartSidebar from "./CartSidebar";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HeaderSidebar from "./HeaderSidebar";
 
 const Header = () => {

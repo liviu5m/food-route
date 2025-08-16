@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
-import BodyLayout from "../layouts/bodyLayout";
-import axios from "axios";
+import BodyLayout from "../layouts/BodyLayout";
 import Hero from "../elements/home/Hero";
 import Categories from "../elements/home/Categories";
 import PopularDishes from "../elements/home/PopularDishes";

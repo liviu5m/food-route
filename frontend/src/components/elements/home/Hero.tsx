@@ -19,7 +19,7 @@ const Hero = () => {
         <div className="container relative pointer-events-none z-40">
           <div className="flex flex-col sm:flex-row items-center justify-between py-10">
             <div className="flex items-center md:items-start flex-col gap-10 w-full ">
-              <h1 className="2xl:text-[70px] xl:text-[50px] text-3xl font-bold text-center">
+              <h1 className="2xl:text-[70px] xl:text-[50px] text-3xl font-bold text-center xl:text-left">
                 <SplitText
                   text="Craving Something"
                   className="text-center"

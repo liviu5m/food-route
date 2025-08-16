@@ -1,5 +1,4 @@
 import axios from "axios";
-import type { Category } from "../../libs/Types";
 
 export async function getCategories() {
   const response = await axios.get(

@@ -12,7 +12,7 @@ import { AppProvider } from "../libs/AppContext";
 import CategoryAdmin from "./components/pages/admin/CategoryAdmin";
 import ProductAdmin from "./components/pages/admin/ProductAdmin";
 import Products from "./components/pages/Products";
-import Product from "./components/pages/Product";
+import Product from "./components/pages/ProductComponent";
 import Cart from "./components/pages/Cart";
 import FailedPayment from "./components/pages/FailedPayment";
 import SuccessPayment from "./components/pages/SuccessPayment";

@@ -1,5 +1,4 @@
-import React from "react";
-import BodyLayout from "../layouts/bodyLayout";
+import BodyLayout from "../layouts/BodyLayout";
 import ProductDisplay from "../elements/products/ProductDisplay";
 
 const Products = () => {

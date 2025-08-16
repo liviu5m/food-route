@@ -3,7 +3,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useAppContext } from "../../../libs/AppContext";
-import type { Order, User } from "../../../libs/Types";
 import Loader from "../elements/Loader";
 
 export default function SuccessPage() {

@@ -4,9 +4,6 @@ import {
   type IconDefinition,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CartItem from "./products/CartItem";
-import { Link, useLocation } from "react-router-dom";
-import { useAppContext } from "../../../libs/AppContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import type { Category } from "../../../libs/Types";
@@ -21,9 +18,6 @@ const FilterSidebar = ({
   setSelectedCategory,
   search,
   setSearch,
-  save,
-  setSave,
-  sortingType,
 }: {
   setIsSidebarOpened: (isOpen: boolean) => void;
   isSidebarOpened: boolean;
@@ -33,19 +27,12 @@ const FilterSidebar = ({
   setSelectedCategory: (e: number) => void;
   search: string;
   setSearch: (e: string) => void;
-  save: boolean;
-  setSave: (e: boolean) => void;
-  sortingType: string;
 }) => {
-  const { pathname } = useLocation();
-
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(0);
   const [hoverId, setHoverId] = useState<number | null>(null);
 
   useEffect(() => {
-    setLoading(true);
     axios
       .get(import.meta.env.VITE_API_URL + "/api/category/all")
       .then((res) => {
@@ -59,11 +46,9 @@ const FilterSidebar = ({
       .then((res) => {
         setMaxPrice(Math.round(res.data));
         setPrices([0, Math.round(res.data)]);
-        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false);
       });
   }, [maxPrice]);
 

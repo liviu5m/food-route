@@ -9,13 +9,11 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAppContext } from "../../../../libs/AppContext";
-import SmallLoader from "../SmallLoader";
-import CartLoader from "../CartLoader";
 
-const Product = ({ product }: { product: Product }) => {
+const ProductCard = ({ product }: { product: Product }) => {
   const [hover, setHover] = useState(false);
   const [rating, setRating] = useState<React.ReactElement[]>();
-  const { managedCart, user, cartLoading, manageFavorite } = useAppContext();
+  const { managedCart, user, manageFavorite } = useAppContext();
   const [isFavorite, setIsFavorite] = useState(
     user?.favorites.find((fav) => fav.product.id == product.id) ? true : false
   );
@@ -146,4 +144,4 @@ const Product = ({ product }: { product: Product }) => {
   );
 };
 
-export default Product;
+export default ProductCard;

@@ -1,6 +1,5 @@
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CartItem from "./products/CartItem";
 import { Link, useLocation } from "react-router-dom";
 import { useAppContext } from "../../../libs/AppContext";
 
@@ -11,7 +10,7 @@ const HeaderSidebar = ({
   setIsSidebarOpened: (isOpen: boolean) => void;
   isSidebarOpened: boolean;
 }) => {
-  const { user, setUser } = useAppContext();
+  const { setUser } = useAppContext();
   const { pathname } = useLocation();
 
   return (

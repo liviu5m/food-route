@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { Product as ProductType } from "../../../../libs/Types";
-import axios from "axios";
-import Product from "./Product";
+import Product from "./ProductCard";
 import Pagination from "../Pagination";
-import SmallLoader from "../SmallLoader";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { getProduct } from "../../../api/products";
 import Loader from "../Loader";
@@ -21,7 +19,6 @@ const ProductsContainer = ({
   prices: number[];
   selectedCategory: number;
   search: string;
-  save: boolean;
   sortingType: string;
   setSortingType: (e: string) => void;
   setIsSidebarOpened: (e: boolean) => void;

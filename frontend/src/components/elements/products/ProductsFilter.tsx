@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import type { Category, Product } from "../../../../libs/Types";
+import { useEffect, useState } from "react";
+import type { Category } from "../../../../libs/Types";
 import axios from "axios";
 import Loader from "../Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,9 +15,6 @@ const ProductsFilter = ({
   setSelectedCategory,
   search,
   setSearch,
-  save,
-  setSave,
-  sortingType,
 }: {
   prices: number[];
   setPrices: (e: number[]) => void;
@@ -25,9 +22,6 @@ const ProductsFilter = ({
   setSelectedCategory: (e: number) => void;
   search: string;
   setSearch: (e: string) => void;
-  save: boolean;
-  setSave: (e: boolean) => void;
-  sortingType: string;
 }) => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,6 +1,3 @@
-/*
-	Installed from https://reactbits.dev/ts/tailwind/
-*/
 import React from "react";
 import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
 import { useEffect, useRef } from "react";
@@ -16,6 +13,7 @@ void main() {
   gl_Position = vec4(position, 0, 1);
 }
 `;
+console.log(React.version);
 
 const fragmentShader = `
 precision highp float;

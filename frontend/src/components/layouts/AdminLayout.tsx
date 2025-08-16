@@ -1,6 +1,5 @@
 import React from "react";
 import type { ReactNode } from "react";
-import Header from "../elements/Header";
 import Sidebar from "../elements/admin/Sidebar";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

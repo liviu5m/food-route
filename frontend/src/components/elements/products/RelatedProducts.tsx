@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { Product as ProductType } from "../../../../libs/Types";
 import axios from "axios";
-import Product from "./Product";
+import Product from "./ProductCard";
 
 const RelatedProducts = ({ product }: { product: ProductType }) => {
   const [products, setProducts] = useState<ProductType[]>();

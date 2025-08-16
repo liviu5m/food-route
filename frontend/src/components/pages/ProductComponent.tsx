@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import BodyLayout from "../layouts/bodyLayout";
-import type { Product, Review } from "../../../libs/Types";
+import { useParams } from "react-router-dom";
+import BodyLayout from "../layouts/BodyLayout";
+import type { Product } from "../../../libs/Types";
 import axios from "axios";
 import Loader from "../elements/Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -18,7 +18,7 @@ import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { useAppContext } from "../../../libs/AppContext";
 import CartLoader from "../elements/CartLoader";
 
-const Product = () => {
+const ProductComponent = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product>();
   const [loading, setLoading] = useState(true);
@@ -230,4 +230,4 @@ const Product = () => {
   );
 };
 
-export default Product;
+export default ProductComponent;

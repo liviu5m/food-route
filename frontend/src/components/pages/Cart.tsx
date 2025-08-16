@@ -1,5 +1,5 @@
 import React from "react";
-import BodyLayout from "../layouts/bodyLayout";
+import BodyLayout from "../layouts/BodyLayout";
 import { useAppContext } from "../../../libs/AppContext";
 import CartPageItem from "../elements/products/CartPageItem";
 import StripePayment from "../elements/stripe/StripePayment";

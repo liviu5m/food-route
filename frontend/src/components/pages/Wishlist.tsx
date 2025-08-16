@@ -1,6 +1,5 @@
-import React from "react";
 import { useAppContext } from "../../../libs/AppContext";
-import BodyLayout from "../layouts/bodyLayout";
+import BodyLayout from "../layouts/BodyLayout";
 import { Link } from "react-router-dom";
 import { faBasketShopping, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -111,7 +110,7 @@ const Wishlist = () => {
                         <div className="p-4">
                           <button
                             className="p-2 hover:scale-110 hover:rotate-180 cursor-pointer"
-                            onClick={(e) => {
+                            onClick={() => {
                               manageFavorite(favorite.product, "delete");
                             }}
                           >

@@ -1,6 +1,6 @@
-import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
+import { faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppContext } from "../../../libs/AppContext";
 import CartItem from "./products/CartItem";
 import { Link } from "react-router-dom";

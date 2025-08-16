@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useAppContext } from "../../../libs/AppContext";
-import BodyLayout from "../layouts/bodyLayout";
+import BodyLayout from "../layouts/BodyLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faStore, faX } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
-import type { Order, OrderItem } from "../../../libs/Types";
+import type { Order } from "../../../libs/Types";
 import { Link, useLocation } from "react-router-dom";
-import SingleOrder from "../elements/SingleOrder";
 import Loader from "../elements/Loader";
 import Pagination from "../elements/Pagination";
 
@@ -14,7 +13,6 @@ const Orders = () => {
   const { user } = useAppContext();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
-  const [showOrderItems, setShowOrderItems] = useState<OrderItem[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const location = useLocation();
@@ -100,10 +98,7 @@ const Orders = () => {
                             <FontAwesomeIcon icon={faMinus} />
                           )}
                         </td>
-                        <td
-                          className="p-4 font-semibold"
-                          onClick={() => setShowOrderItems(order.orderItemList)}
-                        >
+                        <td className="p-4 font-semibold">
                           {order.orderItemList.length > 0 ? (
                             <div>
                               <Link
@@ -164,23 +159,21 @@ const Orders = () => {
                                     )}
                                   </div>
                                   <div className="flex w-full justify-center gap-2 py-2">
-                                    {order.orderItemList.map(
-                                      ({ product }, i) => {
-                                        return (
-                                          <a
-                                            href={`#item-${order.id}-${i}`}
-                                            className={`btn btn-xs ${
-                                              location.hash ==
-                                              `#item-${order.id}-${i}`
-                                                ? "bg-blue-400"
-                                                : ""
-                                            }`}
-                                          >
-                                            {i + 1}
-                                          </a>
-                                        );
-                                      }
-                                    )}
+                                    {order.orderItemList.map(({}, i) => {
+                                      return (
+                                        <a
+                                          href={`#item-${order.id}-${i}`}
+                                          className={`btn btn-xs ${
+                                            location.hash ==
+                                            `#item-${order.id}-${i}`
+                                              ? "bg-blue-400"
+                                              : ""
+                                          }`}
+                                        >
+                                          {i + 1}
+                                        </a>
+                                      );
+                                    })}
                                   </div>
                                 </div>
                                 <form

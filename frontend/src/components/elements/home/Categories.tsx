@@ -1,16 +1,11 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
 import type { Category } from "../../../../libs/Types";
 import { Link } from "react-router-dom";
 import GlareHover from "../../../../libs/reactbits/Animations/GlareHover/GlareHover";
-import AnimatedContent from "../../../../libs/reactbits/Animations/AnimatedContent/AnimatedContent";
 import Loader from "../Loader";
 import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "../../../api/categories";
 
 const Categories = () => {
-  const [loading, setLoading] = useState(true);
-
   const { data: categoriesContent, isLoading } = useQuery({
     queryKey: ["categories"],
     queryFn: getCategories,

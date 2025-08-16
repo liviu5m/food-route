@@ -1,5 +1,4 @@
 import axios from "axios";
-import type { Product } from "../../libs/Types";
 
 export async function getProduct(
   currentPage: number,

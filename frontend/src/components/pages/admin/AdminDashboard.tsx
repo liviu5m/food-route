@@ -1,5 +1,3 @@
-import React from "react";
-import Sidebar from "../../elements/admin/Sidebar";
 import AdminLayout from "../../layouts/AdminLayout";
 import { useAppContext } from "../../../../libs/AppContext";
 
