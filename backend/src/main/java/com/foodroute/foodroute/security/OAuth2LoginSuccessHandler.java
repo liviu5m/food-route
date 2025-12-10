@@ -75,7 +75,6 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         jwtCookie.setPath("/");
         jwtCookie.setMaxAge(86400);
         response.addCookie(jwtCookie);
-        response.sendRedirect("http://localhost:5173/");
-
+        response.sendRedirect("https://food-route.vercel.app/");
     }
 }

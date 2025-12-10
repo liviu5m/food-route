@@ -11,11 +11,11 @@ const ProductDisplay = () => {
   const [sortingType, setSortingType] = useState("default");
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryId = Number(searchParams.get("categoryId")) || -1;
-  setSearchParams();
   const [isSidebarOpened, setIsSidebarOpened] = useState(false);
 
   useEffect(() => {
     setSelectedCategory(categoryId ? categoryId : -1);
+    setSearchParams();
   }, [categoryId]);
 
   return (

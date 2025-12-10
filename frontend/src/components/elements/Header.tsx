@@ -92,14 +92,16 @@ const Header = () => {
                         } as React.CSSProperties
                       }
                     >
-                      <li>
-                        <Link
-                          to="/admin/dashboard"
-                          className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
-                        >
-                          Admin Dashboard
-                        </Link>
-                      </li>
+                      {user.role == "admin " && (
+                        <li>
+                          <Link
+                            to="/admin/dashboard"
+                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                          >
+                            Admin Dashboard
+                          </Link>
+                        </li>
+                      )}
                       <li>
                         <Link
                           to="/account"

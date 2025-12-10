@@ -14,7 +14,7 @@ const Login = () => {
     let email = e.currentTarget.email.value;
     e.preventDefault();
     axios
-      .post(`http://localhost:8080/auth/login`, {
+      .post(import.meta.env.VITE_API_URL+`/auth/login`, {
         email,
         password: e.currentTarget.password.value,
       })
@@ -30,7 +30,7 @@ const Login = () => {
           err.response.data ==
           "Account not verified, please verify your account"
         ) {
-          axios.post("http://localhost:8080/auth/resend");
+          axios.post(import.meta.env.VITE_API_URL+"/auth/resend");
           navigate("/auth/verify?email=" + email);
         }
         if (Array.isArray(err.response.data)) {

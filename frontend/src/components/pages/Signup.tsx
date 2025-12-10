@@ -12,7 +12,7 @@ const Signup = () => {
     e.preventDefault();
 
     axios
-      .post(`http://localhost:8080/auth/signup`, {
+      .post(import.meta.env.VITE_API_URL+`/auth/signup`, {
         fullName: e.currentTarget.fullName.value,
         username: e.currentTarget.username.value,
         email: e.currentTarget.email.value,

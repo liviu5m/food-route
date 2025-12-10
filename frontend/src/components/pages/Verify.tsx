@@ -10,7 +10,7 @@ const Verify = () => {
 
   const verify = () => {
     axios
-      .post("http://localhost:8080/auth/verify", {
+      .post(import.meta.env.VITE_API_URL + "/auth/verify", {
         verificationCode: code,
         email: searchParams.get("email"),
       })
@@ -27,7 +27,9 @@ const Verify = () => {
   const resendVerificationCode = () => {
     axios
       .post(
-        "http://localhost:8080/auth/resend?email=" + searchParams.get("email")
+        import.meta.env.VITE_API_URL +
+          "/auth/resend?email=" +
+          searchParams.get("email")
       )
       .then((res) => {
         console.log(res.data);

@@ -61,7 +61,7 @@ const CategoryModal = ({
           });
       } else {
         axios
-          .post("http://localhost:8080/api/upload", formData, {
+          .post(import.meta.env.VITE_API_URL + "/api/upload", formData, {
             headers: {
               Authorization: "Bearer " + localStorage.getItem("jwtToken"),
               "Content-Type": "multipart/form-data",
@@ -106,7 +106,7 @@ const CategoryModal = ({
       }
     } else {
       axios
-        .post("http://localhost:8080/api/upload", formData, {
+        .post(import.meta.env.VITE_API_URL + "/api/upload", formData, {
           headers: {
             Authorization: "Bearer " + localStorage.getItem("jwtToken"),
             "Content-Type": "multipart/form-data",

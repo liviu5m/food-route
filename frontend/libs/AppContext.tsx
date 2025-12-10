@@ -48,7 +48,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     }
 
     axios
-      .get("http://localhost:8080/api/users/me", {
+      .get(import.meta.env.VITE_API_URL + "/api/users/me", {
         headers: {
           Authorization: "Bearer " + localStorage.getItem("jwtToken"),
         },
