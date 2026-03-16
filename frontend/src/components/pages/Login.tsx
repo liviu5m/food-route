@@ -1,49 +1,50 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useAppContext } from "../../../libs/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import type { LoginData } from "../../../libs/Types";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { loginUserFunc } from "../../api/user";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { getUser } = useAppContext();
+  const [data, setData] = useState<LoginData>({
+    email: "",
+    password: "",
+  });
+  const queryClient = useQueryClient();
 
-  const login = (e: React.FormEvent<HTMLFormElement>) => {
-    let email = e.currentTarget.email.value;
-    e.preventDefault();
-    axios
-      .post(import.meta.env.VITE_API_URL+`/auth/login`, {
-        email,
-        password: e.currentTarget.password.value,
-      })
-      .then((res) => {
-        console.log(res.data.token);
-        localStorage.setItem("jwtToken", res.data.token);
-        getUser();
-        navigate("/");
-      })
-      .catch((err) => {
-        console.log(err);
-        if (
-          err.response.data ==
-          "Account not verified, please verify your account"
-        ) {
-          axios.post(import.meta.env.VITE_API_URL+"/auth/resend");
-          navigate("/auth/verify?email=" + email);
-        }
+  const { mutate: loginUser } = useMutation({
+    mutationKey: ["loginUser"],
+    mutationFn: () => loginUserFunc(data),
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries();
+      navigate("/");
+    },
+    onError: (err: AxiosError) => {
+      if (
+        err?.response?.data ==
+        "Account not verified, please verify your account"
+      ) {
+        // axios.post(import.meta.env.VITE_API_URL + "/auth/resend");
+        // navigate("/auth/verify?email=" + email);
+
         if (Array.isArray(err.response.data)) {
           toast(
             <div>
               {err.response.data.map((msg: string, i: number) => (
                 <div key={i}>{msg}</div>
               ))}
-            </div>
+            </div>,
           );
-        } else toast(err.response.data);
-      });
-  };
+        } else toast(err?.response?.data as string);
+      }
+    },
+  });
 
   const handleGoogleLogin = () => {
     window.location.href =
@@ -54,24 +55,34 @@ const Login = () => {
     <div className="h-screen w-screen flex items-center justify-center bg-[#222831]">
       <Link to="/" className="absolute top-5 left-5">
         <h1 className="flex gap-3 items-center justify-center p-2">
-          <FontAwesomeIcon icon={faArrowLeft} /> 
+          <FontAwesomeIcon icon={faArrowLeft} />
           <span>Back</span>
         </h1>
       </Link>
       <div className="w-[400px]">
         <h1 className="font-bold text-2xl text-center mb-10">Log In</h1>
-        <form className="flex flex-col gap-5" onSubmit={(e) => login(e)}>
+        <form
+          className="flex flex-col gap-5"
+          onSubmit={(e) => {
+            e.preventDefault();
+            loginUser();
+          }}
+        >
           <input
             type="email"
             name="email"
             placeholder="Email"
             className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            value={data.email}
+            onChange={(e) => setData({ ...data, email: e.target.value })}
           />
           <input
             type="password"
             name="password"
             placeholder="Password"
             className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            value={data.password}
+            onChange={(e) => setData({ ...data, password: e.target.value })}
           />
           <button className="px-8 py-3 bg-[#eee] text-[#00ADB5] cursor-pointer rounded-lg font-semibold hover:text-[#eee] hover:bg-[#00ADB5]">
             Log In

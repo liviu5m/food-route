@@ -1,20 +1,17 @@
 import React from "react";
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { useAppContext } from "../../../libs/AppContext";
 
 interface AuthRequiredRouteProps {
   children: ReactNode;
 }
 
-const isAuthenticated = (): boolean => {
-  return localStorage.getItem("jwtToken") != null;
-};
-
 const AuthRequiredRoute: React.FC<AuthRequiredRouteProps> = ({ children }) => {
   const location = useLocation();
-  // console.log(location.pathname);
-  
-  if (!isAuthenticated() && location.pathname.startsWith("/account")) {
+  const { user } = useAppContext();
+
+  if (!user && location.pathname.startsWith("/account")) {
     return <Navigate to="/" replace />;
   }
 

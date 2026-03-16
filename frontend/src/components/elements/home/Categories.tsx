@@ -18,7 +18,7 @@ const Categories = () => {
       <div className="container">
         <h1 className="text-xl text-center mb-7 font-semibold">Categories</h1>
         <div className="flex items-center justify-center gap-8 overflow-y-scroll hide-scrollbar">
-          {categories.map((category, i) => {
+          {categories && categories.map((category, i) => {
             return (
               <Link
                 to={"/products?categoryId=" + category.id}

@@ -1,19 +1,16 @@
 import React from "react";
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { useAppContext } from "../../../libs/AppContext";
 
 interface AuthRouteGuardProps {
   children: ReactNode;
 }
 
-const isAuthenticated = (): boolean => {
-  return localStorage.getItem("jwtToken") != null;
-};
-
 const AuthRouteGuard: React.FC<AuthRouteGuardProps> = ({ children }) => {
   const location = useLocation();
-  
-  if (isAuthenticated() && location.pathname.startsWith("/auth")) {
+  const { user } = useAppContext();
+  if (user && location.pathname.startsWith("/auth")) {
     return <Navigate to="/" replace />;
   }
 

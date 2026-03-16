@@ -15,7 +15,8 @@ const Account = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
+  console.log(user);
+  
   const updateAccountData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios

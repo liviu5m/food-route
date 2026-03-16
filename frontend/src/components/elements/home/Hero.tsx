@@ -1,20 +1,10 @@
 import { Link } from "react-router-dom";
-import Galaxy from "../../../../libs/reactbits/Backgrounds/Galaxy/Galaxy";
 import SplitText from "../../../../libs/reactbits/TextAnimations/SplitText/SplitText";
 
 const Hero = () => {
   return (
     <div className="w-full relative h-[800px]">
-      <div className="absolute top-0 left-0 w-full h-full z-30 ">
-        <Galaxy
-          mouseRepulsion={true}
-          mouseInteraction={true}
-          density={1.5}
-          glowIntensity={0.5}
-          saturation={0.8}
-          hueShift={240}
-        />
-      </div>
+      <div className="absolute top-0 left-0 w-full h-full z-30 "></div>
       <div className="bg-[#1E1D23] h-full w-full flex items-center justify-center text-white">
         <div className="container relative pointer-events-none z-40">
           <div className="flex flex-col sm:flex-row items-center justify-between py-10">

@@ -7,48 +7,34 @@ import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
 
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 @Service
 public class EmailService {
-    @Autowired
-    private JavaMailSender emailSender;
-    private UserRepository userRepository;
+    @Value("${brevo.api-key}")
+    private String apiKey;
+    @Value("${brevo.url}")
+    private String url;
+    @Value("${brevo.support-email}")
+    private String supportEmail;
 
-    @Value("${email.admin}")
-    private String adminEmail;
+    private final UserRepository userRepository;
+    private final RestClient restClient;
 
-    public EmailService(UserRepository userRepository) {
+
+    public EmailService(UserRepository userRepository, RestClient restClient) {
+        this.restClient = restClient;
         this.userRepository = userRepository;
     }
-
-    public void sendVerificationEmail(String to, String subject, String text) throws MessagingException {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setText(text, true);
-
-        emailSender.send(message);
-    }
-
-    public void sendEmail(User user, String subject, String text) throws MessagingException, UnsupportedEncodingException {
-        MimeMessage message = emailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
-        helper.setFrom(new InternetAddress(user.getEmail(), user.getFullName()));
-
-        helper.setTo(adminEmail);
-        helper.setSubject(subject);
-        helper.setText(text, true);
-
-        emailSender.send(message);
-    }
-
 
     public void sendFeedbackEmail(Long userId, String subject, String comment) {
         User user = userRepository.findById(userId).get();
@@ -78,13 +64,61 @@ public class EmailService {
                 + "</body>"
                 + "</html>";
 
+        Map<String, Object> requestBody = Map.of(
+                "sender", Map.of("name", user.getFullName(), "email", user.getEmail()),
+                "to", List.of(Map.of("email", supportEmail, "name", "Food Route")),
+                "subject", subject,
+                "htmlContent", htmlMessage
+        );
+
         try {
-            System.out.println(user.getEmail());
-            sendEmail(user, subject, htmlMessage);
-        }catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            restClient.post()
+                    .uri(url)
+                    .header("api-key", apiKey)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .toBodilessEntity();
+            System.out.println("Email sent successfully to: " + user.getEmail());
+        } catch (Exception e) {
+            System.err.println("Failed to send email: " + e.getMessage());
+        }
+    }
+
+    public void sendVerificationEmail(User user) {
+        String subject = "Account Verification";
+        String verificationCode = user.getVerificationCode();
+        String htmlMessage = "<html>"
+                + "<body style=\"font-family: Arial, sans-serif;\">"
+                + "<div style=\"background-color: #f5f5f5; padding: 20px;\">"
+                + "<h2 style=\"color: #333;\">Welcome to our app!</h2>"
+                + "<p style=\"font-size: 16px;\">Please enter the verification code below to continue:</p>"
+                + "<div style=\"background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0,0,0,0.1);\">"
+                + "<h3 style=\"color: #333;\">Verification Code:</h3>"
+                + "<p style=\"font-size: 18px; font-weight: bold; color: #007bff;\">" + verificationCode + "</p>"
+                + "</div>"
+                + "</div>"
+                + "</body>"
+                + "</html>";
+
+        Map<String, Object> requestBody = Map.of(
+                "sender", Map.of("name", "Food Route", "email", supportEmail),
+                "to", List.of(Map.of("email", user.getEmail(), "name", user.getFullName())),
+                "subject", subject,
+                "htmlContent", htmlMessage
+        );
+
+        try {
+            restClient.post()
+                    .uri(url)
+                    .header("api-key", apiKey)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(requestBody)
+                    .retrieve()
+                    .toBodilessEntity();
+            System.out.println("Email sent successfully to: " + user.getEmail());
+        } catch (Exception e) {
+            System.err.println("Failed to send email: " + e.getMessage());
         }
     }
 }

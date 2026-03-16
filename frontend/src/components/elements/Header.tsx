@@ -10,6 +10,8 @@ import {
 import { useAppContext } from "../../../libs/AppContext";
 import CartSidebar from "./CartSidebar";
 import HeaderSidebar from "./HeaderSidebar";
+import { useMutation } from "@tanstack/react-query";
+import { logoutUserFunc } from "../../api/user";
 
 const Header = () => {
   const { pathname } = useLocation();
@@ -18,6 +20,19 @@ const Header = () => {
   const [isCartOpened, setIsCartOpened] = useState(false);
   const [isSidebarOpened, setIsSidebarOpened] = useState(false);
 
+  const { mutate: logout } = useMutation({
+    mutationKey: ["logout"],
+    mutationFn: () => logoutUserFunc(),
+    onSuccess: (data) => {
+      setUser(null);
+      console.log(data);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+  console.log(user, user?.role == "admin");
+  
   return (
     <div className="relative z-50 w-full">
       <div
@@ -92,7 +107,7 @@ const Header = () => {
                         } as React.CSSProperties
                       }
                     >
-                      {user.role == "admin " && (
+                      {user.role == "admin" && (
                         <li>
                           <Link
                             to="/admin/dashboard"
@@ -113,8 +128,7 @@ const Header = () => {
                       <li>
                         <button
                           onClick={() => {
-                            localStorage.removeItem("jwtToken");
-                            setUser(null);
+                            logout();
                           }}
                           className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
                         >
@@ -131,7 +145,7 @@ const Header = () => {
                           <FontAwesomeIcon icon={faShoppingCart} />
                         </button>
                         <span className="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 xl:flex items-center justify-center">
-                          {user.cart.cartProducts.length}
+                          {user.cart ? user.cart.cartProducts.length : 0}
                         </span>
                       </div>
                       <div className="relative">
@@ -142,7 +156,7 @@ const Header = () => {
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>
                         <span className="hidden absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 xl:flex items-center justify-center">
-                          {user.favorites.length}
+                          {user.favorites ? user.favorites.length : 0}
                         </span>
                       </div>
                       <button

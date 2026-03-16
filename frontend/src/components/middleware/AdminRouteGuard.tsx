@@ -7,17 +7,13 @@ interface AdminRouteGuardProps {
   children: ReactNode;
 }
 
-const isAuthenticated = (): boolean => {
-  return localStorage.getItem("jwtToken") != null;
-};
 
 const AdminRouteGuard: React.FC<AdminRouteGuardProps> = ({ children }) => {
   const location = useLocation();
-
   const { user } = useAppContext();
 
   if (
-    !isAuthenticated() ||
+    !user ||
     (user && location.pathname.startsWith("/admin") && user.role != "admin")
   ) {
     return <Navigate to="/" replace />;

@@ -95,3 +95,18 @@ export type Favorite = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type LoginData = {
+  email: string;
+  password: string;
+}
+
+export type SignupData = {
+  fullName: string;
+  username: string;
+  email: string;
+  password: string; 
+  passwordConfirmation: string;
+  address: string;
+  phoneNumber: string;
+}

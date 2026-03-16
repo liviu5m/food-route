@@ -16,11 +16,12 @@ const CartSidebar = ({
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
-    setTotalPrice(
-      user?.cart.cartProducts.reduce((sum, item) => {
-        return sum + item.product.price * item.quantity;
-      }, 0) || 0
-    );
+    if (user?.cart)
+      setTotalPrice(
+        user?.cart.cartProducts.reduce((sum, item) => {
+          return sum + item.product.price * item.quantity;
+        }, 0) || 0,
+      );
   }, [user]);
   return (
     <>
@@ -49,7 +50,7 @@ const CartSidebar = ({
               />
             </div>
             <div className="w-full">
-              {user?.cart.cartProducts.length == 0 ? (
+              {user?.cart && user?.cart.cartProducts.length == 0 ? (
                 <div className="flex flex-col items-center justify-center h-full">
                   <p className="text-center">No Products added in cart</p>
                   <Link
@@ -62,23 +63,24 @@ const CartSidebar = ({
                 </div>
               ) : (
                 <div className="w-full">
-                  {user?.cart.cartProducts.map((el, i) => {
-                    return (
-                      <CartItem
-                        key={i}
-                        product={el.product}
-                        productQuantity={el.quantity}
-                        cartProductId={el.id}
-                        totalPrice={totalPrice}
-                        setTotalPrice={setTotalPrice}
-                      />
-                    );
-                  })}
+                  {user?.cart &&
+                    user?.cart.cartProducts.map((el, i) => {
+                      return (
+                        <CartItem
+                          key={i}
+                          product={el.product}
+                          productQuantity={el.quantity}
+                          cartProductId={el.id}
+                          totalPrice={totalPrice}
+                          setTotalPrice={setTotalPrice}
+                        />
+                      );
+                    })}
                 </div>
               )}
             </div>
           </div>
-          {user?.cart.cartProducts.length != 0 && (
+          {user?.cart && user?.cart.cartProducts.length != 0 && (
             <div className="flex items-center justify-between gap-5 w-full">
               <Link
                 onClick={() => setIsCartOpened(false)}

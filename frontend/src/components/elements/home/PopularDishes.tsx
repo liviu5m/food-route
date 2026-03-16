@@ -32,7 +32,7 @@ const PopularDishes = () => {
             Popular dishes
           </h1>
           <div className="hidden md:flex items-center justify-center gap-10 mt-8">
-            {categories.content.map((category: Category, i: number) => {
+            {categories.content && categories.content.map((category: Category, i: number) => {
               return (
                 <div
                   key={i}
@@ -49,7 +49,7 @@ const PopularDishes = () => {
             })}
           </div>
           <div className="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-5 gap-10 mt-10">
-            {products.content.map((product: ProductType, i: number) => {
+            {products.content && products.content.map((product: ProductType, i: number) => {
               return <ProductCard key={i} product={product} />;
             })}
           </div>

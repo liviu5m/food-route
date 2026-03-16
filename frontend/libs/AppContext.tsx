@@ -7,16 +7,17 @@ import type { Product, User } from "./Types";
 import Loader from "../src/components/elements/Loader";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getUserFunc } from "../src/api/user";
 
 interface AppContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
-  getUser: () => void;
   managedCart: (
     productId: number,
     type: string,
     isToast?: boolean,
-    quantity?: number
+    quantity?: number,
   ) => void;
   cartLoading: number;
   manageFavorite: (product: Product, type: string) => void;
@@ -31,49 +32,28 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
   const [cartLoading, setCartLoading] = useState(-1);
   const navigate = useNavigate();
 
-  const getUser = () => {
-    const jwt = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("jwt="))
-      ?.split("=")[1];
-    console.log(jwt);
+  const { data, isPending } = useQuery({
+    queryKey: ["getUser"],
+    queryFn: () => getUserFunc(),
+  });
 
-    if (jwt) {
-      localStorage.setItem("jwtToken", jwt);
-      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    }
+  console.log(data);
+  
 
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/users/me", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (res.data) setUser(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        localStorage.removeItem("jwtToken");
-        setLoading(false);
-      });
-  };
   useEffect(() => {
-    getUser();
-  }, []);
+    if (data) setUser(data);
+  }, [data]);
+
+  console.log(user);
 
   const managedCart = (
     productId: number,
     type: string,
     isToast = true,
-    quantity = 1
+    quantity = 1,
   ) => {
     if (type == "add") addToCart(productId, quantity);
     else removeFromCart(productId, type, isToast);
@@ -96,7 +76,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             Authorization: "Bearer " + localStorage.getItem("jwtToken"),
           },
           withCredentials: true,
-        }
+        },
       )
       .then((res) => {
         console.log(res.data);
@@ -130,7 +110,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           let updatedCart = user.cart;
           if (updatedCart) {
             updatedCart.cartProducts = updatedCart.cartProducts.filter(
-              (prod) => prod.product.id !== productId
+              (prod) => prod.product.id !== productId,
             );
           }
           setUser({ ...user, cart: updatedCart });
@@ -174,7 +154,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
             Authorization: "Bearer " + localStorage.getItem("jwtToken"),
           },
           withCredentials: true,
-        }
+        },
       )
       .then((res) => {
         console.log(res.data);
@@ -233,14 +213,13 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       });
   };
 
-  return loading ? (
+  return isPending || (data && !user) ? (
     <Loader />
   ) : (
     <AppContext.Provider
       value={{
         user,
         setUser,
-        getUser,
         managedCart,
         cartLoading,
         manageFavorite,
