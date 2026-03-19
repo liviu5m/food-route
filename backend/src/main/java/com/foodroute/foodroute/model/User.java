@@ -46,7 +46,6 @@ public class User extends BaseEntity implements UserDetails {
     private LocalDateTime verificationCodeExpiresAt;
 
     @OneToOne(mappedBy = "user")
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonManagedReference
     private Cart cart;
 

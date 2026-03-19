@@ -8,6 +8,8 @@ import axios from "axios";
 import Loader from "../../elements/Loader";
 import { toast, ToastContainer } from "react-toastify";
 import Pagination from "../../elements/Pagination";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { deleteCategoryFunc, getCategories } from "../../../api/categories";
 
 const CategoryAdmin = () => {
   const [openModal, setOpenModal] = useState(false);
@@ -16,56 +18,33 @@ const CategoryAdmin = () => {
   const [editCategory, setEditCategory] = useState<Category>();
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
+  const queryClient = useQueryClient();
+
+  const { data: categoriesData, isPending } = useQuery({
+    queryKey: ["categories", currentPage],
+    queryFn: () => getCategories(currentPage),
+  });
+
+  const { mutate: deleteCategory } = useMutation({
+    mutationKey: ["deleteCategory"],
+    mutationFn: (id: number) => deleteCategoryFunc(id),
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ["categories", currentPage] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   useEffect(() => {
-    axios
-      .get(
-        import.meta.env.VITE_API_URL +
-          `/api/category?page=${currentPage}&size=10`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-          },
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        setCategories(res.data.content);
-        setTotalPages(res.data.totalPages);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, []);
-  console.log(categories, categories.length);
+    if (categoriesData) {
+      setCategories(categoriesData.content);
+      setTotalPages(categoriesData.totalPages);
+    }
+  }, [categoriesData]);
 
-  const deleteCategory = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    id: number
-  ) => {
-    const button = e.currentTarget;
-    axios
-      .delete(import.meta.env.VITE_API_URL + "/api/category/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-        button.closest("tr")?.remove();
-        setCategories(categories.filter((category) => category.id != id));
-        toast("Category deleted successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  return loading ? (
+  return isPending ? (
     <Loader />
   ) : (
     <AdminLayout>
@@ -114,7 +93,7 @@ const CategoryAdmin = () => {
                       </button>
                       <button
                         className="px-4 py-2 rounded-md text-[#eee] bg-red-400 cursor-pointer"
-                        onClick={(e) => deleteCategory(e, category.id)}
+                        onClick={(e) => deleteCategory(category.id)}
                       >
                         Delete
                       </button>

@@ -40,9 +40,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     queryFn: () => getUserFunc(),
   });
 
-  console.log(data);
-  
-
   useEffect(() => {
     if (data) setUser(data);
   }, [data]);

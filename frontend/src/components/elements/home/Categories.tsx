@@ -8,7 +8,7 @@ import { getCategories } from "../../../api/categories";
 const Categories = () => {
   const { data: categoriesContent, isLoading } = useQuery({
     queryKey: ["categories"],
-    queryFn: getCategories,
+    queryFn: () => getCategories(0),
   });
   if (isLoading) return <Loader />;
   const categories: Category[] = categoriesContent.content;

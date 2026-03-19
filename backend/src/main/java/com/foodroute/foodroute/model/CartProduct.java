@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -26,11 +28,13 @@ public class CartProduct extends BaseEntity {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cart_id", referencedColumnName = "id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonBackReference
     private Cart cart;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnoreProperties({"reviews"})
     private Product product;
 

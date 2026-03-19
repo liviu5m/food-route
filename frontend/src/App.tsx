@@ -22,14 +22,7 @@ import Wishlist from "./components/pages/Wishlist";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Contact from "./components/pages/Contact";
 
-export const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 1000,
-      retry: 2,
-    },
-  },
-});
+export const queryClient = new QueryClient();
 
 function App() {
   return (

@@ -12,6 +12,7 @@ import CartSidebar from "./CartSidebar";
 import HeaderSidebar from "./HeaderSidebar";
 import { useMutation } from "@tanstack/react-query";
 import { logoutUserFunc } from "../../api/user";
+import { queryClient } from "../../App";
 
 const Header = () => {
   const { pathname } = useLocation();
@@ -25,14 +26,14 @@ const Header = () => {
     mutationFn: () => logoutUserFunc(),
     onSuccess: (data) => {
       setUser(null);
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
       console.log(data);
     },
     onError: (err) => {
       console.log(err);
     },
   });
-  console.log(user, user?.role == "admin");
-  
+
   return (
     <div className="relative z-50 w-full">
       <div

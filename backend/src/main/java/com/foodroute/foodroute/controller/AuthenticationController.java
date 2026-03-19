@@ -96,7 +96,7 @@ public class AuthenticationController {
             if(user.isPresent()) return ResponseEntity.ok(user.get());
             return ResponseEntity.ok(null);
         } else {
-            return ResponseEntity.ok("Something went wrong.");
+            return ResponseEntity.ok(null);
         }
     }
 

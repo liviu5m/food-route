@@ -59,17 +59,12 @@ public class AuthenticationService {
 
     public User authenticate(LoginUserDto input) {
         Optional<User> optionalUser = userRepository.findByEmail(input.getEmail());
-        System.out.println("Helo 1");
-        System.out.println(optionalUser.get());
         if(optionalUser.isPresent() && !optionalUser.get().getProvider().equals("credentials")) throw new RuntimeException("You can only authenticate using google provider on this account.");
-        System.out.println("Helo 2");
         User user = userRepository.findByEmail(input.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
         if(!user.isEnabled()) {
             throw new RuntimeException("Account not verified, please verify your account");
         }
-        System.out.println("Helo 3");
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(input.getEmail(), input.getPassword()));
-        System.out.println("Helo 4");
         return user;
     }
 

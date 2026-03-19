@@ -54,7 +54,7 @@ const Reviews = ({
 
   const manageReview = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!localStorage.getItem("jwtToken")) navigate("/auth/login");
+    if (!user) navigate("/auth/login");
     if (editReview) {
       axios
         .put(

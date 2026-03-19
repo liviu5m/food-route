@@ -10,6 +10,8 @@ interface AuthRouteGuardProps {
 const AuthRouteGuard: React.FC<AuthRouteGuardProps> = ({ children }) => {
   const location = useLocation();
   const { user } = useAppContext();
+  console.log(user);
+  
   if (user && location.pathname.startsWith("/auth")) {
     return <Navigate to="/" replace />;
   }

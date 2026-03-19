@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import type { LoginData } from "../../../libs/Types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { loginUserFunc } from "../../api/user";
+import { loginUserFunc, resendVerificationCodeFunc } from "../../api/user";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -16,6 +16,20 @@ const Login = () => {
     password: "",
   });
   const queryClient = useQueryClient();
+
+  const { mutate: resend } = useMutation({
+    mutationKey: ["resendVerificationCode"],
+    mutationFn: (email: string) => resendVerificationCodeFunc(email),
+    onSuccess: (data2) => {
+      console.log(data2);
+      navigate("/auth/verify", {
+        state: { verification: true, email: data.email },
+      });
+    },
+    onError: (err: AxiosError) => {
+      console.log(err);
+    },
+  });
 
   const { mutate: loginUser } = useMutation({
     mutationKey: ["loginUser"],
@@ -26,23 +40,22 @@ const Login = () => {
       navigate("/");
     },
     onError: (err: AxiosError) => {
+      console.log(err);
+
       if (
         err?.response?.data ==
         "Account not verified, please verify your account"
-      ) {
-        // axios.post(import.meta.env.VITE_API_URL + "/auth/resend");
-        // navigate("/auth/verify?email=" + email);
-
-        if (Array.isArray(err.response.data)) {
-          toast(
-            <div>
-              {err.response.data.map((msg: string, i: number) => (
-                <div key={i}>{msg}</div>
-              ))}
-            </div>,
-          );
-        } else toast(err?.response?.data as string);
-      }
+      )
+        resend(data.email);
+      if (Array.isArray(err?.response?.data)) {
+        toast(
+          <div>
+            {err.response.data.map((msg: string, i: number) => (
+              <div key={i}>{msg}</div>
+            ))}
+          </div>,
+        );
+      } else toast(err?.response?.data as string);
     },
   });
 
