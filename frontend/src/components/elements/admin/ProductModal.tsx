@@ -5,197 +5,117 @@ import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import type { Category, Product } from "../../../../libs/Types";
 import Loader from ".././Loader";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getAllCategories } from "../../../api/categories";
+import { uploadImage } from "../../../api/upload";
+import { createProductFunc, updateProductFunc } from "../../../api/products";
 
 const ProductModal = ({
   setOpenModal,
-  setProducts,
-  products,
   editProduct,
-  setEditProduct,
 }: {
   setOpenModal: (e: boolean) => void;
-  setProducts: (e: Product[]) => void;
-  products: Product[];
   editProduct: Product | undefined;
-  setEditProduct: (e: Product | undefined) => void;
 }) => {
   const [name, setName] = useState(editProduct?.name || "");
   const [description, setDescription] = useState(
-    editProduct?.description || ""
+    editProduct?.description || "",
   );
   const [price, setPrice] = useState(editProduct?.price || "");
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
-    editProduct?.image || null
+    editProduct?.image || null,
   );
+  const [imageUrl, setImageUrl] = useState("");
   const [categoryId, setCategoryId] = useState<string | undefined>(
-    String(editProduct?.category.id) || undefined
+    String(editProduct?.category.id) || undefined,
   );
-  const [loading, setLoading] = useState(true);
+  const { data: categories, isPending } = useQuery({
+    queryKey: ["get-all-categories"],
+    queryFn: () => getAllCategories(),
+  });
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/category/all", {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        setCategories(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, []);
+  const { mutate: uploadFile, isPending: isPendingImage } = useMutation({
+    mutationKey: ["uploadFile"],
+    mutationFn: (data: FormData) => uploadImage(data),
+    onSuccess: (data) => {
+      console.log(data);
+      setImageUrl(data);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const { mutate: createProduct } = useMutation({
+    mutationKey: ["create-product"],
+    mutationFn: () =>
+      createProductFunc(name, description, price, imageUrl, categoryId),
+    onSuccess: (data) => {
+      console.log(data);
+      setName("");
+      setDescription("");
+      setPrice("");
+      setCategoryId(undefined);
+      setPreviewUrl(null);
+      toast("Product created successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
+      setOpenModal(false);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const { mutate: updateProduct } = useMutation({
+    mutationKey: ["create-product"],
+    mutationFn: () =>
+      updateProductFunc(
+        editProduct?.id || -1,
+        name,
+        description,
+        price,
+        imageUrl ? imageUrl : editProduct?.image || "",
+        categoryId,
+      ),
+    onSuccess: (data) => {
+      console.log(data);
+      setName("");
+      setDescription("");
+      setPrice("");
+      setCategoryId(undefined);
+      setPreviewUrl(null);
+      toast("Product created successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
+      setOpenModal(false);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const saveProduct = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("file", selectedFile || "");
-
-    if (editProduct) {
-      if (editProduct.image == previewUrl) {
-        axios
-          .put(
-            import.meta.env.VITE_API_URL + "/api/product/" + editProduct.id,
-            {
-              name,
-              description,
-              price,
-              image: previewUrl,
-              categoryId,
-            },
-            {
-              headers: {
-                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-              },
-              withCredentials: true,
-            }
-          )
-          .then((res) => {
-            console.log(res.data);
-
-            setProducts(
-              products.map((product) => {
-                if (product.id == editProduct.id) return res.data;
-                return product;
-              })
-            );
-            setEditProduct(undefined);
-            setOpenModal(false);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        axios
-          .post(import.meta.env.VITE_API_URL + "/api/upload", formData, {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-              "Content-Type": "multipart/form-data",
-            },
-            withCredentials: true,
-          })
-          .then((res) => {
-            console.log(res.data);
-            axios
-              .put(
-                import.meta.env.VITE_API_URL + "/api/product/" + editProduct.id,
-                {
-                  name,
-                  description,
-                  price,
-                  image: res.data,
-                  categoryId,
-                },
-                {
-                  headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-                  },
-                  withCredentials: true,
-                }
-              )
-              .then((res) => {
-                setProducts(
-                  products.map((product) => {
-                    if (product.id == editProduct.id) return res.data;
-                    return product;
-                  })
-                );
-                setEditProduct(undefined);
-                setOpenModal(false);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    } else {
-      axios
-        .post(import.meta.env.VITE_API_URL + "/api/upload", formData, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        })
-        .then((res) => {
-          console.log(res.data);
-          axios
-            .post(
-              import.meta.env.VITE_API_URL + "/api/product",
-              {
-                name,
-                description,
-                price,
-                image: res.data,
-                categoryId,
-              },
-              {
-                headers: {
-                  Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-                },
-                withCredentials: true,
-              }
-            )
-            .then((res) => {
-              console.log(res.data);
-              setProducts([...products, res.data]);
-              setName("");
-              setDescription("");
-              setPrice("");
-              setCategoryId(undefined);
-              setPreviewUrl(null);
-              setSelectedFile(null);
-              toast("Product created successfully");
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    if (imageUrl == "" && editProduct == null) {
+      toast("Image required");
+      return;
     }
+    if (isPendingImage) return;
+    if (editProduct) updateProduct();
+    else createProduct();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      const formData = new FormData();
+      formData.append("file", file);
+      uploadFile(formData);
     }
   };
 
-  return loading ? (
+  return isPending ? (
     <Loader />
   ) : (
     <div>
@@ -246,7 +166,7 @@ const ProductModal = ({
               <option selected={categoryId == undefined} disabled={true}>
                 Choose a category
               </option>
-              {categories.map((category, i) => {
+              {categories.map((category: Category, i: number) => {
                 return (
                   <option key={i} value={category.id}>
                     {category.name}
@@ -270,8 +190,13 @@ const ProductModal = ({
             {previewUrl && (
               <img src={previewUrl} className="w-3/5 rounded-lg" />
             )}
-            <button className="bg-[#00ADB5] text-[#eee] px-4 py-2 rounded-lg w-3/5 cursor-pointer hover:scale-105 outline-none">
+            <button
+              className={`bg-[#00ADB5] text-[#eee] px-4 py-2 rounded-lg w-3/5 cursor-pointer outline-none flex items-center justify-center gap-5 ${isPendingImage ? "" : "hover:scale-105"}`}
+            >
               {editProduct ? "Edit" : "Save"}
+              {isPendingImage && (
+                <div className="w-5 h-5 border-4 border-t-white border-gray-300 rounded-full animate-spin"></div>
+              )}
             </button>
           </form>
         </div>

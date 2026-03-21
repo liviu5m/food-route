@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useAppContext } from "../../../libs/AppContext";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { updateUserAccountData } from "../../api/user";
 
 const Account = () => {
   const { user } = useAppContext();
@@ -15,67 +17,40 @@ const Account = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  console.log(user);
-  
+
+  const { mutate: updateAccount } = useMutation({
+    mutationKey: ["update-account-data"],
+    mutationFn: (data: any) => updateUserAccountData(user?.id || -1, data),
+    onSuccess: (data) => {
+      console.log(data);
+      toast("Account updated successfully");
+    },
+    onError: (err: AxiosError) => {
+      console.log(err);
+      if (err?.response?.data) toast(err?.response?.data as string);
+    },
+  });
+
   const updateAccountData = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .put(
-        import.meta.env.VITE_API_URL + "/api/users/" + user?.id,
-        {
-          fullName,
-          username,
-          address,
-          phoneNumber,
-          currentUsername: user?.username,
-          type: "data",
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-          },
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        toast("Account Data updated successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.data) toast(err.response.data);
-      });
+    updateAccount({
+      fullName,
+      username,
+      address,
+      phoneNumber,
+      currentUsername: user?.username,
+      type: "data",
+    });
   };
 
   const updateAccountPassword = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .put(
-        import.meta.env.VITE_API_URL + "/api/users/" + user?.id,
-        {
-          currentPassword,
-          newPassword,
-          passwordConfirmation,
-          type: "password",
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-          },
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        toast("Account Password updated successfully");
-        setCurrentPassword("");
-        setNewPassword("");
-        setPasswordConfirmation("");
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.data) toast(err.response.data);
-      });
+    updateAccount({
+      currentPassword,
+      newPassword,
+      passwordConfirmation,
+      type: "password",
+    });
   };
 
   return (

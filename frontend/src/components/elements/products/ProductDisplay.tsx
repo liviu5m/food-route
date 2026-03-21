@@ -3,6 +3,10 @@ import ProductsContainer from "./ProductsContainer";
 import ProductsFilter from "./ProductsFilter";
 import { useSearchParams } from "react-router-dom";
 import FilterSidebar from "../FilterSidebar";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCategories } from "../../../api/categories";
+import { getProductMaxPrice } from "../../../api/products";
+import Loader from "../Loader";
 
 const ProductDisplay = () => {
   const [prices, setPrices] = useState([0, 10000]);
@@ -18,7 +22,19 @@ const ProductDisplay = () => {
     setSearchParams();
   }, [categoryId]);
 
-  return (
+  const { data: categories, isPending } = useQuery({
+    queryKey: ["categories"],
+    queryFn: () => getAllCategories(),
+  });
+
+  const { data: price, isPending: isPendingPrice } = useQuery({
+    queryKey: ["get-max-price"],
+    queryFn: () => getProductMaxPrice(),
+  });
+
+  return isPending || isPendingPrice ? (
+    <Loader />
+  ) : (
     <div className="flex w-full my-10 gap-10">
       <ProductsContainer
         prices={prices}
@@ -35,6 +51,8 @@ const ProductDisplay = () => {
         setSelectedCategory={setSelectedCategory}
         search={search}
         setSearch={setSearch}
+        price={price}
+        categories={categories}
       />
       <FilterSidebar
         isSidebarOpened={isSidebarOpened}
@@ -45,6 +63,8 @@ const ProductDisplay = () => {
         setSelectedCategory={setSelectedCategory}
         search={search}
         setSearch={setSearch}
+        price={price}
+        categories={categories}
       />
     </div>
   );

@@ -8,64 +8,41 @@ import Loader from "../../elements/Loader";
 import { toast, ToastContainer } from "react-toastify";
 import ProductModal from "../../elements/admin/ProductModal";
 import Pagination from "../../elements/Pagination";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { deleteProductFunc, getProduct } from "../../../api/products";
 
 const ProductAdmin = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState<Product[]>([]);
   const [editProduct, setEditProduct] = useState<Product>();
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
+  const pageSize = 10;
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    setLoading(true);
-    axios
-      .get(
-        import.meta.env.VITE_API_URL +
-          `/api/product?page=${currentPage}&size=10`,
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-          },
-          withCredentials: true,
-        }
-      )
-      .then((res) => {
-        console.log(res.data);
-        setProducts(res.data.content);
-        setTotalPages(res.data.totalPages);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, [currentPage]);
+  const { data: productsData, isPending } = useQuery({
+    queryKey: ["get-products", currentPage],
+    queryFn: () => getProduct(currentPage, pageSize),
+    placeholderData: keepPreviousData,
+  });
 
-  const deleteProduct = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    id: number
-  ) => {
-    const button = e.currentTarget;
-    axios
-      .delete(import.meta.env.VITE_API_URL + "/api/product/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-        button.closest("tr")?.remove();
-        setProducts(products.filter((product) => product.id != id));
-        toast("Product deleted successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const { mutate: deleteProduct } = useMutation({
+    mutationKey: ["delete-product"],
+    mutationFn: (id: number) => deleteProductFunc(id),
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ["get-products"] });
+      toast("Product deleted successfully");
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
-  return loading ? (
+  return isPending ? (
     <Loader />
   ) : (
     <AdminLayout>
@@ -79,7 +56,8 @@ const ProductAdmin = () => {
           <h3>Add Product</h3>
         </button>
       </div>
-      {products.length > 0 ? (
+
+      {productsData.content.length > 0 ? (
         <>
           <table className="w-full table-auto border-collapse text-left my-10">
             <thead>
@@ -94,7 +72,7 @@ const ProductAdmin = () => {
               </tr>
             </thead>
             <tbody className="text-gray-700">
-              {products.map((product, i) => {
+              {productsData.content.map((product: Product, i: number) => {
                 return (
                   <tr
                     key={i}
@@ -122,7 +100,7 @@ const ProductAdmin = () => {
                       </button>
                       <button
                         className="px-4 py-2 rounded-md text-[#eee] bg-red-400 cursor-pointer"
-                        onClick={(e) => deleteProduct(e, product.id)}
+                        onClick={(e) => deleteProduct(product.id)}
                       >
                         Delete
                       </button>
@@ -134,7 +112,7 @@ const ProductAdmin = () => {
           </table>
           <Pagination
             currentPage={currentPage}
-            totalPages={totalPages}
+            totalPages={productsData.totalPages}
             onPageChange={setCurrentPage}
           />
         </>
@@ -142,13 +120,7 @@ const ProductAdmin = () => {
         <p className="mt-10 text-center text-lg">No Products available.</p>
       )}
       {openModal && (
-        <ProductModal
-          setOpenModal={setOpenModal}
-          setProducts={setProducts}
-          products={products}
-          editProduct={editProduct}
-          setEditProduct={setEditProduct}
-        />
+        <ProductModal setOpenModal={setOpenModal} editProduct={editProduct} />
       )}
       <ToastContainer />
     </AdminLayout>

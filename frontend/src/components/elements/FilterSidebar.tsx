@@ -18,6 +18,8 @@ const FilterSidebar = ({
   setSelectedCategory,
   search,
   setSearch,
+  price,
+  categories,
 }: {
   setIsSidebarOpened: (isOpen: boolean) => void;
   isSidebarOpened: boolean;
@@ -27,29 +29,17 @@ const FilterSidebar = ({
   setSelectedCategory: (e: number) => void;
   search: string;
   setSearch: (e: string) => void;
+  price: number;
+  categories: Category[];
 }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
   const [maxPrice, setMaxPrice] = useState(0);
   const [hoverId, setHoverId] = useState<number | null>(null);
 
   useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/category/all")
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/product/max")
-      .then((res) => {
-        setMaxPrice(Math.round(res.data));
-        setPrices([0, Math.round(res.data)]);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    if (price) {
+      setMaxPrice(Math.round(price));
+      setPrices([0, Math.round(price)]);
+    }
   }, [maxPrice]);
 
   return (
@@ -90,7 +80,7 @@ const FilterSidebar = ({
                       }`}
                       onClick={() =>
                         setSelectedCategory(
-                          selectedCategory == category.id ? -1 : category.id
+                          selectedCategory == category.id ? -1 : category.id,
                         )
                       }
                       onMouseOver={() => setHoverId(category.id)}

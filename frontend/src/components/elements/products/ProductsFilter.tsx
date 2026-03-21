@@ -7,6 +7,9 @@ import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
+import { useQuery } from "@tanstack/react-query";
+import { getAllCategories } from "../../../api/categories";
+import { getProductMaxPrice } from "../../../api/products";
 
 const ProductsFilter = ({
   prices,
@@ -15,6 +18,8 @@ const ProductsFilter = ({
   setSelectedCategory,
   search,
   setSearch,
+  price,
+  categories,
 }: {
   prices: number[];
   setPrices: (e: number[]) => void;
@@ -22,43 +27,25 @@ const ProductsFilter = ({
   setSelectedCategory: (e: number) => void;
   search: string;
   setSearch: (e: string) => void;
+  price: number;
+  categories: Category[];
 }) => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [maxPrice, setMaxPrice] = useState(0);
   const [hoverId, setHoverId] = useState<number | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/category/all")
-      .then((res) => {
-        setCategories(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/product/max")
-      .then((res) => {
-        setMaxPrice(Math.round(res.data));
-        setPrices([0, Math.round(res.data)]);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+    if (price) {
+      setMaxPrice(Math.round(price));
+      setPrices([0, Math.round(price)]);
+    }
   }, [maxPrice]);
 
-  return loading ? (
-    <Loader />
-  ) : (
+  return (
     <div className="w-1/5 hidden xl:flex flex-col gap-10">
       <div className="rounded-2xl border border-[#e5e5e5] px-5 py-3">
         <h2 className="text-center font-bold text-lg">Categories</h2>
         <div className="bg-[#FBF7E8] rounded-2xl px-5 py-3 flex flex-col gap-5 text-[#808080] mt-4">
-          {categories.map((category, i) => {
+          {categories.map((category: Category, i: number) => {
             return (
               <div
                 key={i}
@@ -67,7 +54,7 @@ const ProductsFilter = ({
                 }`}
                 onClick={() =>
                   setSelectedCategory(
-                    selectedCategory == category.id ? -1 : category.id
+                    selectedCategory == category.id ? -1 : category.id,
                   )
                 }
                 onMouseOver={() => setHoverId(category.id)}

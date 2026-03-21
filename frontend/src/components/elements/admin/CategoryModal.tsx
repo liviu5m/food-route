@@ -4,6 +4,10 @@ import axios from "axios";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import type { Category } from "../../../../libs/Types";
+import { useMutation } from "@tanstack/react-query";
+import { createCategory, editCategoryFunc } from "../../../api/categories";
+import { uploadImage } from "../../../api/upload";
+import { queryClient } from "../../../App";
 
 const CategoryModal = ({
   setOpenModal,
@@ -21,129 +25,68 @@ const CategoryModal = ({
   const [name, setName] = useState(editCategory?.name || "");
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
-    editCategory?.image || null
+    editCategory?.image || null,
   );
+  const [imageUrl, setImageUrl] = useState("");
+
+  const { mutate: addCategory } = useMutation({
+    mutationKey: ["addCategory"],
+    mutationFn: () => createCategory(name, imageUrl),
+    onSuccess: (data) => {
+      console.log(data);
+      setName("");
+      setPreviewUrl(null);
+      setSelectedFile(null);
+      toast("Category created successfully");
+      setOpenModal(false);
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const { mutate: uploadFile, isPending } = useMutation({
+    mutationKey: ["uploadFile"],
+    mutationFn: (data: FormData) => uploadImage(data),
+    onSuccess: (data) => {
+      console.log(data);
+      setImageUrl(data);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const { mutate: updateCategory } = useMutation({
+    mutationKey: ["upload-category"],
+    mutationFn: () =>
+      editCategoryFunc(
+        editCategory?.id || -1,
+        name,
+        imageUrl ? imageUrl : editCategory?.image || "",
+      ),
+    onSuccess: (data) => {
+      console.log(data);
+      setEditCategory(undefined);
+      setOpenModal(false);
+      queryClient.invalidateQueries({ queryKey: ["categories"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+  console.log(imageUrl);
 
   const saveCategory = (e: React.FormEvent<HTMLFormElement>) => {
-    const formData = new FormData();
-    formData.append("file", selectedFile || "");
-
+    if (isPending) return;
     e.preventDefault();
-    if (editCategory) {
-      if (previewUrl == editCategory.image) {
-        axios
-          .put(
-            import.meta.env.VITE_API_URL + "/api/category/" + editCategory.id,
-            {
-              name,
-              image: previewUrl,
-            },
-            {
-              headers: {
-                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-              },
-              withCredentials: true,
-            }
-          )
-          .then((res) => {
-            console.log(res.data);
-            setCategories(
-              categories.map((category) => {
-                if (category.id == editCategory.id) return res.data;
-                return category;
-              })
-            );
-            setEditCategory(undefined);
-            setOpenModal(false);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      } else {
-        axios
-          .post(import.meta.env.VITE_API_URL + "/api/upload", formData, {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-              "Content-Type": "multipart/form-data",
-            },
-            withCredentials: true,
-          })
-          .then((res) => {
-            axios
-              .put(
-                import.meta.env.VITE_API_URL +
-                  "/api/category/" +
-                  editCategory.id,
-                {
-                  name,
-                  image: res.data,
-                },
-                {
-                  headers: {
-                    Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-                  },
-                  withCredentials: true,
-                }
-              )
-              .then((res) => {
-                console.log(res.data);
-                setCategories(
-                  categories.map((category) => {
-                    if (category.id == editCategory.id) return res.data;
-                    return category;
-                  })
-                );
-                setEditCategory(undefined);
-                setOpenModal(false);
-              })
-              .catch((err) => {
-                console.log(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      }
-    } else {
-      axios
-        .post(import.meta.env.VITE_API_URL + "/api/upload", formData, {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        })
-        .then((res) => {
-          axios
-            .post(
-              import.meta.env.VITE_API_URL + "/api/category",
-              {
-                name,
-                image: res.data,
-              },
-              {
-                headers: {
-                  Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-                },
-                withCredentials: true,
-              }
-            )
-            .then((res) => {
-              console.log(res.data);
-              setCategories([...categories, res.data]);
-              setName("");
-              setPreviewUrl(null);
-              setSelectedFile(null);
-              toast("Category created successfully");
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    if (imageUrl == "" && editCategory == null) {
+      toast("Image required");
+      return;
     }
+    if (editCategory) updateCategory();
+    else addCategory();
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -151,6 +94,9 @@ const CategoryModal = ({
     if (file) {
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
+      const formData = new FormData();
+      formData.append("file", file);
+      uploadFile(formData);
     }
   };
 
@@ -198,8 +144,13 @@ const CategoryModal = ({
             {previewUrl && (
               <img src={previewUrl} className="w-3/5 rounded-lg" />
             )}
-            <button className="bg-[#00ADB5] text-[#eee] px-4 py-2 rounded-lg w-3/5 cursor-pointer hover:scale-105 outline-none">
+            <button
+              className={`bg-[#00ADB5] text-[#eee] px-4 py-2 rounded-lg w-3/5 cursor-pointer ${isPending ? "" : "hover:scale-105"} outline-none flex items-center justify-center gap-5`}
+            >
               {editCategory ? "Edit" : "Save"}
+              {isPending && (
+                <div className="w-5 h-5 border-4 border-t-white border-gray-300 rounded-full animate-spin"></div>
+              )}
             </button>
           </form>
         </div>

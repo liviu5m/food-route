@@ -45,3 +45,14 @@ export async function logoutUserFunc() {
   );
   return response.data;
 }
+
+export async function updateUserAccountData(id: number, data: any) {
+  const response = await axios.put(
+    `${baseUrl}/api/users/${id}`,
+    { ...data },
+    {
+      withCredentials: true,
+    },
+  );
+  return response.data;
+}

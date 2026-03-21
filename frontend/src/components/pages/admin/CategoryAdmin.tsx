@@ -1,19 +1,17 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import AdminLayout from "../../layouts/AdminLayout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import CategoryModal from "../../elements/admin/CategoryModal";
 import type { Category } from "../../../../libs/Types";
-import axios from "axios";
 import Loader from "../../elements/Loader";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import Pagination from "../../elements/Pagination";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { deleteCategoryFunc, getCategories } from "../../../api/categories";
 
 const CategoryAdmin = () => {
   const [openModal, setOpenModal] = useState(false);
-  const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
   const [editCategory, setEditCategory] = useState<Category>();
   const [currentPage, setCurrentPage] = useState(0);
@@ -79,7 +77,10 @@ const CategoryAdmin = () => {
                     <td className="p-4 font-semibold">{category.id}</td>
                     <td className="p-4 font-semibold">{category.name}</td>
                     <td className="p-4 font-semibold">
-                      <img className="w-30" src={category.image} />
+                      <img
+                        className="w-30 h-20 rounded-lg object-cover"
+                        src={category.image}
+                      />
                     </td>
                     <td className="p-4 font-semibold">
                       <button

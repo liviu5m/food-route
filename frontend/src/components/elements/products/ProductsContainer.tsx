@@ -38,7 +38,7 @@ const ProductsContainer = ({
         prices,
         selectedCategory,
         search,
-        sortingType
+        sortingType,
       ),
     refetchOnWindowFocus: false,
     staleTime: 0,
