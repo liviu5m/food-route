@@ -13,9 +13,6 @@ export async function sendEmail(
       comment,
     },
     {
-      headers: {
-        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-      },
       withCredentials: true,
     }
   );

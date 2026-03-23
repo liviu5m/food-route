@@ -1,5 +1,4 @@
 import axios from "axios";
-import { toast } from "react-toastify";
 const baseUrl = import.meta.env.VITE_API_URL;
 
 export async function getCategories(currentPage: number) {

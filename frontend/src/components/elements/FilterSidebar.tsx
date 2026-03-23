@@ -5,7 +5,6 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import type { Category } from "../../../libs/Types";
 import Slider from "rc-slider";
 

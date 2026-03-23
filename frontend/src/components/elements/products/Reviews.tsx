@@ -3,12 +3,17 @@ import { useAppContext } from "../../../../libs/AppContext";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
 import type { Review } from "../../../../libs/Types";
 import SingleReview from "./SingleReview";
 import SmallLoader from "../SmallLoader";
 import type { Dispatch, SetStateAction } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createReviewFunc,
+  getReviewsPaginated,
+  updateReviewById,
+} from "../../../api/review";
 
 type ReviewsProps = {
   productId: number;
@@ -36,11 +41,13 @@ const Reviews = ({
   const [loading, setLoading] = useState(false);
   const [editReview, setEditReview] = useState<Review | null>(null);
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   let stars = [];
   for (let i = 1; i <= 5; i++) {
     stars.push(
       <FontAwesomeIcon
+        key={i}
         icon={faStar}
         className={`${
           review.rating >= i ? "text-[#FFCC00]" : "text-[#DFDFDF]"
@@ -48,99 +55,74 @@ const Reviews = ({
         onClick={() =>
           setReview({ ...review, rating: i == review.rating ? 0 : i })
         }
-      />
+      />,
     );
   }
+
+  const { mutate: updateReview } = useMutation({
+    mutationKey: ["update-review"],
+    mutationFn: () =>
+      updateReviewById(editReview?.id || -1, {
+        ...review,
+        productId: productId,
+        userId: user?.id,
+      }),
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ["get-reviews-paginated"] });
+      queryClient.invalidateQueries({ queryKey: ["get-reviews"] });
+      toast("Review updated successfully");
+      setEditReview(null);
+      setReview({ rating: 0, review: "" });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const { mutate: createReview } = useMutation({
+    mutationKey: ["create-review"],
+    mutationFn: () =>
+      createReviewFunc({ ...review, productId: productId, userId: user?.id }),
+    onSuccess: (data) => {
+      console.log(data);
+      setReview({ rating: 0, review: "" });
+      toast("Review created successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-reviews-paginated"] });
+      queryClient.invalidateQueries({ queryKey: ["get-reviews"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const { data: reviewsData } = useQuery({
+    queryKey: ["get-reviews-paginated", productId],
+    queryFn: () =>
+      getReviewsPaginated({
+        page: currentPage,
+        size: 5,
+        productId,
+        userId: user?.id || -1,
+      }),
+  });
 
   const manageReview = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!user) navigate("/auth/login");
-    if (editReview) {
-      axios
-        .put(
-          import.meta.env.VITE_API_URL + "/api/review/" + editReview.id,
-          { ...review, productId: productId, userId: user?.id },
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-            },
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          let reviewsFiltered = reviews.filter(
-            (review) => review.id !== editReview.id
-          );
-          setReviews([res.data, ...reviewsFiltered]);
-
-          setRating(
-            Math.round(
-              (rating * totalReviews - editReview.rating + res.data.rating) /
-                totalReviews
-            )
-          );
-          setReview({ rating: 0, review: "" });
-          toast("Review updated successfully");
-          setEditReview(null);
-        })
-        .catch((err) => {
-        console.log(err);
-        });
-    } else {
-      axios
-        .post(
-          import.meta.env.VITE_API_URL + "/api/review",
-          { ...review, productId: productId, userId: user?.id },
-          {
-            headers: {
-              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-            },
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-
-          setRating(
-            Math.round(
-              (rating * totalReviews + res.data.rating) / (totalReviews + 1)
-            )
-          );
-          setTotalReviews(totalReviews + 1);
-          setReview({ rating: 0, review: "" });
-          setReviews([res.data, ...reviews]);
-          toast("Review created successfully");
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    if (editReview) updateReview();
+    else createReview();
   };
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/review", {
-        params: {
-          page: currentPage,
-          size: 5,
-          productId,
-          userId: user?.id || -1,
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (res.data.totalPages == currentPage + 1) setShowMore(false);
-        else setShowMore(true);
-        if (currentPage == 0) setReviews(res.data.content);
-        else setReviews([...reviews, ...res.data.content]);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, [currentPage]);
+    if (reviewsData) {
+      if (reviewsData.totalPages == currentPage + 1) setShowMore(false);
+      else setShowMore(true);
+      if (currentPage == 0) setReviews(reviewsData.content);
+      else setReviews([...reviews, ...reviewsData.content]);
+      setLoading(false);
+    }
+  }, [currentPage, reviewsData]);
 
   useEffect(() => {
     if (editReview) {

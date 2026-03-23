@@ -79,3 +79,20 @@ export async function getProductMaxPrice() {
   const response = await axios.get(baseUrl + "/api/product/max");
   return response.data;
 }
+
+export async function getProductById(id: string) {
+  const response = await axios.get(baseUrl + "/api/product/" + id);
+  return response.data;
+}
+
+export async function getProductsByCategoryId(categoryId: number) {
+  const response = await axios.get(
+    import.meta.env.VITE_API_URL + "/api/product",
+    {
+      params: {
+        categoryId,
+      },
+    },
+  );
+  return response.data;
+}

@@ -1,6 +1,5 @@
 import { faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import axios from "axios";
 import React, { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import type { Category } from "../../../../libs/Types";
@@ -11,19 +10,14 @@ import { queryClient } from "../../../App";
 
 const CategoryModal = ({
   setOpenModal,
-  setCategories,
-  categories,
   editCategory,
   setEditCategory,
 }: {
   setOpenModal: (e: boolean) => void;
-  setCategories: (e: Category[]) => void;
-  categories: Category[];
   editCategory: Category | undefined;
   setEditCategory: (e: Category | undefined) => void;
 }) => {
   const [name, setName] = useState(editCategory?.name || "");
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
     editCategory?.image || null,
   );
@@ -36,7 +30,6 @@ const CategoryModal = ({
       console.log(data);
       setName("");
       setPreviewUrl(null);
-      setSelectedFile(null);
       toast("Category created successfully");
       setOpenModal(false);
       queryClient.invalidateQueries({ queryKey: ["categories"] });
@@ -92,7 +85,6 @@ const CategoryModal = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       const formData = new FormData();
       formData.append("file", file);

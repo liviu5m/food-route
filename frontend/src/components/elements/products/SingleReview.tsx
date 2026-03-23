@@ -1,4 +1,3 @@
-import React from "react";
 import type { Review } from "../../../../libs/Types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -8,15 +7,12 @@ import {
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { useAppContext } from "../../../../libs/AppContext";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deleteReviewById } from "../../../api/review";
 
 const SingleReview = ({
   review,
-  setTotalReviews,
-  totalReviews,
-  rating,
-  setRating,
   setEditReview,
 }: {
   review: Review;
@@ -27,13 +23,15 @@ const SingleReview = ({
   setEditReview: (e: Review | null) => void;
 }) => {
   const { user } = useAppContext();
+  const queryClient = useQueryClient();
   let stars = [];
   for (let i = 1; i <= 5; i++) {
     stars.push(
       <FontAwesomeIcon
+        key={i}
         icon={faStar}
         className={review.rating >= i ? "text-[#FFCC00]" : "text-[#DFDFDF]"}
-      />
+      />,
     );
   }
 
@@ -46,30 +44,18 @@ const SingleReview = ({
     });
   }
 
-  const deleteReview = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const button = e.currentTarget;
-    axios
-      .delete(import.meta.env.VITE_API_URL + "/api/review/" + review.id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-        toast("Review deleted successfully");
-        button.closest("section")?.remove();
-        setTotalReviews(totalReviews - 1);
-        setRating(
-          Math.round(
-            (rating * totalReviews - review.rating) / (totalReviews - 1)
-          )
-        );
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const { mutate: deleteReview } = useMutation({
+    mutationKey: ["delete-review"],
+    mutationFn: () => deleteReviewById(review.id),
+    onSuccess: (data) => {
+      console.log(data);
+      toast("Review deleted successfully");
+      queryClient.invalidateQueries({ queryKey: ["get-reviews-paginated"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   return (
     <section className="flex gap-5 flex-1/2">
@@ -94,7 +80,7 @@ const SingleReview = ({
                 </button>
                 <button
                   className="bg-red-400 font-bold w-fit text-white px-5 py-3 text-sm rounded-lg uppercase cursor-pointer hover:scale-105"
-                  onClick={(e) => deleteReview(e)}
+                  onClick={() => deleteReview()}
                 >
                   <FontAwesomeIcon icon={faTrash} />
                 </button>

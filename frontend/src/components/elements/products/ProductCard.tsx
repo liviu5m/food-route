@@ -9,18 +9,20 @@ import {
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { useAppContext } from "../../../../libs/AppContext";
+import { useQuery } from "@tanstack/react-query";
+import { getAllReviewsByProductId } from "../../../api/review";
 
 const ProductCard = ({ product }: { product: Product }) => {
   const [hover, setHover] = useState(false);
   const [rating, setRating] = useState<React.ReactElement[]>();
   const { managedCart, user, manageFavorite } = useAppContext();
   const [isFavorite, setIsFavorite] = useState(
-    user?.favorites.find((fav) => fav.product.id == product.id) ? true : false
+    user?.favorites.find((fav) => fav.product.id == product.id) ? true : false,
   );
   const [isInCart, setIsInCart] = useState(
     user?.cart.cartProducts.find((prod) => prod.product.id == product.id)
       ? true
-      : false
+      : false,
   );
 
   const formatDesc = (desc: string) => {
@@ -29,47 +31,42 @@ const ProductCard = ({ product }: { product: Product }) => {
     return res;
   };
 
-  useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/review/all", {
-        params: {
-          productId: product.id,
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        let reviewSum = 0;
-        for (let i = 0; i < res.data.length; i++) {
-          reviewSum += res.data[i].rating;
-        }
-        let stars = [];
-        let avg = Math.round(reviewSum / res.data.length) | 0;
+  const { data: reviewsData } = useQuery({
+    queryKey: ["get-reviews-all"],
+    queryFn: () => getAllReviewsByProductId(product.id.toString()),
+  });
 
-        for (let i = 1; i <= avg; i++) {
-          stars.push(
-            <FontAwesomeIcon
-              keyPoints={i}
-              key={i}
-              icon={faStar}
-              className={"text-[#FFCC00]"}
-            />
-          );
-        }
-        for (let i = avg + 1; i <= 5; i++) {
-          stars.push(
-            <FontAwesomeIcon
-              key={i}
-              icon={faStar}
-              className={"text-[#DFDFDF]"}
-            />
-          );
-        }
-        setRating(stars);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  useEffect(() => {
+    if (reviewsData) {
+      let reviewSum = 0;
+      for (let i = 0; i < reviewsData.length; i++) {
+        reviewSum += reviewsData[i].rating;
+      }
+      let stars = [];
+      let avg = Math.round(reviewSum / reviewsData.length) | 0;
+
+      for (let i = 1; i <= avg; i++) {
+        stars.push(
+          <FontAwesomeIcon
+            keyPoints={i}
+            key={i}
+            icon={faStar}
+            className={"text-[#FFCC00]"}
+          />,
+        );
+      }
+      for (let i = avg + 1; i <= 5; i++) {
+        stars.push(
+          <FontAwesomeIcon
+            key={i}
+            icon={faStar}
+            className={"text-[#DFDFDF]"}
+          />,
+        );
+      }
+      setRating(stars);
+    }
+  }, [reviewsData]);
 
   return (
     <div
@@ -131,7 +128,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             onClick={() => {
               setIsInCart(!isInCart);
               let el = user?.cart.cartProducts.find(
-                (prod) => prod.product.id == product.id
+                (prod) => prod.product.id == product.id,
               );
               managedCart(product.id, el ? String(el?.id) : "add", true, 1);
             }}

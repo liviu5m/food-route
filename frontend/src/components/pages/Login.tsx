@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import axios, { AxiosError } from "axios";
-import { useAppContext } from "../../../libs/AppContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import type { LoginData } from "../../../libs/Types";
@@ -16,6 +15,8 @@ const Login = () => {
     password: "",
   });
   const queryClient = useQueryClient();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { mutate: resend } = useMutation({
     mutationKey: ["resendVerificationCode"],
@@ -41,7 +42,6 @@ const Login = () => {
     },
     onError: (err: AxiosError) => {
       console.log(err);
-
       if (
         err?.response?.data ==
         "Account not verified, please verify your account"
@@ -64,6 +64,26 @@ const Login = () => {
       import.meta.env.VITE_API_URL + "/oauth2/authorization/google";
   };
 
+  useEffect(() => {
+    const errorType = searchParams.get("error");
+
+    if (errorType) {
+      const messages: Record<string, string> = {
+        provider_mismatch:
+          "This account uses a different login method (e.g., Credentials).",
+        invalid_credentials: "Invalid email or password.",
+        default: "An error occurred during authentication.",
+      };
+
+      setErrorMessage(messages[errorType] || messages.default);
+      searchParams.delete("error");
+      setSearchParams(searchParams, { replace: true });
+      setTimeout(() => {
+        setErrorMessage("");
+      }, 5000);
+    }
+  }, [searchParams, setSearchParams]);
+
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-[#222831]">
       <Link to="/" className="absolute top-5 left-5">
@@ -74,6 +94,11 @@ const Login = () => {
       </Link>
       <div className="w-[400px]">
         <h1 className="font-bold text-2xl text-center mb-10">Log In</h1>
+        {errorMessage && (
+          <div className=" text-red-700 p-3 rounded">
+            {errorMessage}
+          </div>
+        )}
         <form
           className="flex flex-col gap-5"
           onSubmit={(e) => {

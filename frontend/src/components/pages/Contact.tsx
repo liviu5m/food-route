@@ -77,7 +77,10 @@ const Contact = () => {
           </div>
           <div className="w-full lg:w-1/2">
             <h2 className="text-xl font-semibold mb-4">Send us a message</h2>
-            <form className="w-full lg:w-2/3" onSubmit={(e) => sendEmailFunc(e)}>
+            <form
+              className="w-full lg:w-2/3"
+              onSubmit={(e) => sendEmailFunc(e)}
+            >
               <input
                 type="text"
                 className="px-5 py-3 rounded-lg border border-[#E1E1E1] outline-none w-full"

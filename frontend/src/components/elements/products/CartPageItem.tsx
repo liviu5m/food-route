@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import type { Product } from "../../../../libs/Types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMinus, faPlus} from "@fortawesome/free-solid-svg-icons";
+import { faMinus, faPlus } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useAppContext } from "../../../../libs/AppContext";
+import { useMutation } from "@tanstack/react-query";
+import { updateCartProductQuantity } from "../../../api/cart";
 
 const CartPageItem = ({
   product,
@@ -21,30 +23,29 @@ const CartPageItem = ({
   const [quantity, setQuantity] = React.useState(productQuantity);
   const { user, managedCart, manageFavorite } = useAppContext();
   const [isFavorite, setIsFavorite] = useState(
-    user?.favorites.find((fav) => fav.product.id == product.id) ? true : false
+    user?.favorites.find((fav) => fav.product.id == product.id) ? true : false,
   );
 
+
+  const { mutate: updateCartQuantity } = useMutation({
+    mutationKey: ["update-cart-quantity"],
+    mutationFn: () =>
+      updateCartProductQuantity(
+        cartProductId,
+        product.id,
+        quantity,
+        user?.cart.id || -1,
+      ),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
   useEffect(() => {
-    if (quantity != productQuantity) {
-      axios
-        .put(
-          import.meta.env.VITE_API_URL + "/api/cart-product/" + cartProductId,
-          {
-            productId: product.id,
-            quantity: quantity,
-            cartId: user?.cart.id,
-          },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    if (quantity != productQuantity) updateCartQuantity();
   }, [quantity]);
 
   return (
@@ -62,8 +63,12 @@ const CartPageItem = ({
       <div className="flex flex-col justify-between w-full">
         <div className="h-full flex flex-col gap-5 md:grid md:grid-cols-4 justify-between w-full items-start">
           <div>
-            <h2 className="text-lg md:text-xl font-semibold ">{product.name}</h2>
-            <h4 className="hidden md:block text-[#808080]">{product.category.name}</h4>
+            <h2 className="text-lg md:text-xl font-semibold ">
+              {product.name}
+            </h2>
+            <h4 className="hidden md:block text-[#808080]">
+              {product.category.name}
+            </h4>
           </div>
           <p className=" text-gray-600">Price: ${product.price.toFixed(2)}</p>
           <div className="flex items-center">
@@ -110,10 +115,10 @@ const CartPageItem = ({
             className="text-[#808080] cursor-pointer hover:text-[#FFCC00]"
             onClick={() => {
               setIsFavorite(!isFavorite);
-              manageFavorite(product, isFavorite ? "create" : "delete");
+              manageFavorite(product, !isFavorite ? "create" : "delete");
             }}
           >
-            {isFavorite ? "Add to " : "Remove from "} Wishlist
+            {!isFavorite ? "Add to " : "Remove from "} Wishlist
           </button>
         </div>
       </div>

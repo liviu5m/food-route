@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { getCategories } from "../../../api/categories";
+import { getAllCategories, getCategories } from "../../../api/categories";
 import { getProduct } from "../../../api/products";
 import type { Category, Product as ProductType } from "../../../../libs/Types";
 import Loader from "../Loader";
@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 const PopularDishes = () => {
   const { data: categories, isLoading } = useQuery({
     queryKey: ["categories"],
-    queryFn: getCategories,
+    queryFn: () => getAllCategories(),
   });
 
   const [selectedCategory, setSelectedCategory] = useState(-1);
@@ -32,26 +32,28 @@ const PopularDishes = () => {
             Popular dishes
           </h1>
           <div className="hidden md:flex items-center justify-center gap-10 mt-8">
-            {categories.content && categories.content.map((category: Category, i: number) => {
-              return (
-                <div
-                  key={i}
-                  className={`px-10 py-5 rounded-2xl border border-[#EDEDED] text-lg font-semibold  cursor-pointer ${
-                    selectedCategory == category.id
-                      ? "bg-[#FFCC00]"
-                      : "hover:bg-[#FFCC00]"
-                  }`}
-                  onClick={() => setSelectedCategory(category.id)}
-                >
-                  <h1>{category.name}</h1>
-                </div>
-              );
-            })}
+            {categories.content &&
+              categories.content.map((category: Category, i: number) => {
+                return (
+                  <div
+                    key={i}
+                    className={`px-10 py-5 rounded-2xl border border-[#EDEDED] text-lg font-semibold  cursor-pointer ${
+                      selectedCategory == category.id
+                        ? "bg-[#FFCC00]"
+                        : "hover:bg-[#FFCC00]"
+                    }`}
+                    onClick={() => setSelectedCategory(category.id)}
+                  >
+                    <h1>{category.name}</h1>
+                  </div>
+                );
+              })}
           </div>
           <div className="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-5 gap-10 mt-10">
-            {products.content && products.content.map((product: ProductType, i: number) => {
-              return <ProductCard key={i} product={product} />;
-            })}
+            {products.content &&
+              products.content.map((product: ProductType, i: number) => {
+                return <ProductCard key={i} product={product} />;
+              })}
           </div>
           <Link
             to="/products"

@@ -17,11 +17,12 @@ import RelatedProducts from "../elements/products/RelatedProducts";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
 import { useAppContext } from "../../../libs/AppContext";
 import CartLoader from "../elements/CartLoader";
+import { useQuery } from "@tanstack/react-query";
+import { getAllReviewsByProductId } from "../../api/review";
+import { getProductById } from "../../api/products";
 
 const ProductComponent = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState<Product>();
-  const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [totalReviews, setTotalReviews] = useState(0);
   const [rating, setRating] = useState(0);
@@ -32,67 +33,55 @@ const ProductComponent = () => {
       ? user?.favorites.find((fav) => fav.product.id == Number(id))
         ? true
         : false
-      : false
+      : false,
   );
 
+  const { data: reviews, isPending } = useQuery({
+    queryKey: ["get-reviews", id],
+    queryFn: () => getAllReviewsByProductId(id || ""),
+  });
+
+  const { data: product, isPending: isProductPending } = useQuery({
+    queryKey: ["get-product", id],
+    queryFn: () => getProductById(id || ""),
+  });
+
   useEffect(() => {
-    setLoading(true);
-
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/review/all", {
-        params: {
-          productId: id,
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        setTotalReviews(res.data.length);
-        let reviewSum = 0;
-        for (let i = 0; i < res.data.length; i++) {
-          reviewSum += res.data[i].rating;
-        }
-        let avg = Math.round(reviewSum / res.data.length) | 0;
-        setRating(avg);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    axios
-      .get(import.meta.env.VITE_API_URL + "/api/product/" + id)
-      .then((res) => {
-        console.log(res.data);
-
-        setProduct(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
-  }, []);
+    if (reviews) {
+      setTotalReviews(reviews.length);
+      let reviewSum = 0;
+      for (let i = 0; i < reviews.length; i++) {
+        reviewSum += reviews[i].rating;
+      }
+      let avg = Math.round(reviewSum / reviews.length) | 0;
+      setRating(avg);
+    }
+  }, [reviews]);
 
   useEffect(() => {
     let stars = [];
     for (let i = 1; i <= rating; i++) {
       stars.push(
         <FontAwesomeIcon
+          key={i}
           icon={faStar as IconDefinition}
           className={"text-[#FFCC00]"}
-        />
+        />,
       );
     }
     for (let i = rating + 1; i <= 5; i++) {
       stars.push(
         <FontAwesomeIcon
+          key={i}
           icon={faStar as IconDefinition}
           className={"text-[#DFDFDF]"}
-        />
+        />,
       );
     }
     setStars(stars);
   }, [rating]);
 
-  return loading ? (
+  return isPending || isProductPending ? (
     <Loader />
   ) : (
     product && (
@@ -146,20 +135,20 @@ const ProductComponent = () => {
                     <button
                       className={`px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer ${
                         user?.cart.cartProducts.find(
-                          (prod) => prod.product.id == product.id
+                          (prod) => prod.product.id == product.id,
                         )
                           ? "bg-[#1E1D23] text-[#FFCC00]"
-                          : " "
+                          : "text-[#1E1D23] bg-[#FFCC00]"
                       }`}
                       onClick={() => {
                         let el = user?.cart.cartProducts.find(
-                          (prod) => prod.product.id == product.id
+                          (prod) => prod.product.id == product.id,
                         );
                         managedCart(
                           product.id,
                           el ? String(el.id) : "add",
                           true,
-                          quantity
+                          quantity,
                         );
                       }}
                     >
@@ -169,7 +158,7 @@ const ProductComponent = () => {
                         <FontAwesomeIcon icon={faBasketShopping} />
                       )}
                       {user?.cart.cartProducts.find(
-                        (prod) => prod.product.id == product.id
+                        (prod) => prod.product.id == product.id,
                       )
                         ? "In Cart"
                         : "Add to Cart"}
@@ -184,7 +173,7 @@ const ProductComponent = () => {
                         setIsFavorite(!isFavorite);
                         manageFavorite(
                           product,
-                          isFavorite ? "delete" : "create"
+                          isFavorite ? "delete" : "create",
                         );
                       }}
                     >

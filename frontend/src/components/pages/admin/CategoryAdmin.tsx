@@ -116,8 +116,6 @@ const CategoryAdmin = () => {
       {openModal && (
         <CategoryModal
           setOpenModal={setOpenModal}
-          setCategories={setCategories}
-          categories={categories}
           editCategory={editCategory}
           setEditCategory={setEditCategory}
         />

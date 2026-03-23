@@ -7,8 +7,15 @@ import type { Product, User } from "./Types";
 import Loader from "../src/components/elements/Loader";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUserFunc } from "../src/api/user";
+import {
+  addProductToCart,
+  clearCartProducts,
+  removeProductFromCart,
+} from "../src/api/cart";
+import { queryClient } from "../src/App";
+import { createFavoriteFunc, deleteFavoriteFunc } from "../src/api/favorite";
 
 interface AppContextType {
   user: User | null;
@@ -32,8 +39,11 @@ interface AppProviderProps {
 
 export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [cartLoading, setCartLoading] = useState(-1);
+  const [cartLoading, setCartLoading] = useState(-1); // here something to do
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [cartProductId, setCartProductId] = useState(-1);
+  const [favoriteProductId, setFavoriteProductId] = useState(-1);
 
   const { data, isPending } = useQuery({
     queryKey: ["getUser"],
@@ -44,86 +54,94 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
     if (data) setUser(data);
   }, [data]);
 
-  console.log(user);
-
   const managedCart = (
     productId: number,
     type: string,
     isToast = true,
     quantity = 1,
   ) => {
-    if (type == "add") addToCart(productId, quantity);
-    else removeFromCart(productId, type, isToast);
-  };
-
-  const addToCart = (productId: number, quantity: number) => {
     setCartLoading(productId);
-    console.log(productId, user?.id);
+    setCartLoading(productId);
     if (!user) navigate("/auth/login");
-    axios
-      .post(
-        import.meta.env.VITE_API_URL + "/api/cart-product",
-        {
-          quantity,
-          productId,
-          cartId: user?.cart.id,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-          },
-          withCredentials: true,
-        },
-      )
-      .then((res) => {
-        console.log(res.data);
-        if (user) {
-          toast.success("Product added to cart successfully!");
-          let updatedCart = user.cart;
-          if (updatedCart) updatedCart.cartProducts.push(res.data);
-          setUser({ ...user, cart: updatedCart });
-          setCartLoading(-1);
-        }
-      })
-      .catch((err) => {
-        console.error("Error adding to cart:", err);
-        setCartLoading(-1);
-      });
+    if (type == "add") addToCart({ productId, quantity });
+    else removeFromCart(productId);
   };
 
-  const removeFromCart = (productId: number, id: string, isToast: boolean) => {
-    if (!user) navigate("/auth/login");
-    axios
-      .delete(import.meta.env.VITE_API_URL + "/api/cart-product/" + id, {
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (user) {
-          if (isToast) toast.success("Product removed from cart successfully!");
-          let updatedCart = user.cart;
-          if (updatedCart) {
-            updatedCart.cartProducts = updatedCart.cartProducts.filter(
-              (prod) => prod.product.id !== productId,
-            );
-          }
-          setUser({ ...user, cart: updatedCart });
-          setCartLoading(-1);
-        }
-      })
-      .catch((err) => {
-        console.error("Error removing from cart:", err);
-        setCartLoading(-1);
-      });
-  };
+  const { mutate: addToCart } = useMutation({
+    mutationFn: ({
+      productId,
+      quantity,
+    }: {
+      productId: number;
+      quantity: number;
+    }) => addProductToCart(productId, quantity, user?.cart.id || -1),
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success("Product added to cart successfully!");
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
+      setCartLoading(-1);
+    },
+    onError: (err) => {
+      console.log(err);
+      setCartLoading(-1);
+    },
+  });
+
+  const { mutate: removeFromCart } = useMutation({
+    mutationFn: (id: number) => removeProductFromCart(id),
+    onSuccess: (data) => {
+      console.log(data);
+      toast.success("Product removed from cart successfully!");
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
+      setCartLoading(-1);
+    },
+    onError: (err) => {
+      console.log(err);
+      setCartLoading(-1);
+    },
+  });
+
+  const { mutate: clearCart } = useMutation({
+    mutationFn: () => clearCartProducts(user?.cart.id || -1),
+    onSuccess: (data) => {
+      console.log(data);
+      toast("Cart Cleared");
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const manageFavorite = (product: Product, type: string) => {
+    setFavoriteProductId(product.id);
     if (type == "create") createFavorite(product);
     else deleteFavorite(product);
   };
+
+  const { mutate: addFavorite } = useMutation({
+    mutationFn: (productId: number) =>
+      createFavoriteFunc(productId, user?.id || -1),
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
+  const { mutate: deleteFavoriteItem } = useMutation({
+    mutationFn: (productId: number) =>
+      deleteFavoriteFunc(productId, user?.id || -1),
+    onSuccess: (data) => {
+      console.log(data);
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   const createFavorite = (product: Product) => {
     if (user)
@@ -139,26 +157,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
           },
         ],
       });
-    axios
-      .post(
-        import.meta.env.VITE_API_URL + "/api/favorite",
-        {
-          productId: product.id,
-          userId: user?.id,
-        },
-        {
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-          },
-          withCredentials: true,
-        },
-      )
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    addFavorite(product.id);
   };
 
   const deleteFavorite = (product: Product) => {
@@ -167,47 +166,7 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
         ...user,
         favorites: user.favorites.filter((fav) => fav.product.id != product.id),
       });
-    axios
-      .delete(import.meta.env.VITE_API_URL + "/api/favorite", {
-        params: {
-          productId: product.id,
-          userId: user?.id,
-        },
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
-
-  const clearCart = () => {
-    axios
-      .delete(import.meta.env.VITE_API_URL + "/api/cart-product", {
-        params: {
-          cartId: user?.cart.id,
-        },
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        if (user) {
-          let updatedCart = { ...user.cart, cartProducts: [] };
-          setUser({ ...user, cart: updatedCart });
-        }
-        toast("Cart Cleared");
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    deleteFavoriteItem(product.id);
   };
 
   return isPending || (data && !user) ? (

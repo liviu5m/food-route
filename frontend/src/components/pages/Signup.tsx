@@ -126,10 +126,6 @@ const Signup = () => {
             Or
           </h2>
         </div>
-        <button className="px-8 py-3 bg-[#00ADB5] text-[#eee] cursor-pointer rounded-lg font-semibold hover:text-[#00ADB5] hover:bg-[#eee] flex items-center justify-center gap-7 w-full mt-5">
-          <img src="/imgs/google.png" className="w-6" alt="" />
-          <h3>Google</h3>
-        </button>
         <p className="text-center mt-5">
           Already have an account ?{" "}
           <Link to="/auth/login" className="text-[#00ADB5]">

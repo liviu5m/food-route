@@ -1,15 +1,10 @@
 import { useEffect, useState } from "react";
 import type { Category } from "../../../../libs/Types";
-import axios from "axios";
-import Loader from "../Loader";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import type { IconDefinition } from "@fortawesome/fontawesome-svg-core";
-import { useQuery } from "@tanstack/react-query";
-import { getAllCategories } from "../../../api/categories";
-import { getProductMaxPrice } from "../../../api/products";
 
 const ProductsFilter = ({
   prices,

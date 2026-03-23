@@ -8,44 +8,30 @@ import type { Order } from "../../../libs/Types";
 import { Link, useLocation } from "react-router-dom";
 import Loader from "../elements/Loader";
 import Pagination from "../elements/Pagination";
+import { useQuery } from "@tanstack/react-query";
+import { getOrdersFunc } from "../../api/order";
 
 const Orders = () => {
   const { user } = useAppContext();
   const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const location = useLocation();
+  const pageSize = 10;
+
+  const { data: ordersData, isPending } = useQuery({
+    queryKey: ["get-orders-data", currentPage],
+    queryFn: () => getOrdersFunc(user?.id || -1, currentPage, pageSize),
+  });
 
   useEffect(() => {
-    if (user) {
-      setLoading(true);
-      axios
-        .get(import.meta.env.VITE_API_URL + "/api/order/user", {
-          params: {
-            userId: user.id,
-            page: currentPage,
-            size: 10,
-          },
-          headers: {
-            Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-          },
-          withCredentials: true,
-        })
-        .then((res) => {
-          console.log(res.data);
-          setOrders(res.data.content);
-          setTotalPages(res.data.totalPages);
-          setLoading(false);
-        })
-        .catch((err) => {
-          console.log(err);
-          setLoading(false);
-        });
+    if (ordersData) {
+      setOrders(ordersData.content);
+      setTotalPages(ordersData.totalPages);
     }
-  }, [user, currentPage]);
+  }, [user, currentPage, ordersData]);
 
-  return loading ? (
+  return isPending ? (
     <Loader />
   ) : (
     <BodyLayout>
@@ -106,7 +92,7 @@ const Orders = () => {
                                 className="btn"
                                 onClick={() => {
                                   const dialog = document.getElementById(
-                                    "order-" + order.id
+                                    "order-" + order.id,
                                   ) as HTMLDialogElement | null;
                                   dialog?.showModal();
                                 }}
@@ -155,7 +141,7 @@ const Orders = () => {
                                             </div>
                                           </div>
                                         );
-                                      }
+                                      },
                                     )}
                                   </div>
                                   <div className="flex w-full justify-center gap-2 py-2">

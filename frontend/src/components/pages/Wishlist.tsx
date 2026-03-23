@@ -6,31 +6,25 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CartLoader from "../elements/CartLoader";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { clearFavoriteFunc } from "../../api/favorite";
 
 const Wishlist = () => {
   const { user, setUser, managedCart, manageFavorite, cartLoading } =
     useAppContext();
+  const queryClient = useQueryClient();
 
-  const clearWishlist = () => {
-    axios
-      .delete(import.meta.env.VITE_API_URL + "/api/favorite/all", {
-        params: {
-          userId: user?.id,
-        },
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem("jwtToken"),
-        },
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res.data);
-        if (user) setUser({ ...user, favorites: [] });
-        toast("Wishlist cleared");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  const { mutate: clearWishlist } = useMutation({
+    mutationFn: () => clearFavoriteFunc(user?.id || -1),
+    onSuccess: (data) => {
+      console.log(data);
+      toast("Wishlist cleared");
+      queryClient.invalidateQueries({ queryKey: ["getUser"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
   return (
     <BodyLayout>
@@ -78,20 +72,22 @@ const Wishlist = () => {
                           <button
                             className={`px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer ${
                               user?.cart.cartProducts.find(
-                                (prod) => prod.product.id == favorite.product.id
+                                (prod) =>
+                                  prod.product.id == favorite.product.id,
                               )
                                 ? "bg-[#1E1D23] text-[#FFCC00]"
                                 : "bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] text-[#1E1D23]"
                             }`}
                             onClick={() => {
                               let el = user?.cart.cartProducts.find(
-                                (prod) => prod.product.id == favorite.product.id
+                                (prod) =>
+                                  prod.product.id == favorite.product.id,
                               );
                               managedCart(
                                 favorite.product.id,
                                 el ? String(el.id) : "add",
                                 true,
-                                1
+                                1,
                               );
                             }}
                           >
@@ -101,7 +97,7 @@ const Wishlist = () => {
                               <FontAwesomeIcon icon={faBasketShopping} />
                             )}
                             {user?.cart.cartProducts.find(
-                              (prod) => prod.product.id == favorite.product.id
+                              (prod) => prod.product.id == favorite.product.id,
                             )
                               ? "In Cart"
                               : "Add to Cart"}

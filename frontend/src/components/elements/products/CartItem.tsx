@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMinus, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { useAppContext } from "../../../../libs/AppContext";
+import { useMutation } from "@tanstack/react-query";
+import { updateCartProductQuantity } from "../../../api/cart";
 
 const CartItem = ({
   product,
@@ -21,27 +23,25 @@ const CartItem = ({
   const [quantity, setQuantity] = React.useState(productQuantity);
   const { user, managedCart } = useAppContext();
 
+  const { mutate: updateCartQuantity } = useMutation({
+    mutationKey: ["update-cart-quantity"],
+    mutationFn: () =>
+      updateCartProductQuantity(
+        cartProductId,
+        product.id,
+        quantity,
+        user?.cart.id || -1,
+      ),
+    onSuccess: (data) => {
+      console.log(data);
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
+
   useEffect(() => {
-    if (quantity != productQuantity) {
-      axios
-        .put(
-          import.meta.env.VITE_API_URL + "/api/cart-product/" + cartProductId,
-          {
-            productId: product.id,
-            quantity: quantity,
-            cartId: user?.cart.id,
-          },
-          {
-            withCredentials: true,
-          }
-        )
-        .then((res) => {
-          console.log(res.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
+    if (quantity != productQuantity) updateCartQuantity();
   }, [quantity]);
 
   return (

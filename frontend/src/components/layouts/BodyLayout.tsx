@@ -2,6 +2,7 @@ import React from "react";
 import type { ReactNode } from "react";
 import Header from "../elements/Header";
 import Footer from "../elements/Footer";
+import { ToastContainer } from "react-toastify";
 
 type LayoutProps = {
   children: ReactNode;
@@ -14,6 +15,7 @@ const BodyLayout: React.FC<LayoutProps> = ({ children }) => {
       <div className="h-24"></div>
       {children}
       <Footer />
+      <ToastContainer />
     </div>
   );
 };
