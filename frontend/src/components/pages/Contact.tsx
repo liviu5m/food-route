@@ -35,13 +35,13 @@ const Contact = () => {
 
   return (
     <BodyLayout>
-      <div className='bg-[url("/imgs/breadcrumb1.jpg")] bg-cover bg-center w-full py-20 text-black text-center text-4xl font-bold'>
+      <div className='bg-[url("/imgs/breadcrumb1.jpg")] bg-cover bg-center w-full py-16 sm:py-20 px-4 text-black text-center text-3xl sm:text-4xl font-bold'>
         <h1>Contact Us</h1>
       </div>
-      <div className="flex items-center justify-center py-20 w-full">
-        <div className="container flex flex-col lg:flex-row justify-between gap-10 px-5 items-center">
-          <div className="w-full lg:w-1/2 flex flex-col gap-16">
-            <div className="flex items-center gap-10">
+      <div className="flex w-full items-center justify-center py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto flex w-full max-w-screen-xl flex-col items-center justify-between gap-8 sm:gap-10 px-4 sm:px-6 lg:flex-row lg:px-8">
+          <div className="flex w-full flex-col gap-10 sm:gap-12 lg:gap-16 lg:w-1/2">
+            <div className="flex items-center gap-6 sm:gap-8 lg:gap-10">
               <FontAwesomeIcon
                 icon={faPhone}
                 className="text-3xl text-[#FFCC00]"
@@ -52,7 +52,7 @@ const Contact = () => {
                 <h6 className="mt-1">+ 844 123 444 77 88</h6>
               </div>
             </div>
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-6 sm:gap-8 lg:gap-10">
               <FontAwesomeIcon
                 icon={faAddressCard}
                 className="text-3xl text-[#FFCC00]"
@@ -63,7 +63,7 @@ const Contact = () => {
                 <h6 className="mt-1">Nevis, West Indies, Caribbean</h6>
               </div>
             </div>
-            <div className="flex items-center gap-10">
+            <div className="flex items-center gap-6 sm:gap-8 lg:gap-10">
               <FontAwesomeIcon
                 icon={faEnvelope}
                 className="text-3xl text-[#FFCC00]"
@@ -83,18 +83,18 @@ const Contact = () => {
             >
               <input
                 type="text"
-                className="px-5 py-3 rounded-lg border border-[#E1E1E1] outline-none w-full"
+                className="w-full rounded-lg border border-[#E1E1E1] px-5 py-3 outline-none"
                 placeholder="Subject"
                 value={subject}
                 onChange={(e) => setSubject(e.target.value)}
               />
               <textarea
                 placeholder="Comment"
-                className="px-5 py-3 mt-5 h-40 rounded-lg border border-[#E1E1E1] outline-none w-full resize-none"
+                className="mt-5 h-36 sm:h-40 w-full resize-none rounded-lg border border-[#E1E1E1] px-5 py-3 outline-none"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
               ></textarea>
-              <button className="px-8 py-4 rounded-lg bg-[#FFCC00] font-semibold cursor-pointer hover:bg-[#f1c101] hover:text-white mt-5">
+              <button className="mt-5 min-h-11 rounded-lg bg-[#FFCC00] px-8 py-4 font-semibold cursor-pointer lg:hover:bg-[#f1c101] lg:hover:text-white">
                 Submit
               </button>
             </form>

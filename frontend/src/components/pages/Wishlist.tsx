@@ -28,30 +28,30 @@ const Wishlist = () => {
 
   return (
     <BodyLayout>
-      <div className="flex items-center justify-center w-full">
-        <div className="container my-20 min-h-[50vh] w-full">
-          <h1 className="text-3xl text-center font-bold">Wishlist</h1>
+      <div className="flex w-full items-center justify-center">
+        <div className="mx-auto my-20 min-h-[50vh] w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
+          <h1 className="text-center text-2xl sm:text-3xl font-bold">Wishlist</h1>
           <div className="w-full">
             {user?.favorites.length == 0 ? (
-              <div className="flex items-center justify-center flex-col">
-                <h2 className="text-center text-lg font-semibold mt-5">
+              <div className="flex flex-col items-center justify-center">
+                <h2 className="mt-5 text-center text-lg font-semibold">
                   No Favorites
                 </h2>
                 <Link
                   to={"/products"}
-                  className="px-10 py-4 rounded-lg mt-5 bg-[#FFCC00] text-[#1E1D23] hover:bg-[#1E1D23] hover:text-[#FFCC00]"
+                  className="mt-5 min-h-11 min-w-[44px] rounded-lg bg-[#FFCC00] px-8 sm:px-10 py-4 text-[#1E1D23] lg:hover:bg-[#1E1D23] lg:hover:text-[#FFCC00]"
                 >
                   Return to Shopping
                 </Link>
               </div>
             ) : (
               <div className="overflow-y-scroll hide-scrollbar">
-                <div className="text-sm lg:scale-100 w-full text-left my-10 flex flex-col rounded-lg px-5">
+                <div className="my-10 flex w-full flex-col rounded-lg px-0 sm:px-5 text-left text-xs sm:text-sm">
                   {user?.favorites.map((favorite, i) => {
                     return (
                       <div
                         key={i}
-                        className={`even:bg-gray-200 w-full bg-blue-50 transition flex items-center justify-between ${
+                        className={`even:bg-gray-200 w-full bg-blue-50 transition flex flex-col lg:flex-row items-center justify-between ${
                           i == 0 && "rounded-t-2xl"
                         } ${i == user.favorites.length - 1 && "rounded-b-2xl"}`}
                       >
@@ -70,13 +70,13 @@ const Wishlist = () => {
                         </div>
                         <div className="p-4 font-semibold">
                           <button
-                            className={`px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer ${
+                            className={`min-h-11 w-full sm:w-auto px-8 sm:px-16 lg:px-24 xl:px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer ${
                               user?.cart.cartProducts.find(
                                 (prod) =>
                                   prod.product.id == favorite.product.id,
                               )
                                 ? "bg-[#1E1D23] text-[#FFCC00]"
-                                : "bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] text-[#1E1D23]"
+                                : "bg-[#FFCC00] lg:hover:text-[#FFCC00] lg:hover:bg-[#1E1D23] text-[#1E1D23]"
                             }`}
                             onClick={() => {
                               let el = user?.cart.cartProducts.find(
@@ -105,7 +105,7 @@ const Wishlist = () => {
                         </div>
                         <div className="p-4">
                           <button
-                            className="p-2 hover:scale-110 hover:rotate-180 cursor-pointer"
+                            className="p-2 cursor-pointer transition-transform lg:hover:scale-110 lg:hover:rotate-180"
                             onClick={() => {
                               manageFavorite(favorite.product, "delete");
                             }}
@@ -123,7 +123,7 @@ const Wishlist = () => {
                     className="flex items-center justify-center mt-10"
                     onClick={() => clearWishlist()}
                   >
-                    <button className="px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer bg-[#FFCC00] hover:text-[#FFCC00] hover:bg-[#1E1D23] text-[#1E1D23]">
+                    <button className="min-h-11 w-full sm:w-auto px-8 sm:px-16 lg:px-24 xl:px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer bg-[#FFCC00] lg:hover:text-[#FFCC00] lg:hover:bg-[#1E1D23] text-[#1E1D23]">
                       Clear
                     </button>
                   </div>

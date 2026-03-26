@@ -58,7 +58,7 @@ const SingleReview = ({
   });
 
   return (
-    <section className="flex gap-5 flex-1/2">
+    <section className="flex gap-3 sm:gap-5 flex-1/2">
       <div className="w-16 shrink-0">
         <img
           className="w-16 h-16 aspect-square object-cover rounded-full"
@@ -67,19 +67,19 @@ const SingleReview = ({
         />
       </div>
       <div className="w-full">
-        <div className="flex items-center justify-between w-full">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-3">
           <div>{stars}</div>
-          <div>
+          <div className="flex items-center gap-2 sm:gap-3">
             {review.user.id == user?.id && (
               <>
                 <button
-                  className="bg-blue-400 font-bold mr-5 w-fit text-white px-5 py-3 text-sm rounded-lg uppercase cursor-pointer hover:scale-105"
+                  className="min-h-11 rounded-lg bg-blue-400 px-4 sm:px-5 py-3 text-sm font-bold uppercase text-white cursor-pointer lg:hover:scale-105"
                   onClick={() => setEditReview(review)}
                 >
                   <FontAwesomeIcon icon={faEdit} />
                 </button>
                 <button
-                  className="bg-red-400 font-bold w-fit text-white px-5 py-3 text-sm rounded-lg uppercase cursor-pointer hover:scale-105"
+                  className="min-h-11 rounded-lg bg-red-400 px-4 sm:px-5 py-3 text-sm font-bold uppercase text-white cursor-pointer lg:hover:scale-105"
                   onClick={() => deleteReview()}
                 >
                   <FontAwesomeIcon icon={faTrash} />
@@ -88,9 +88,9 @@ const SingleReview = ({
             )}
           </div>
         </div>
-        <div className="flex items-center gap-10 mt-2">
-          <h1 className="text-lg">{review.user.fullName}</h1>
-          <h3 className="text-[#808080] flex items-center justify-center gap-3 text-sm">
+        <div className="mt-2 flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6 lg:gap-10">
+          <h1 className="text-base sm:text-lg">{review.user.fullName}</h1>
+          <h3 className="text-[#808080] flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm">
             <FontAwesomeIcon icon={faClock} />
             <span>{formatDate(review.createdAt)}</span>
           </h3>

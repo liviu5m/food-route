@@ -54,16 +54,16 @@ const Account = () => {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <Link to="/" className="absolute top-5 left-5">
-        <h1 className="flex gap-3 items-center justify-center p-2">
+    <div className="flex items-center justify-center px-4 sm:px-6 lg:px-8">
+      <Link to="/" className="absolute top-4 left-4 sm:top-5 sm:left-5">
+        <h1 className="flex items-center justify-center gap-2 sm:gap-3 p-2">
           <FontAwesomeIcon icon={faArrowLeft} /> <span>Back</span>
         </h1>
       </Link>
-      <div className="container mt-20">
-        <h1 className="text-2xl">Account Details</h1>
-        <div className="bg-[#393E46] w-full p-10 rounded-lg mt-10 flex gap-10">
-          <div className="w-1/2">
+      <div className="mx-auto mt-20 w-full max-w-screen-xl">
+        <h1 className="text-2xl sm:text-3xl">Account Details</h1>
+        <div className="mt-8 sm:mt-10 flex flex-col lg:flex-row gap-8 lg:gap-10 rounded-lg bg-[#393E46] p-4 sm:p-6 lg:p-10 w-full">
+          <div className="w-full lg:w-1/2">
             <h1 className="text-lg mb-7">Account Data</h1>
             <form
               className="flex gap-5 flex-col"
@@ -75,7 +75,7 @@ const Account = () => {
                   type="text"
                   name="fullName"
                   id="fullName"
-                  className="w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
+                  className="w-full sm:w-4/5 lg:w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                 />
@@ -86,7 +86,7 @@ const Account = () => {
                   type="text"
                   name="username"
                   id="username"
-                  className="w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
+                  className="w-full sm:w-4/5 lg:w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                 />
@@ -97,7 +97,7 @@ const Account = () => {
                   type="text"
                   name="address"
                   id="address"
-                  className="w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
+                  className="w-full sm:w-4/5 lg:w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                 />
@@ -108,17 +108,17 @@ const Account = () => {
                   type="text"
                   name="phoneNumber"
                   id="phoneNumber"
-                  className="w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
+                  className="w-full sm:w-4/5 lg:w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                 />
               </div>
-              <button className="bg-[#00ADB5] text-[#eee] px-4 py-2 rounded-lg w-3/5 cursor-pointer hover:scale-105 outline-none">
+              <button className="min-h-11 w-full sm:w-4/5 lg:w-3/5 rounded-lg bg-[#00ADB5] px-4 py-2 text-[#eee] cursor-pointer lg:hover:scale-105 outline-none">
                 Save
               </button>
             </form>
           </div>
-          <div className="w-1/2">
+          <div className="w-full lg:w-1/2">
             <h1 className="text-lg">Password Management</h1>
             {user?.provider == "google" ? (
               <p className="text-[#00ADB5] mt-5">
@@ -135,7 +135,7 @@ const Account = () => {
                     type="password"
                     name="currentPassword"
                     id="currentPassword"
-                    className="w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
+                    className="w-full sm:w-4/5 lg:w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                   />
@@ -146,7 +146,7 @@ const Account = () => {
                     type="password"
                     name="newPassword"
                     id="newPassword"
-                    className="w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
+                    className="w-full sm:w-4/5 lg:w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   />
@@ -157,12 +157,12 @@ const Account = () => {
                     type="password"
                     name="passwordConfirmation"
                     id="passwordConfirmation"
-                    className="w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
+                    className="w-full sm:w-4/5 lg:w-3/5 outline-none bg-[#EEEEEE] rounded-lg px-4 py-2 text-[#222831]"
                     value={passwordConfirmation}
                     onChange={(e) => setPasswordConfirmation(e.target.value)}
                   />
                 </div>
-                <button className="bg-[#00ADB5] text-[#eee] px-4 py-2 rounded-lg w-3/5 cursor-pointer hover:scale-105 outline-none">
+                <button className="min-h-11 w-full sm:w-4/5 lg:w-3/5 rounded-lg bg-[#00ADB5] px-4 py-2 text-[#eee] cursor-pointer lg:hover:scale-105 outline-none">
                   Save
                 </button>
               </form>

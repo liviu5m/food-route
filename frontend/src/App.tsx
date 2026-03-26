@@ -21,6 +21,7 @@ import Orders from "./components/pages/Orders";
 import Wishlist from "./components/pages/Wishlist";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Contact from "./components/pages/Contact";
+import { ToastContainer } from "react-toastify";
 
 export const queryClient = new QueryClient();
 
@@ -83,6 +84,7 @@ function App() {
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
+          <ToastContainer />
         </div>
       </AppProvider>
     </QueryClientProvider>

@@ -183,7 +183,6 @@ export const AppProvider: React.FC<AppProviderProps> = ({ children }) => {
       }}
     >
       {children}
-      <ToastContainer />
     </AppContext.Provider>
   );
 };

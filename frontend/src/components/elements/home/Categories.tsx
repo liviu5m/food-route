@@ -13,17 +13,19 @@ const Categories = () => {
   if (isPending) return <Loader />;
 
   return (
-    <div className="bg-white flex items-center justify-center w-full py-10 text-[#1E1D23]">
-      <div className="container">
-        <h1 className="text-xl text-center mb-7 font-semibold">Categories</h1>
-        <div className="flex items-center justify-center gap-8 overflow-y-scroll hide-scrollbar">
+    <div className="bg-white flex w-full items-center justify-center py-10 text-[#1E1D23]">
+      <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <h1 className="mb-7 text-center text-xl sm:text-2xl font-semibold">
+          Categories
+        </h1>
+        <div className="flex items-center justify-start sm:justify-center gap-6 sm:gap-8 overflow-y-scroll hide-scrollbar">
           {categories &&
             categories.map((category: Category, i: number) => {
               return (
                 <Link
                   to={"/products?categoryId=" + category.id}
                   key={i}
-                  className="flex flex-col items-center justify-center gap-5 hover:text-[#FFCC00] cursor-pointer p-1 hover:scale-110"
+                  className="flex flex-col items-center justify-center gap-4 sm:gap-5 p-1 cursor-pointer transition-transform lg:hover:scale-110 lg:hover:text-[#FFCC00]"
                 >
                   <GlareHover
                     glareColor="#FFCC00"
@@ -39,13 +41,17 @@ const Categories = () => {
                       border: 0,
                     }}
                   >
-                    <img
-                      className="w-30 aspect-square rounded-lg object-cover"
-                      src={category.image}
-                      alt=""
-                    />
+                    {category.image && (
+                      <img
+                        className="w-24 sm:w-28 md:w-30 aspect-square rounded-lg object-cover"
+                        src={category.image}
+                        alt=""
+                      />
+                    )}
                   </GlareHover>
-                  <span className="font-semibold">{category.name}</span>
+                  <span className="text-sm sm:text-base font-semibold">
+                    {category.name}
+                  </span>
                 </Link>
               );
             })}

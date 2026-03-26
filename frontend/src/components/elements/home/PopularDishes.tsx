@@ -26,21 +26,21 @@ const PopularDishes = () => {
 
   return (
     <div className="flex items-center justify-center">
-      <div className="container">
-        <div className="py-20 flex items-center justify-center flex-col">
-          <h1 className="text-2xl md:text-4xl font-bold text-center">
+      <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col items-center justify-center py-12 sm:py-16 md:py-20">
+          <h1 className="text-center text-2xl font-bold sm:text-3xl md:text-4xl">
             Popular dishes
           </h1>
-          <div className="hidden md:flex items-center justify-center gap-10 mt-8">
+          <div className="mt-8 hidden flex-wrap items-center justify-center gap-4 md:flex lg:gap-6 xl:gap-10">
             {categories.content &&
               categories.content.map((category: Category, i: number) => {
                 return (
                   <div
                     key={i}
-                    className={`px-10 py-5 rounded-2xl border border-[#EDEDED] text-lg font-semibold  cursor-pointer ${
+                    className={`min-h-11 rounded-2xl border border-[#EDEDED] px-6 py-3 text-sm font-semibold transition-colors sm:px-8 sm:py-4 sm:text-base lg:text-lg ${
                       selectedCategory == category.id
                         ? "bg-[#FFCC00]"
-                        : "hover:bg-[#FFCC00]"
+                        : "lg:hover:bg-[#FFCC00]"
                     }`}
                     onClick={() => setSelectedCategory(category.id)}
                   >
@@ -49,7 +49,7 @@ const PopularDishes = () => {
                 );
               })}
           </div>
-          <div className="flex flex-col md:grid md:grid-cols-3 xl:grid-cols-5 gap-10 mt-10">
+          <div className="mt-10 grid w-full grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:gap-10 xl:grid-cols-5">
             {products.content &&
               products.content.map((product: ProductType, i: number) => {
                 return <ProductCard key={i} product={product} />;
@@ -57,7 +57,7 @@ const PopularDishes = () => {
           </div>
           <Link
             to="/products"
-            className="px-8 py-4 rounded-lg bg-[#FFCC00] font-semibold cursor-pointer hover:bg-[#f1c101] hover:text-white mt-5"
+            className="mt-5 min-h-11 min-w-[44px] rounded-lg bg-[#FFCC00] px-6 py-3 text-sm font-semibold transition-transform sm:px-8 sm:py-4 sm:text-base lg:hover:scale-[1.01] lg:hover:bg-[#f1c101] lg:hover:text-white"
           >
             All Products
           </Link>

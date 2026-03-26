@@ -35,34 +35,34 @@ const Orders = () => {
     <Loader />
   ) : (
     <BodyLayout>
-      <div className="container">
-        <div className="flex items-center justify-center gap-5 text-3xl mt-10">
+      <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <div className="mt-10 flex items-center justify-center gap-3 sm:gap-5 text-2xl sm:text-3xl">
           <FontAwesomeIcon icon={faStore} />
           <h1 className="text-center font-bold">Orders</h1>
         </div>
         <div className="mb-10 min-h-[50vh]">
           {orders && orders.length == 0 ? (
-            <div className="flex items-center justify-center flex-col gap-3 mt-20">
+            <div className="mt-16 sm:mt-20 flex flex-col items-center justify-center gap-3">
               <p className="text-lg font-bold">No Orders</p>
               <Link
                 to="/products"
-                className="bg-[#FFCC00] w-fit font-semibold text-white px-5 py-3 rounded-lg cursor-pointer hover:scale-105 outline-none"
+                className="min-h-11 w-fit rounded-lg bg-[#FFCC00] px-5 py-3 font-semibold text-white cursor-pointer lg:hover:scale-105 outline-none"
               >
                 Return to Shopping
               </Link>
             </div>
           ) : (
-            <div className="overflow-y-scroll hide-scrollbar px-5">
-              <table className="text-sm sm:text-sm lg:scale-100  w-full table-auto border-collapse text-left my-10">
+            <div className="overflow-x-auto overflow-y-visible hide-scrollbar px-0 sm:px-5">
+              <table className="my-10 w-full min-w-[740px] md:min-w-[860px] table-auto border-collapse text-left text-xs sm:text-sm">
                 <thead>
                   <tr className="bg-gradient-to-r from-blue-500 to-blue-400 text-white">
-                    <th className="p-4">Id</th>
-                    <th className="p-4">Date</th>
-                    <th className="p-4">Shipping Address</th>
-                    <th className="p-4">Phone Number</th>
-                    <th className="p-4">Order Items</th>
-                    <th className="p-4">Total Price</th>
-                    <th className="p-4">Status</th>
+                    <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">Id</th>
+                    <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">Date</th>
+                    <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">Shipping Address</th>
+                    <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">Phone Number</th>
+                    <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">Order Items</th>
+                    <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">Total Price</th>
+                    <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">Status</th>
                   </tr>
                 </thead>
                 <tbody className="text-gray-700">
@@ -72,19 +72,19 @@ const Orders = () => {
                         key={i}
                         className="even:bg-gray-200 bg-blue-50 transition"
                       >
-                        <td className="p-4 font-semibold">{order.id}</td>
-                        <th className="p-4">{order.createdAt}</th>
-                        <td className="p-4 font-semibold">
+                        <td className="p-2 sm:p-3 md:p-4 font-semibold whitespace-nowrap">{order.id}</td>
+                        <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">{order.createdAt}</th>
+                        <td className="p-2 sm:p-3 md:p-4 font-semibold">
                           {order.shippingAddress || (
                             <FontAwesomeIcon icon={faMinus} />
                           )}
                         </td>
-                        <td className="p-4 font-semibold">
+                        <td className="p-2 sm:p-3 md:p-4 font-semibold whitespace-nowrap">
                           {order.phoneNumber || (
                             <FontAwesomeIcon icon={faMinus} />
                           )}
                         </td>
-                        <td className="p-4 font-semibold">
+                        <td className="p-2 sm:p-3 md:p-4 font-semibold whitespace-nowrap">
                           {order.orderItemList.length > 0 ? (
                             <div>
                               <Link
@@ -103,7 +103,7 @@ const Orders = () => {
                                 id={"order-" + order.id}
                                 className="modal"
                               >
-                                <div className="modal-box w-1/2 max-w-5xl pt-5">
+                                <div className="modal-box w-full sm:w-11/12 md:w-3/4 xl:w-1/2 max-w-5xl pt-5">
                                   <form method="dialog">
                                     <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
                                       <FontAwesomeIcon icon={faX} />
@@ -176,14 +176,14 @@ const Orders = () => {
                             </div>
                           )}
                         </td>
-                        <th className="p-4">
+                        <th className="p-2 sm:p-3 md:p-4 whitespace-nowrap">
                           ${" "}
                           {order.orderItemList.reduce((sum, el) => {
                             return sum + el.product.price * el.quantity;
                           }, 0)}
                         </th>
                         <td
-                          className={`p-4 font-semibold ${
+                          className={`p-2 sm:p-3 md:p-4 font-semibold whitespace-nowrap ${
                             order.status == "SUCCESS"
                               ? "text-green-400"
                               : "text-red-400"

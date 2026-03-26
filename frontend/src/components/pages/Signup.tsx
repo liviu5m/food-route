@@ -43,16 +43,16 @@ const Signup = () => {
   });
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-[#222831]">
-      <Link to="/" className="absolute top-5 left-5">
-        <h1 className="flex gap-3 items-center justify-center p-2">
+    <div className="min-h-screen w-full px-4 py-6 sm:px-6 sm:py-8 flex items-center justify-center bg-[#222831]">
+      <Link to="/" className="absolute top-4 left-4 sm:top-5 sm:left-5">
+        <h1 className="flex items-center justify-center gap-2 sm:gap-3 p-2">
           <FontAwesomeIcon icon={faArrowLeft} /> <span>Back</span>
         </h1>
       </Link>
-      <div className="w-[400px]">
-        <h1 className="font-bold text-2xl text-center mb-10">Sign Up</h1>
+      <div className="w-full max-w-md">
+        <h1 className="mb-8 sm:mb-10 text-center text-2xl sm:text-3xl font-bold">Sign Up</h1>
         <form
-          className="flex flex-col gap-5"
+          className="flex flex-col gap-4 sm:gap-5"
           onSubmit={(e) => {
             e.preventDefault();
             signupUser();
@@ -62,7 +62,7 @@ const Signup = () => {
             type="text"
             name="fullName"
             placeholder="Full Name"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.fullName}
             onChange={(e) => setData({ ...data, fullName: e.target.value })}
           />
@@ -70,7 +70,7 @@ const Signup = () => {
             type="text"
             name="username"
             placeholder="Username"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.username}
             onChange={(e) => setData({ ...data, username: e.target.value })}
           />
@@ -78,7 +78,7 @@ const Signup = () => {
             type="email"
             name="email"
             placeholder="Email"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.email}
             onChange={(e) => setData({ ...data, email: e.target.value })}
           />
@@ -86,7 +86,7 @@ const Signup = () => {
             type="password"
             name="password"
             placeholder="Password"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.password}
             onChange={(e) => setData({ ...data, password: e.target.value })}
           />
@@ -94,7 +94,7 @@ const Signup = () => {
             type="password"
             name="passwordConfirmation"
             placeholder="Confirm Password"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.passwordConfirmation}
             onChange={(e) =>
               setData({ ...data, passwordConfirmation: e.target.value })
@@ -104,7 +104,7 @@ const Signup = () => {
             type="text"
             name="address"
             placeholder="Address"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.address}
             onChange={(e) => setData({ ...data, address: e.target.value })}
           />
@@ -112,11 +112,11 @@ const Signup = () => {
             type="text"
             name="phoneNumber"
             placeholder="Phone Number"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.phoneNumber}
             onChange={(e) => setData({ ...data, phoneNumber: e.target.value })}
           />
-          <button className="px-8 py-3 bg-[#eee] text-[#00ADB5] cursor-pointer rounded-lg font-semibold hover:text-[#eee] hover:bg-[#00ADB5]">
+          <button className="min-h-11 w-full rounded-lg bg-[#eee] px-8 py-3 text-[#00ADB5] font-semibold cursor-pointer lg:hover:text-[#eee] lg:hover:bg-[#00ADB5]">
             Sign Up
           </button>
         </form>

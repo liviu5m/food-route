@@ -36,20 +36,20 @@ const Header = () => {
 
   return (
     <div className="relative z-50 w-full">
-      <div
-        className={`w-full px-5 md:px-0 bg-white fixed top-0 left-0 right-0 shadow-md z-50 h-24 flex items-center justify-center`}
-      >
-        <div className="bg-white flex items-center justify-center w-full">
-          <div className="container">
-            <div className="flex items-center justify-between">
-              <Link to="/" className="flex items-center justify-center gap-5">
-                <img className="w-8" src="./imgs/logo.png" alt="" />
-                <h2 className="text-3xl font-bold text-[#FFCC00]">FoodRoute</h2>
+      <div className="fixed left-0 right-0 top-0 z-50 flex h-20 w-full items-center justify-center bg-white shadow-md sm:h-24">
+        <div className="flex w-full items-center justify-center bg-white">
+          <div className="mx-auto flex w-full max-w-screen-xl items-center px-4 sm:px-6 lg:px-8">
+            <div className="flex w-full items-center justify-between gap-3 sm:gap-4">
+              <Link to="/" className="flex items-center justify-center gap-2 sm:gap-3">
+                <img className="w-7 sm:w-8" src="./imgs/logo.png" alt="" />
+                <h2 className="text-xl font-bold text-[#FFCC00] sm:text-2xl md:text-3xl">
+                  FoodRoute
+                </h2>
               </Link>
-              <ul className="hidden xl:flex items-center justify-center gap-10">
+              <ul className="hidden items-center justify-center gap-6 lg:flex xl:gap-10">
                 <Link
                   to="/"
-                  className={`hover:text-[#FFCC00] font-semibold  ${
+                  className={`font-semibold transition-colors lg:hover:text-[#FFCC00] ${
                     pathname == "/" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
@@ -57,7 +57,7 @@ const Header = () => {
                 </Link>
                 <Link
                   to="/products"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold transition-colors lg:hover:text-[#FFCC00] ${
                     pathname == "/products"
                       ? "text-[#FFCC00]"
                       : "text-[#1E1D23]"
@@ -67,7 +67,7 @@ const Header = () => {
                 </Link>
                 <Link
                   to="/orders"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold transition-colors lg:hover:text-[#FFCC00] ${
                     pathname == "/orders" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
@@ -75,18 +75,18 @@ const Header = () => {
                 </Link>
                 <Link
                   to="/contact"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold transition-colors lg:hover:text-[#FFCC00] ${
                     pathname == "/contact" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
                   Contact
                 </Link>
               </ul>
-              <div className="flex items-center justify-center gap-10">
+              <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-5">
                 {user ? (
-                  <div className="flex items-center justify-center gap-5">
+                  <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-5">
                     <button
-                      className="hidden xl:inline-flex w-full justify-center gap-x-1.5 text-sm shadow-xs ring-gray-300 px-5 md:px-16 h-12 outline-none bg-[#FFCC00] text-[#1E1D23] rounded-lg font-semibold hover:text-[#FFCC00] hover:bg-[#1E1D23] items-center gap-5 border-none cursor-pointer"
+                      className="hidden min-h-11 w-auto items-center justify-center gap-x-1.5 gap-3 rounded-lg border-none bg-[#FFCC00] px-4 text-sm font-semibold text-[#1E1D23] shadow-xs outline-none ring-gray-300 transition-colors lg:hover:bg-[#1E1D23] lg:hover:text-[#FFCC00] xl:inline-flex"
                       popoverTarget="popover-1"
                       style={
                         {
@@ -99,7 +99,7 @@ const Header = () => {
                     </button>
 
                     <ul
-                      className="dropdown menu w-52 rounded-box bg-white shadow-sm"
+                      className="dropdown menu w-52 max-w-[90vw] rounded-box bg-white shadow-sm"
                       popover="auto"
                       id="popover-1"
                       style={
@@ -112,7 +112,7 @@ const Header = () => {
                         <li>
                           <Link
                             to="/admin/dashboard"
-                            className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                            className="flex min-h-11 items-center px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                           >
                             Admin Dashboard
                           </Link>
@@ -121,7 +121,7 @@ const Header = () => {
                       <li>
                         <Link
                           to="/account"
-                          className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
+                          className="flex min-h-11 items-center px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden"
                         >
                           Account Data
                         </Link>
@@ -131,16 +131,16 @@ const Header = () => {
                           onClick={() => {
                             logout();
                           }}
-                          className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
+                          className="flex min-h-11 w-full items-center px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
                         >
                           Log out
                         </button>
                       </li>
                     </ul>
-                    <div className="flex items-center justify-center gap-5">
+                    <div className="flex items-center justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-5">
                       <div className="relative">
                         <button
-                          className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg hidden xl:flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
+                          className="hidden min-h-11 min-w-11 items-center justify-center rounded-lg bg-[#FFCC00] text-[#1E1D23] transition-colors lg:hover:bg-[#1E1D23] lg:hover:text-[#FFCC00] xl:flex"
                           onClick={() => setIsCartOpened(!isCartOpened)}
                         >
                           <FontAwesomeIcon icon={faShoppingCart} />
@@ -152,7 +152,7 @@ const Header = () => {
                       <div className="relative">
                         <Link
                           to="/wishlist"
-                          className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg hidden xl:flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
+                          className="hidden min-h-11 min-w-11 items-center justify-center rounded-lg bg-[#FFCC00] text-[#1E1D23] transition-colors lg:hover:bg-[#1E1D23] lg:hover:text-[#FFCC00] xl:flex"
                         >
                           <FontAwesomeIcon icon={faHeart} />
                         </Link>
@@ -161,7 +161,7 @@ const Header = () => {
                         </span>
                       </div>
                       <button
-                        className="h-12 w-12 bg-[#FFCC00] text-[#1E1D23] rounded-lg xl:hidden flex items-center justify-center hover:bg-[#1E1D23] hover:text-[#FFCC00] cursor-pointer"
+                        className="flex min-h-11 min-w-11 items-center justify-center rounded-lg bg-[#FFCC00] text-[#1E1D23] transition-colors lg:hover:bg-[#1E1D23] lg:hover:text-[#FFCC00] xl:hidden"
                         onClick={() => setIsSidebarOpened(true)}
                       >
                         <FontAwesomeIcon icon={faBars} />
@@ -172,13 +172,13 @@ const Header = () => {
                   <>
                     <Link
                       to="/auth/login"
-                      className="px-8 py-3 bg-[#FFCC00] text-[#1E1D23] rounded-lg font-semibold hover:text-[#FFCC00] hover:bg-[#1E1D23]"
+                      className="min-h-11 min-w-[44px] rounded-lg bg-[#FFCC00] px-4 py-3 text-sm font-semibold text-[#1E1D23] transition-colors sm:px-5 md:px-6 lg:text-base lg:hover:bg-[#1E1D23] lg:hover:text-[#FFCC00]"
                     >
                       Log In
                     </Link>
                     <Link
                       to="/auth/signup"
-                      className="px-8 py-3 bg-[#1E1D23] text-[#FFCC00] rounded-lg font-semibold hover:text-[#1E1D23] hover:bg-[#FFCC00]"
+                      className="min-h-11 min-w-[44px] rounded-lg bg-[#1E1D23] px-4 py-3 text-sm font-semibold text-[#FFCC00] transition-colors sm:px-5 md:px-6 lg:text-base lg:hover:bg-[#FFCC00] lg:hover:text-[#1E1D23]"
                     >
                       Sign Up
                     </Link>

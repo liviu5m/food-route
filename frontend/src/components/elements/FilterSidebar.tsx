@@ -53,28 +53,28 @@ const FilterSidebar = ({
       />
 
       <div
-        className={`fixed right-0 top-0 h-full w-full sm:w-1/2 bg-white shadow-lg z-50 ${
+        className={`fixed right-0 top-0 z-50 h-full w-full bg-white shadow-lg transition-transform duration-300 sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-2/5 ${
           isSidebarOpened ? "translate-x-0" : "translate-x-full"
-        } transition-transform duration-300`}
+        }`}
       >
-        <div className="p-10">
+        <div className="h-full overflow-y-auto p-4 sm:p-6 md:p-8 lg:p-10">
           <div className="flex items-center justify-between mb-5 w-full">
-            <h1 className="text-center font-semibold text-xl">Filter</h1>
+            <h1 className="text-lg font-semibold sm:text-xl">Filter</h1>
             <FontAwesomeIcon
               icon={faX}
-              className="text-[#FF0000] hover:scale-110 hover:rotate-180 cursor-pointer"
+              className="min-h-11 min-w-11 rounded-lg text-[#FF0000] transition-transform hover:bg-red-50 lg:hover:rotate-180 lg:hover:scale-110 cursor-pointer"
               onClick={() => setIsSidebarOpened(false)}
             />
           </div>
-          <div className="flex flex-col gap-10">
-            <div className="rounded-2xl border border-[#e5e5e5] px-5 py-3">
-              <h2 className="text-center font-bold text-lg">Categories</h2>
-              <div className="bg-[#FBF7E8] rounded-2xl px-5 py-3 flex flex-col gap-5 text-[#808080] mt-4">
+          <div className="flex flex-col gap-6 sm:gap-8 md:gap-10">
+            <div className="rounded-2xl border border-[#e5e5e5] px-4 py-3 sm:px-5">
+              <h2 className="text-center text-base font-bold sm:text-lg">Categories</h2>
+              <div className="bg-[#FBF7E8] rounded-2xl px-4 py-3 sm:px-5 flex flex-col gap-4 mt-4 text-[#808080]">
                 {categories.map((category, i) => {
                   return (
                     <div
                       key={i}
-                      className={`hover:text-[#FFCC00]  cursor-pointer ${
+                      className={`min-h-11 flex items-center px-2 transition-colors lg:hover:text-[#FFCC00] cursor-pointer ${
                         selectedCategory == category.id && "text-[#FFCC00]"
                       }`}
                       onClick={() =>
@@ -85,7 +85,7 @@ const FilterSidebar = ({
                       onMouseOver={() => setHoverId(category.id)}
                       onMouseOut={() => setHoverId(null)}
                     >
-                      <span className="py-2">{category.name}</span>
+                      <span className="py-2 text-sm sm:text-base">{category.name}</span>
                       <div
                         className={`border-t border-dotted pb-2 ${
                           hoverId == category.id ||
@@ -103,17 +103,17 @@ const FilterSidebar = ({
               <input
                 type="text"
                 placeholder="Search products..."
-                className="pl-5 w-full pr-12 py-4 border border-[#FFCC00] outline-none rounded-2xl"
+                className="w-full rounded-2xl border border-[#FFCC00] py-3 pl-4 pr-12 text-sm outline-none sm:py-4 sm:pl-5 sm:text-base"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
               <FontAwesomeIcon
                 icon={faSearch as IconDefinition}
-                className="absolute top-1/2 right-5 -translate-y-1/2"
+                className="absolute top-1/2 right-4 sm:right-5 -translate-y-1/2"
               />
             </div>
             <div>
-              <h1 className="text-xl font-bold">Filter by price</h1>
+              <h1 className="text-lg sm:text-xl font-bold">Filter by price</h1>
               <div className="border-t border-dotted border-gray-400 h-px my-3"></div>
               <Slider
                 range
@@ -134,7 +134,7 @@ const FilterSidebar = ({
                   opacity: 1,
                 }}
               />
-              <h3 className="mt-3 text-[#808080]">
+              <h3 className="mt-3 text-sm sm:text-base text-[#808080]">
                 Price: ${prices[0]} - ${prices[1]}
               </h3>
             </div>

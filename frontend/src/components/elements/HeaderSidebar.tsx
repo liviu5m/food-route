@@ -25,25 +25,25 @@ const HeaderSidebar = ({
       />
 
       <div
-        className={`fixed right-0 top-0 h-full w-full sm:w-1/2 lg:w-1/4 bg-white shadow-lg z-30 ${
+        className={`fixed right-0 top-0 z-30 h-full w-full sm:w-4/5 md:w-3/5 lg:w-1/2 xl:w-1/3 2xl:w-1/4 bg-white shadow-lg ${
           isSidebarOpened ? "translate-x-0" : "translate-x-full"
         } transition-transform duration-300`}
       >
-        <div className="h-full w-full overflow-scroll scroll-container p-10 flex flex-col items-center justify-between gap-5">
+        <div className="h-full w-full overflow-scroll scroll-container p-4 sm:p-6 lg:p-8 xl:p-10 flex flex-col items-center justify-between gap-5">
           <div className="w-full">
             <div className="flex items-center justify-between mb-5 w-full">
               <h1></h1>
               <FontAwesomeIcon
                 icon={faX}
-                className="text-[#FF0000] hover:scale-110 hover:rotate-180 cursor-pointer"
+                className="min-h-11 min-w-11 rounded-lg text-[#FF0000] transition-transform hover:bg-red-50 lg:hover:scale-110 lg:hover:rotate-180 cursor-pointer"
                 onClick={() => setIsSidebarOpened(false)}
               />
             </div>
             <div>
-              <ul className="flex items-center flex-col justify-center gap-10 mt-10">
+              <ul className="mt-8 sm:mt-10 flex flex-col items-center justify-center gap-6 sm:gap-8 lg:gap-10">
                 <Link
                   to="/"
-                  className={`hover:text-[#FFCC00] font-semibold  ${
+                  className={`font-semibold lg:hover:text-[#FFCC00] ${
                     pathname == "/" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
@@ -51,7 +51,7 @@ const HeaderSidebar = ({
                 </Link>
                 <Link
                   to="/products"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold lg:hover:text-[#FFCC00] ${
                     pathname == "/products"
                       ? "text-[#FFCC00]"
                       : "text-[#1E1D23]"
@@ -61,7 +61,7 @@ const HeaderSidebar = ({
                 </Link>
                 <Link
                   to="/orders"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold lg:hover:text-[#FFCC00] ${
                     pathname == "/orders" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
@@ -69,7 +69,7 @@ const HeaderSidebar = ({
                 </Link>
                 <Link
                   to="/contact"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold lg:hover:text-[#FFCC00] ${
                     pathname == "/contact" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
@@ -77,7 +77,7 @@ const HeaderSidebar = ({
                 </Link>
                 <Link
                   to="/cart"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold lg:hover:text-[#FFCC00] ${
                     pathname == "/cart" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
@@ -85,7 +85,7 @@ const HeaderSidebar = ({
                 </Link>
                 <Link
                   to="/wishlist"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold lg:hover:text-[#FFCC00] ${
                     pathname == "/wishlist"
                       ? "text-[#FFCC00]"
                       : "text-[#1E1D23]"
@@ -95,7 +95,7 @@ const HeaderSidebar = ({
                 </Link>
                 <Link
                   to="/account"
-                  className={`hover:text-[#FFCC00] font-semibold ${
+                  className={`font-semibold lg:hover:text-[#FFCC00] ${
                     pathname == "/account" ? "text-[#FFCC00]" : "text-[#1E1D23]"
                   }`}
                 >
@@ -107,7 +107,7 @@ const HeaderSidebar = ({
                       localStorage.removeItem("jwtToken");
                       setUser(null);
                     }}
-                    className="font-semibold block w-full px-4 py-2 text-left text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
+                    className="font-semibold block min-h-11 w-full px-4 py-2 text-left text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900 data-focus:outline-hidden cursor-pointer"
                   >
                     Log out
                   </button>

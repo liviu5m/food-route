@@ -85,22 +85,22 @@ const Login = () => {
   }, [searchParams, setSearchParams]);
 
   return (
-    <div className="h-screen w-screen flex items-center justify-center bg-[#222831]">
-      <Link to="/" className="absolute top-5 left-5">
-        <h1 className="flex gap-3 items-center justify-center p-2">
+    <div className="min-h-screen w-full px-4 py-6 sm:px-6 sm:py-8 flex items-center justify-center bg-[#222831]">
+      <Link to="/" className="absolute top-4 left-4 sm:top-5 sm:left-5">
+        <h1 className="flex items-center justify-center gap-2 sm:gap-3 p-2">
           <FontAwesomeIcon icon={faArrowLeft} />
           <span>Back</span>
         </h1>
       </Link>
-      <div className="w-[400px]">
-        <h1 className="font-bold text-2xl text-center mb-10">Log In</h1>
+      <div className="w-full max-w-md">
+        <h1 className="mb-8 sm:mb-10 text-center text-2xl sm:text-3xl font-bold">Log In</h1>
         {errorMessage && (
-          <div className=" text-red-700 p-3 rounded">
+          <div className="text-red-700 p-3 rounded">
             {errorMessage}
           </div>
         )}
         <form
-          className="flex flex-col gap-5"
+          className="flex flex-col gap-4 sm:gap-5"
           onSubmit={(e) => {
             e.preventDefault();
             loginUser();
@@ -110,7 +110,7 @@ const Login = () => {
             type="email"
             name="email"
             placeholder="Email"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.email}
             onChange={(e) => setData({ ...data, email: e.target.value })}
           />
@@ -118,11 +118,11 @@ const Login = () => {
             type="password"
             name="password"
             placeholder="Password"
-            className="px-6 py-3 rounded-lg bg-[#00ADB5] outline-none text-[#eee] placeholder:text-gray-300"
+            className="w-full rounded-lg bg-[#00ADB5] px-5 sm:px-6 py-3 outline-none text-[#eee] placeholder:text-gray-300"
             value={data.password}
             onChange={(e) => setData({ ...data, password: e.target.value })}
           />
-          <button className="px-8 py-3 bg-[#eee] text-[#00ADB5] cursor-pointer rounded-lg font-semibold hover:text-[#eee] hover:bg-[#00ADB5]">
+          <button className="min-h-11 w-full rounded-lg bg-[#eee] px-8 py-3 text-[#00ADB5] font-semibold cursor-pointer lg:hover:text-[#eee] lg:hover:bg-[#00ADB5]">
             Log In
           </button>
         </form>
@@ -134,7 +134,7 @@ const Login = () => {
         </div>
         <button
           onClick={() => handleGoogleLogin()}
-          className="px-8 py-3 bg-[#00ADB5] text-[#eee] cursor-pointer rounded-lg font-semibold hover:text-[#00ADB5] hover:bg-[#eee] flex items-center justify-center gap-7 w-full mt-5"
+          className="mt-5 flex min-h-11 w-full items-center justify-center gap-4 sm:gap-7 rounded-lg bg-[#00ADB5] px-8 py-3 text-[#eee] font-semibold cursor-pointer lg:hover:text-[#00ADB5] lg:hover:bg-[#eee]"
         >
           <img src="/imgs/google.png" className="w-6" alt="" />
           <h3>Google</h3>

@@ -86,13 +86,13 @@ const ProductComponent = () => {
   ) : (
     product && (
       <BodyLayout>
-        <div className='bg-[url("/imgs/breadcrumb1.jpg")] bg-cover bg-center w-full py-20 text-black text-center text-xl font-bold'>
+        <div className='bg-[url("/imgs/breadcrumb1.jpg")] bg-cover bg-center w-full py-16 sm:py-20 px-4 text-black text-center text-xl sm:text-2xl font-bold'>
           <h1>{product.name}</h1>
         </div>
-        <div className="flex justify-center w-full mt-10">
-          <div className="container">
-            <div className="flex gap-10">
-              <div className="w-2/5">
+        <div className="mt-10 flex w-full justify-center">
+          <div className="mx-auto w-full max-w-screen-xl px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col lg:flex-row gap-8 lg:gap-10">
+              <div className="w-full lg:w-2/5">
                 <div className="aspect-square w-full rounded-xl bg-[#F7F4EF] flex items-center justify-center">
                   <img
                     src={product.image}
@@ -100,10 +100,10 @@ const ProductComponent = () => {
                   />
                 </div>
               </div>
-              <div className="w-3/5">
+              <div className="w-full lg:w-3/5">
                 <div className="pb-10 border-b border-[#E5E5E5]">
-                  <h1 className="text-4xl font-bold mb-5">{product.name}</h1>
-                  <div className="flex items-center gap-5 mb-10">
+                  <h1 className="mb-5 text-3xl sm:text-4xl font-bold">{product.name}</h1>
+                  <div className="mb-8 sm:mb-10 flex items-center gap-4 sm:gap-5">
                     <div className="text-[#FFCC00]">{stars}</div>
                     <h2 className="text-[#808080] text-sm">
                       ({totalReviews} Customers Reviews)
@@ -111,29 +111,29 @@ const ProductComponent = () => {
                   </div>
                   <p className="text-[#808080]">{product.description}</p>
                 </div>
-                <div className="flex items-center justify-between py-10 border-b border-[#e5e5e5]">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 sm:gap-6 py-8 sm:py-10 border-b border-[#e5e5e5]">
                   <div className="flex items-center">
                     <button
-                      className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F4EF] text-sm font-bold cursor-pointer hover:text-[#FFCC00] outline-none"
+                      className="h-10 w-10 flex items-center justify-center rounded-full bg-[#F7F4EF] text-sm font-bold cursor-pointer lg:hover:text-[#FFCC00] outline-none"
                       onClick={() =>
                         setQuantity(quantity > 1 ? quantity - 1 : quantity)
                       }
                     >
                       <FontAwesomeIcon icon={faMinus as IconDefinition} />
                     </button>
-                    <p className="font-bold w-10 flex items-center justify-center">
+                    <p className="w-10 flex items-center justify-center font-bold">
                       {quantity}
                     </p>
                     <button
-                      className="w-10 h-10 flex items-center justify-center rounded-full bg-[#F7F4EF] text-sm font-bold cursor-pointer hover:text-[#FFCC00] outline-none"
+                      className="h-10 w-10 flex items-center justify-center rounded-full bg-[#F7F4EF] text-sm font-bold cursor-pointer lg:hover:text-[#FFCC00] outline-none"
                       onClick={() => setQuantity(quantity + 1)}
                     >
                       <FontAwesomeIcon icon={faPlus as IconDefinition} />
                     </button>
                   </div>
-                  <div className="flex items-center justify-center gap-5">
+                  <div className="flex w-full sm:w-auto flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-5">
                     <button
-                      className={`px-40 h-14 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer ${
+                      className={`min-h-11 h-14 w-full sm:w-auto px-8 sm:px-16 lg:px-24 xl:px-40 rounded-lg text-sm flex items-center justify-center gap-4 font-semibold cursor-pointer ${
                         user?.cart.cartProducts.find(
                           (prod) => prod.product.id == product.id,
                         )
@@ -164,10 +164,10 @@ const ProductComponent = () => {
                         : "Add to Cart"}
                     </button>
                     <button
-                      className={`w-14 h-14 flex items-center justify-center   cursor-pointer text-lg rounded-lg ${
+                      className={`min-h-11 min-w-[44px] h-14 w-14 flex items-center justify-center cursor-pointer text-lg rounded-lg ${
                         isFavorite
-                          ? "bg-[#FF0000] text-[#F7F4EF] hover:bg-[#F7F4EF] hover:text-[#FF0000]"
-                          : "bg-[#F7F4EF] text-[#FF0000]  hover:bg-[#FF0000] hover:text-[#F7F4EF]"
+                          ? "bg-[#FF0000] text-[#F7F4EF] lg:hover:bg-[#F7F4EF] lg:hover:text-[#FF0000]"
+                          : "bg-[#F7F4EF] text-[#FF0000] lg:hover:bg-[#FF0000] lg:hover:text-[#F7F4EF]"
                       }`}
                       onClick={() => {
                         setIsFavorite(!isFavorite);

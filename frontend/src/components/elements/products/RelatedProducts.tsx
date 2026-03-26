@@ -9,16 +9,15 @@ const RelatedProducts = ({ product }: { product: ProductType }) => {
     queryKey: ["get-products-category"],
     queryFn: () => getProductsByCategoryId(product.category.id),
   });
-  console.log(products);
 
   return isPending ? (
     <Loader />
   ) : (
-    <div className="my-20">
-      <h1 className="text-center font-bold uppercase text-2xl">
+    <div className="my-12 sm:my-16 lg:my-20">
+      <h1 className="text-center text-xl sm:text-2xl font-bold uppercase">
         Related Products
       </h1>
-      <div className="grid grid-cols-4 gap-20 mt-10">
+      <div className="mt-8 sm:mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8 lg:gap-10">
         {products.content
           .slice(0, 4)
           ?.map((product: ProductType, i: number) => {

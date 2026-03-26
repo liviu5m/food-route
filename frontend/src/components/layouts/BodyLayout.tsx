@@ -10,9 +10,9 @@ type LayoutProps = {
 
 const BodyLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex justify-center items-center flex-col text-[#1E1D23] bg-white">
+    <div className="flex min-h-screen w-full flex-col items-stretch overflow-x-hidden bg-white text-[#1E1D23]">
       <Header />
-      <div className="h-24"></div>
+      <div className="h-20 sm:h-24" />
       {children}
       <Footer />
       <ToastContainer />

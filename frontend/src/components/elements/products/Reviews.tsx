@@ -135,11 +135,11 @@ const Reviews = ({
 
   return (
     <div>
-      <h2 className="my-10 text-center text-2xl font-bold">
+      <h2 className="my-8 sm:my-10 text-center text-xl sm:text-2xl font-bold">
         Reviews ({totalReviews})
       </h2>
-      <div className="flex gap-20">
-        <div className="w-3/5 flex flex-col gap-5">
+      <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 xl:gap-20">
+        <div className="w-full lg:w-3/5 flex flex-col gap-5">
           {reviews.length > 0 ? (
             <>
               {reviews.map((review, i) => {
@@ -163,37 +163,37 @@ const Reviews = ({
               {totalReviews > 5 && (
                 <p
                   onClick={() => setCurrentPage(showMore ? currentPage + 1 : 0)}
-                  className="my-3 text-[#808080] hover:text-[#FFCC00] font-semibold cursor-pointer"
+                  className="my-3 text-[#808080] font-semibold cursor-pointer lg:hover:text-[#FFCC00]"
                 >
                   Show {showMore ? "More" : "Less"}
                 </p>
               )}
             </>
           ) : (
-            <p className="text-xl">No Reviews</p>
+            <p className="text-lg sm:text-xl">No Reviews</p>
           )}
         </div>
-        <div className="w-2/5">
+        <div className="w-full lg:w-2/5">
           <form
-            className="flex flex-col gap-10"
+            className="flex flex-col gap-6 sm:gap-8 lg:gap-10"
             onSubmit={(e) => manageReview(e)}
           >
             <div>
               <label>Your Rating</label>
-              <div className="mt-1">{stars}</div>
+              <div className="mt-1 flex items-center gap-1 sm:gap-2 text-lg sm:text-xl">{stars}</div>
             </div>
             <div>
               <label htmlFor="review">Your Review</label>
               <textarea
                 id="review"
-                className="resize-none outline-none border border-[#DFDFDF] h-40 w-full p-4 mt-2 rounded-lg focus:border focus:border-[#FFCC00]"
+                className="mt-2 h-32 sm:h-40 w-full resize-none rounded-lg border border-[#DFDFDF] p-3 sm:p-4 outline-none focus:border focus:border-[#FFCC00]"
                 value={review.review}
                 onChange={(e) =>
                   setReview({ ...review, review: e.target.value })
                 }
               ></textarea>
             </div>
-            <button className="bg-[#FFCC00] font-bold w-fit px-8 py-4 text-sm rounded-lg uppercase cursor-pointer hover:scale-105">
+            <button className="min-h-11 w-full sm:w-fit rounded-lg bg-[#FFCC00] px-8 py-3 sm:py-4 text-sm font-bold uppercase cursor-pointer lg:hover:scale-105">
               {editReview ? "Edit" : "Submit"}
             </button>
           </form>

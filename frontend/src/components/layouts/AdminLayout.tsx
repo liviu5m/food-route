@@ -11,18 +11,18 @@ type LayoutProps = {
 
 const AdminLayout: React.FC<LayoutProps> = ({ children }) => {
   return (
-    <div className="flex justify-center py-10 bg-[#222831] min-h-screen">
-      <Link to="/" className="fixed top-5 left-5">
-        <h1 className="flex gap-3 items-center justify-center p-2">
+    <div className="flex justify-center py-6 sm:py-10 bg-[#222831] min-h-screen px-4 sm:px-6">
+      <Link to="/" className="fixed top-4 left-4 sm:top-5 sm:left-5">
+        <h1 className="flex items-center justify-center gap-2 sm:gap-3 p-2">
           <FontAwesomeIcon icon={faArrowLeft} /> <span>Back</span>
         </h1>
       </Link>
-      <div className="container flex gap-10">
-        <div className="fixed">
+      <div className="mx-auto w-full max-w-screen-xl flex gap-6 lg:gap-10">
+        <div className="fixed hidden lg:block">
           <Sidebar />
         </div>
-        <div className="w-1/5"></div>
-        <div className="w-4/5">{children}</div>
+        <div className="hidden lg:block w-1/5"></div>
+        <div className="w-full lg:w-4/5">{children}</div>
       </div>
     </div>
   );
